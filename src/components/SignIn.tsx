@@ -1,5 +1,5 @@
 "use client";
-import GoogleIcon from "../app/assets/google.svg";
+import GoogleIcon from "@/app/assets/google.svg";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
