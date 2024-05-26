@@ -14,7 +14,8 @@ export const authOptions: AuthOptions = {
                 params: {
                     prompt: "consent",
                     access_type: "offline",
-                    response_type: "code"
+                    response_type: "code",
+                    scope: "https://www.googleapis.com/auth/youtube  https://www.googleapis.com/auth/youtube.force-ssl https://www.googleapis.com/auth/youtube.readonly"
                 }
             }
         }),

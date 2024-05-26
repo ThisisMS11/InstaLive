@@ -1,9 +1,13 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
+import DashBoardCard from '@/components/Card';
+import DialogBox from '@/components/DialogBox';
 
 const DashBoard = () => {
   const { data: session, status } = useSession();
+  const buttonref = useRef<HTMLButtonElement | null>(null);
+
 
   useEffect(() => {
     if (status === 'loading') {
@@ -20,10 +24,11 @@ const DashBoard = () => {
     return <div>Loading...</div>;
   }
 
+
   return (
-    <div>
-      <h1>DashBoard</h1>
-      {status === 'authenticated' && <p>Welcome, {session.user?.name}!</p>}
+    <div className='flex items-center justify-center p-10'>
+      <DashBoardCard buttonRef={buttonref} />
+      <DialogBox buttonRef={buttonref} />
     </div>
   );
 };
