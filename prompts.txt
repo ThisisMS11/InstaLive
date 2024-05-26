@@ -1,0 +1,2 @@
+Create a live stream: Use the YouTube Live Streaming API to create a new live stream. You will need to provide a title, description, and privacy settings for your live stream.
+

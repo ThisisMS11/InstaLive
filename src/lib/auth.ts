@@ -15,7 +15,7 @@ export const authOptions: AuthOptions = {
                     prompt: "consent",
                     access_type: "offline",
                     response_type: "code",
-                    scope: "https://www.googleapis.com/auth/youtube  https://www.googleapis.com/auth/youtube.force-ssl https://www.googleapis.com/auth/youtube.readonly"
+                    scope: "openid profile email https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.force-ssl https://www.googleapis.com/auth/youtube.readonly"
                 }
             }
         }),
@@ -28,8 +28,15 @@ export const authOptions: AuthOptions = {
     // The JWT session strategy stores session data in a JSON Web Token, which is typically saved in a cookie on the client side. This is a stateless approach, meaning no session data is stored on the server.
     session: { strategy: "jwt" as SessionStrategy, maxAge: 30 * 24 * 60 * 60 }, // 30 days maxAge.
     callbacks: {
+
+        /* When jwt and session Callbacks are Invoked ?
+        API Route Requests: When you make requests to /api/auth, NextAuth.js handles these requests using the code inside /pages/api/auth/* [...nextauth].ts.
+        Session Management: When a user accesses a protected page (e.g., /dashboard), NextAuth.js needs to check the session. This check involves calling the jwt and session callbacks to verify and retrieve the session data.
+        */
+
         async jwt({ token, account, profile }: any) {
             // When a new user logs in, add custom properties to the token
+
             if (account && profile) {
 
                 token.refresh_token = account.refresh_token;
@@ -82,6 +89,7 @@ export const authOptions: AuthOptions = {
             }
         },
         async session({ session, token }: any) {
+
             /* configuring the session object before sending it to the client */
             if (token) {
                 session.access_token = token.access_token;

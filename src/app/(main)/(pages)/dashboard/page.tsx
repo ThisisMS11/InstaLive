@@ -1,34 +1,31 @@
 'use client';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import DashBoardCard from '@/components/Card';
 import DialogBox from '@/components/DialogBox';
+import { Loader } from 'lucide-react';
 
 const DashBoard = () => {
   const { data: session, status } = useSession();
+
+  const [youtubeChannelInfo, setYoutubeChannelInfo] = useState<any>();
+
   const buttonref = useRef<HTMLButtonElement | null>(null);
 
-
-  useEffect(() => {
-    if (status === 'loading') {
-      console.log('Session is loading...');
-    } else if (status === 'authenticated') {
-      console.log("User is Authenticated.")
-      // console.log('Session data:', session);
-    } else {
-      console.log('Session status:', status);
-    }
-  }, [session, status]);
-
   if (status === 'loading') {
-    return <div>Loading...</div>;
+    return <div className='flex h-[100vh] fixed top-0 w-full bg-white opacity-60 items-center justify-center gap-2'>
+      <Loader className='animate-spin' />
+      <span className='text-sm font-semibold '>Hang Tight ! Dashboard is Loading ...</span>
+    </div >
+  } else if (status === 'authenticated') {
+    console.log("User is Authenticated.")
   }
-
 
   return (
     <div className='flex items-center justify-center p-10'>
-      <DashBoardCard buttonRef={buttonref} />
-      <DialogBox buttonRef={buttonref} />
+      <DashBoardCard buttonRef={buttonref} setYoutubeChannelInfo={setYoutubeChannelInfo} />
+
+      <DialogBox buttonRef={buttonref} youtubeChannelInfo={youtubeChannelInfo} />
     </div>
   );
 };
