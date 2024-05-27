@@ -8,3 +8,9 @@ Future Improvements :
 1. Add some caching system.
 
 
+https://chatgpt.com/c/00eb4a8c-beff-421b-8175-b9ee54c7c5a7
+
+
+livebroadcast resource represenation : https://developers.google.com/youtube/v3/live/docs/liveBroadcasts#:~:text=an%20ad%20break.-,Resource%20representation,-The%20following%20JSON
+
+livestream resource represenation : https://developers.google.com/youtube/v3/live/docs/liveStreams#resource:~:text=it%20now.-,Resource%20representation,-The%20following%20JSON
