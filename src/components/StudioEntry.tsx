@@ -1,21 +1,3 @@
-work on showing youtube channel photo on create live stream and add a stream and do the rest. you are going good.
-
-
-
-Work : 
-1. Create a Table na
-Future Improvements : 
-1. Add some caching system.
-
-
-https://chatgpt.com/c/00eb4a8c-beff-421b-8175-b9ee54c7c5a7
-
-
-livebroadcast resource represenation : https://developers.google.com/youtube/v3/live/docs/liveBroadcasts#:~:text=an%20ad%20break.-,Resource%20representation,-The%20following%20JSON
-
-livestream resource represenation : https://developers.google.com/youtube/v3/live/docs/liveStreams#resource:~:text=it%20now.-,Resource%20representation,-The%20following%20JSON
-
-
 'use client';
 
 import React, { useEffect, useRef, useState } from "react";
@@ -41,9 +23,6 @@ export default function StudioEntry() {
     const [audioLevel, setAudioLevel] = useState<number>(0);
     const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
 
-    let analyser: AnalyserNode | null = null;
-    let dataArray: Uint8Array | null = null;
-
     const handleVideoToggle = () => {
         if (isVideoOn) stopVideo();
         else startVideo();
@@ -53,17 +32,16 @@ export default function StudioEntry() {
 
     const handleAudioToggle = () => {
         if (isAudioOn) {
-            // Stop all audio tracks
             if (audioContext) {
-                const stream = audioContext.stream;
-                stream.getTracks().forEach(track => track.stop());
-                audioContext.close();
-                setAudioContext(null);
+                setAudioLevel(0);  // Set audio level to zero immediately
+                audioContext.suspend(); // Suspend audio context
             }
-            setAudioLevel(0); // Reset audio level to zero
         } else {
-            // Restart audio stream
-            startAudio();
+            if (!audioContext) {
+                startAudio(); // Restart audio stream
+            } else {
+                audioContext.resume(); // Resume audio context
+            }
         }
         setIsAudioOn((prevState) => !prevState);
     };
@@ -87,30 +65,6 @@ export default function StudioEntry() {
             tracks.forEach(track => track.stop());
         }
     };
-
-    // const startAudioAnalysis = (stream: MediaStream) => {
-
-    //     // @ts-ignore
-    //     audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    //     const source = audioContext.createMediaStreamSource(stream);
-    //     analyser = audioContext.createAnalyser();
-    //     source.connect(analyser);
-    //     analyser.fftSize = 256;
-    //     const bufferLength = analyser.frequencyBinCount;
-    //     dataArray = new Uint8Array(bufferLength);
-
-    //     const draw = () => {
-    //         if (!analyser || !dataArray) return;
-
-    //         analyser.getByteFrequencyData(dataArray);
-    //         const sum = dataArray.reduce((a, b) => a + b, 0);
-    //         const avg = sum / dataArray.length;
-    //         setAudioLevel(avg);
-
-    //         requestAnimationFrame(draw);
-    //     };
-    //     draw();
-    // };
 
     async function startAudio() {
         try {
@@ -137,17 +91,14 @@ export default function StudioEntry() {
     }
 
     useEffect(() => {
-
-        if (isVideoOn)
-            startVideo();   
-
-        if (isAudioOn)
-            startAudio();
+        if (isVideoOn) startVideo();
+        if (isAudioOn) startAudio();
 
         return () => {
             stopVideo();
             if (audioContext) {
                 audioContext.close();
+                setAudioLevel(0);
             }
         };
     }, []);
@@ -165,7 +116,6 @@ export default function StudioEntry() {
                     <div className="col-span-2 space-y-1.5 rounded-lg border bg-card text-card-foreground shadow-sm">
                         <div ref={audioRef} className="h-full w-full bg-gray-200 relative flex items-end justify-center">
                             <div className={classNames('w-full', { 'bg-red-500': audioLevel > 90, 'bg-orange-500': audioLevel > 60 && audioLevel <= 90, 'bg-green-500': audioLevel <= 60 })} style={{ height: `${audioLevel}%` }}></div>
-
                         </div>
                     </div>
                 </div>
