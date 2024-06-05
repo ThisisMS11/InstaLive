@@ -10,18 +10,16 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import classNames from 'classnames';
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Video, VideoOff, Mic, MicOff } from 'lucide-react';
-import { useStudio } from '@/app/context/StudioContext'
+import { useStudio } from "@/app/context/StudioContext";
 
 
-export default function StudioEntry({ setGotoStudio }: { setGotoStudio: (data: boolean) => void }) {
+export default function StudioEntry() {
 
     const videoRef = useRef<HTMLVideoElement>(null);
     const audioRef = useRef<HTMLDivElement>(null);
 
-    const { isVideoOn, setIsVideoOn, isAudioOn, setIsAudioOn, displayName, setDisplayName } = useStudio();
+    const { isVideoOn, setIsVideoOn, isAudioOn, setIsAudioOn, displayName } = useStudio();
 
     const [audioLevel, setAudioLevel] = useState<number>(0);
     const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
@@ -107,40 +105,37 @@ export default function StudioEntry({ setGotoStudio }: { setGotoStudio: (data: b
     }, []);
 
     return (
-        <Card className="w-[700px]">
-            <CardHeader>
-                <CardTitle className="text-center">Let's check your camera and audio</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="grid grid-cols-10 gap-4 h-74">
-                    <div className="col-span-8 space-y-1.5 rounded-lg border bg-card text-card-foreground shadow-sm">
-                        <video ref={videoRef} autoPlay className="w-full h-full" />
+        <Card className="grid grid-cols-12">
+            {/* <CardHeader>
+                <CardTitle className="text-center">Main {displayName}</CardTitle>
+            </CardHeader> */}
+            <div className="col-span-10 gap-4">
+
+                <CardContent className=" bb items-center justify-center flex flex-col">
+
+                <div className="w-[65rem] h-[40rem] rounded-lg border bg-card text-card-foreground shadow-sm">
+                        <video ref={videoRef} autoPlay className="w-full h-full object-cover" />
                     </div>
-                    <div className="col-span-2 space-y-1.5 rounded-lg border bg-card text-card-foreground shadow-sm">
+                    {/* <div className="col-span-2 space-y-1.5 rounded-lg border bg-card text-card-foreground shadow-sm">
                         <div ref={audioRef} className="h-full w-full bg-gray-200 relative flex items-end justify-center">
                             <div className={classNames('w-full', { 'bg-red-500': audioLevel > 90, 'bg-orange-500': audioLevel > 60 && audioLevel <= 90, 'bg-green-500': audioLevel <= 60 })} style={{ height: `${audioLevel}%` }}></div>
                         </div>
+                    </div> */}
+
+                    {/* ButtonGroup to toggle audio and video */}
+                    <div className="bb mt-2 flex justify-center gap-10">
+                        <Button onClick={handleAudioToggle}>
+                            {isAudioOn ? <Mic /> : <MicOff />}
+                        </Button>
+                        <Button onClick={handleVideoToggle}>
+                            {isVideoOn ? <Video /> : <VideoOff />}
+                        </Button>
                     </div>
-                </div>
 
-                {/* ButtonGroup to toggle audio and video */}
-                <div className="mt-6 flex justify-center gap-10">
-                    <Button onClick={handleAudioToggle}>
-                        {isAudioOn ? <Mic /> : <MicOff />}
-                    </Button>
-                    <Button onClick={handleVideoToggle}>
-                        {isVideoOn ? <Video /> : <VideoOff />}
-                    </Button>
-                </div>
-            </CardContent>
+                </CardContent>
+            </div>
 
-            <CardFooter>
-                <form className="flex justify-between flex-col w-full gap-4">
-                    <Label htmlFor="name">Display Name</Label>
-                    <Input id="name" placeholder="Name of your display" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
-                    <Button className="w-full" onClick={() => setGotoStudio(true)}>Enter Studio</Button>
-                </form>
-            </CardFooter>
+
         </Card>
     );
 }
