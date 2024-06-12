@@ -6,17 +6,15 @@ import { authOptions } from '@/lib/auth';
 
 
 export const PUT = async (req: any) => {
-    /* get the access token in the request body */
 
-    const { streamId } = await req.json();
-
+    const { youtubeBroadcastId, status } = await req.json();
     const session = await getServerSession(authOptions);
 
     // @ts-ignore
     let access_token = session?.access_token;
 
     /* set the credentials */
-    oauth2Client.setCredentials({ access_token });  
+    oauth2Client.setCredentials({ access_token });
 
     /* call the youtube api */
     const youtube = google.youtube({
@@ -25,29 +23,15 @@ export const PUT = async (req: any) => {
     })
 
     /* get the videos */
-
     try {
-        const statusUpdateRes = await youtube.liveStreams.update({
-            part: ['id', 'snippet', 'cdn', 'status'],
-            requestBody: {
-                id: streamId,
-                snippet: {
-                    title: 'Test Stream by Mohit'
-                },
-                cdn: {
-                    resolution: '1080p',
-                    ingestionType: 'rtmp',
-                    frameRate: '60fps'
-                },
-                status: {
-                    streamStatus: 'active'
-                }
-            }
+        const statusUpdateRes = await youtube.liveBroadcasts.transition({
+            part: ['id,snippet,contentDetails,status'],
+            broadcastStatus: status,
+            id: youtubeBroadcastId,
         });
-
         return NextResponse.json({ statusUpdateRes })
     } catch (error) {
-        console.log('error while updating livestream status ', error);
+        console.log('error while updating liveBroadCast status ', error);
         return NextResponse.json({ error }, { status: 401 });
     }
 }
@@ -57,7 +41,7 @@ export const GET = async (req: any) => {
         // Extract the livestream ID from the query parameters
         const url = new URL(req.url);
 
-        const id = url.searchParams.get('id');
+        const id = url.searchParams.get('broadCastId');
 
         console.log({ id });
 
@@ -82,17 +66,19 @@ export const GET = async (req: any) => {
 
         // Get the livestream status
         // @ts-ignore
-        const livestreamResponse = await youtube.liveStreams.list({
+        const liveBroadCast = await youtube.liveBroadcasts.list({
             part: ['status'],
             id: id
         });
 
+        console.log({ liveBroadCast })
+
         // Extract the livestream status from the response
         //@ts-ignore
-        const livestreamStatus = livestreamResponse.data.items[0].status.streamStatus;
+        const broadCastStatus = liveBroadCast.data.items[0].status.lifeCycleStatus;
 
         // Return the livestream status
-        return NextResponse.json({ livestreamStatus });
+        return NextResponse.json({ broadCastStatus });
     } catch (error) {
         console.log('Error while getting livestream status: ', error);
         return NextResponse.json({ error }, { status: 500 });

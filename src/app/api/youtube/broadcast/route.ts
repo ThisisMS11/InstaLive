@@ -60,7 +60,7 @@ async function createLiveBraodCast(youtube: any, title: string, description: str
                 privacyStatus: privacy
             },
             contentDetails: {
-                enableAutoStart: true,
+                enableAutoStart: false,
                 enableAutoStop: true
             }
         }
@@ -70,16 +70,20 @@ async function createLiveBraodCast(youtube: any, title: string, description: str
 
 async function createLiveStream(youtube: any) {
     const streamResponse = await youtube.liveStreams.insert({
-        part: ['snippet', 'cdn', 'status'],
+        part: ['snippet,cdn,contentDetails,status'],
         requestBody: {
             snippet: {
                 title: 'Test Stream by Mohit'
             },
             cdn: {
-                resolution: '1080p',
+                frameRate: 'variable',
                 ingestionType: 'rtmp',
-                frameRate: '60fps'
-            }
+                resolution: 'variable',
+                format: '',
+            },
+            contentDetails: {
+                isReusable: true,
+            },
         }
     });
 

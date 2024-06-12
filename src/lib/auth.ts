@@ -50,7 +50,7 @@ export const authOptions: AuthOptions = {
                 // If the access token has not expired yet, return it
                 return token
             } else {
-
+                console.log("Asking for refresh token here ");
                 /* Refresh Token Logic */
                 if (!token.refresh_token) throw new Error("Missing refresh token")
 
