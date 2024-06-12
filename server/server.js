@@ -1,10 +1,3 @@
-Create a live stream: Use the YouTube Live Streaming API to create a new live stream. You will need to provide a title, description, and privacy settings for your live stream.
-
-
-// adding dynamicallly video and audio switching options : 
-"""
-the working code is : 
-"""
 import express, { json, urlencoded } from 'express';
 import cors from 'cors';
 import { Server } from 'socket.io';
@@ -101,9 +94,3 @@ io.on('connection', (socket) => {
 server.listen(PORT, () => {
     console.log(`Listening on PORT ${PORT} for REST API requests`);
 });
-""""
-
-Now but there is one case , i am giving the option to turn off/on his audio as well as video . 
-now in the ffmpeg commmand used in the server , if i have audio and video configuratioons defined then i will always have to make sure  both audio and video are sent in the  stream . how can i dynamically handle  this  thing . based on what options has user  turned off at the client side ? 
-"""
-

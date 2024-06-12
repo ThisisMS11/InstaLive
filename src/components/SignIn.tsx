@@ -41,7 +41,7 @@ const SignIn = () => {
                 <div className="flex flex-col items-center justify-center gap-4">
                   <p className="font-normal text-2xl text-gray-900">Welcome</p>
 
-                  <p className="font-light text-sm text-gray-600">Log in to continue to LiveMe.</p>
+                  <p className="font-light text-sm text-gray-600">Log in to continue to InstaLive.</p>
                   <button
                     className="w-full flex justify-center items-center gap-2 py-3 px-4 border rounded font-light text-md text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 -mt-2"
                     onClick={async () => {

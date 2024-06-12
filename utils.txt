@@ -1,0 +1,6 @@
+   // Extract the livestream ID from the query parameters
+        const url = new URL(req.url);
+
+        const id = url.searchParams.get('id');
+
+        console.log({ id });
