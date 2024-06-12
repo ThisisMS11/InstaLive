@@ -12,97 +12,140 @@ import {
 import classNames from 'classnames';
 import { Video, VideoOff, Mic, MicOff } from 'lucide-react';
 import { useStudio } from "@/app/context/StudioContext";
+import { io } from 'socket.io-client';
+import axios from "axios";
+import { type } from "os";
 
 
 export default function StudioEntry() {
 
     const videoRef = useRef<HTMLVideoElement>(null);
-    const audioRef = useRef<HTMLDivElement>(null);
+    // const audioRef = useRef<HTMLAudioElement>(null);
 
-    const { isVideoOn, setIsVideoOn, isAudioOn, setIsAudioOn, displayName } = useStudio();
+    const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
 
-    const [audioLevel, setAudioLevel] = useState<number>(0);
-    const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
+    const socket = useRef<any>(null);
+    // const mediaRecorder = useRef<MediaRecorder | null>(null);
 
-    const handleVideoToggle = () => {
-        if (isVideoOn) stopVideo();
-        else startVideo();
+    let liveStreamRecorder;
 
-        setIsVideoOn(!isVideoOn);
-    };
 
-    const handleAudioToggle = () => {
-        if (isAudioOn) {
-            if (audioContext) {
-                setAudioLevel(0);  // Set audio level to zero immediately
-                audioContext.suspend(); // Suspend audio context
-            }
-        } else {
-            if (!audioContext) {
-                startAudio(); // Restart audio stream
-            } else {
-                audioContext.resume(); // Resume audio context
-            }
-        }
-        setIsAudioOn(!isAudioOn);
-    };
+    // const [audioLevel, setAudioLevel] = useState<number>(0);
+    // const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
 
-    const startVideo = async () => {
+
+    const transitionToLive = async () => {
+        const url = `${process.env.NEXT_PUBLIC_URL}/api/youtube/broadcast/status`;
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            if (videoRef.current) {
-                videoRef.current.srcObject = stream;
-            }
+            const response = await axios.put(url, {
+                youtubeBroadcastId: "GWodIL8vJ-k",
+                status: "testing"
+            });
+            const data = response.data;
+            console.log({ data });
+            return data;
         } catch (error) {
-            console.error("Error accessing webcam:", error);
-        }
-    };
-
-    const stopVideo = () => {
-        if (videoRef.current && videoRef.current.srcObject) {
-            const stream = videoRef.current.srcObject as MediaStream;
-            const tracks = stream.getTracks();
-
-            tracks.forEach(track => track.stop());
-        }
-    };
-
-    async function startAudio() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            const newAudioContext = new AudioContext();
-            const source = newAudioContext.createMediaStreamSource(stream);
-            const analyser = newAudioContext.createAnalyser();
-            source.connect(analyser);
-            analyser.fftSize = 256;
-            const dataArray = new Uint8Array(analyser.frequencyBinCount);
-
-            const analyze = () => {
-                analyser.getByteFrequencyData(dataArray);
-                const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
-                setAudioLevel(average);
-                requestAnimationFrame(analyze);
-            };
-
-            analyze();
-            setAudioContext(newAudioContext);
-        } catch (error) {
-            console.error("Error accessing microphone:", error);
+            console.error("Some error occurred while updating broadcast status:", error);
+            throw error;
         }
     }
 
-    useEffect(() => {
-        if (isVideoOn) startVideo();
-        if (isAudioOn) startAudio();
-
-        return () => {
-            stopVideo();
-            if (audioContext) {
-                audioContext.close();
-                setAudioLevel(0);
-            }
+    const InitiateRecording = async () => {
+        const videoElement = videoRef.current as HTMLVideoElement & {
+            captureStream?(frameRate?: number): MediaStream
         };
-    }, []);
+
+        if (videoElement && videoElement.captureStream) {
+
+
+            const videoStream = videoElement.captureStream(30); // Capture video at 30FPS
+
+            console.log({ videoStream })
+
+            try {
+                // Capture audio stream
+                const audioStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+
+                // Combine video and audio streams
+                const combinedStream = new MediaStream([
+                    ...videoStream.getVideoTracks(),
+                    ...audioStream.getAudioTracks(),
+                ]);
+
+                console.log({ combinedStream })
+
+                liveStreamRecorder = new MediaRecorder(combinedStream, {
+                    audioBitsPerSecond: 128000,
+                    videoBitsPerSecond: 2500000,
+                    mimeType: 'video/webm;codecs=vp8,opus',
+                    //@ts-ignore
+                    framerate: 30,
+                });
+
+                liveStreamRecorder.ondataavailable = (e: any) => {
+                    console.log('Data is available and sent.');
+                    console.log(typeof (e.data));
+                    console.log(e.data);
+
+                    socket.current.emit('binarystream', e.data)
+                };
+
+                // Start recording and dump data every second
+                liveStreamRecorder.start(1000);
+
+            } catch (error) {
+                console.error("Error accessing microphone:", error);
+            }
+
+        } else {
+            console.error("captureStream is not supported on this browser.");
+        }
+    };
+
+    const handleStreaming = async () => {
+        const media = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+
+        setMediaStream(media);
+
+        // @ts-ignore
+        videoRef.current.srcObject = media;
+    }
+
+    useEffect(() => {
+        if (mediaStream) {
+            const mediaRecorder = new MediaRecorder(mediaStream, {
+                audioBitsPerSecond: 128000,
+                videoBitsPerSecond: 2500000,
+                // @ts-ignore
+                framerate: 25
+            })
+
+            mediaRecorder.ondataavailable = ev => {
+                console.log('Binary Stream Available', ev.data)
+                socket.current.emit('binarystream', ev.data)
+            }
+
+            mediaRecorder.start(25)
+        }
+    }, [mediaStream])
+
+
+    useEffect(() => {
+        const LiveMe = () => {
+            console.log('live Me called');
+            const youtubeUrl = "rtmp://a.rtmp.youtube.com/live2/w8vy-4dvt-42ea-5xtg-31zr"
+            const url = `http://localhost:8005/?youtubeUrl=${youtubeUrl}`
+            socket.current = io(url, {
+                transports: ['websocket']
+            })
+        }
+
+        LiveMe();
+    }, [])
+
+
+
+
 
     return (
         <Card className="grid grid-cols-12">
@@ -113,8 +156,8 @@ export default function StudioEntry() {
 
                 <CardContent className=" bb items-center justify-center flex flex-col">
 
-                <div className="w-[65rem] h-[40rem] rounded-lg border bg-card text-card-foreground shadow-sm">
-                        <video ref={videoRef} autoPlay className="w-full h-full object-cover" />
+                    <div className="w-[65rem] h-[40rem] rounded-lg border bg-card text-card-foreground shadow-sm">
+                        <video ref={videoRef} autoPlay className="w-full h-full object-cover" playsInline muted/>
                     </div>
                     {/* <div className="col-span-2 space-y-1.5 rounded-lg border bg-card text-card-foreground shadow-sm">
                         <div ref={audioRef} className="h-full w-full bg-gray-200 relative flex items-end justify-center">
@@ -123,14 +166,16 @@ export default function StudioEntry() {
                     </div> */}
 
                     {/* ButtonGroup to toggle audio and video */}
-                    <div className="bb mt-2 flex justify-center gap-10">
+                    {/* <div className="bb mt-2 flex justify-center gap-10">
                         <Button onClick={handleAudioToggle}>
                             {isAudioOn ? <Mic /> : <MicOff />}
                         </Button>
                         <Button onClick={handleVideoToggle}>
                             {isVideoOn ? <Video /> : <VideoOff />}
                         </Button>
-                    </div>
+                    </div> */}
+
+                    <button onClick={handleStreaming} className="border-2 border-black p-4 rounded-md">Click Me to start Streaming</button>
 
                 </CardContent>
             </div>

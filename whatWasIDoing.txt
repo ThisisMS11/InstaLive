@@ -1,0 +1,4 @@
+open the folder livestream : studio.js 
+https://stackoverflow.com/questions/35003786/cannot-make-transition-of-my-youtube-broadcast-to-live-using-youtube-api
+
+handle typemismatch is data sent from client side adn recieved at the server side.
