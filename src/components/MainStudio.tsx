@@ -131,7 +131,7 @@ export default function StudioEntry() {
 
 
     useEffect(() => {
-        const LiveMe = () => {
+        const InstaLive = () => {
             console.log('live Me called');
             const youtubeUrl = "rtmp://a.rtmp.youtube.com/live2/w8vy-4dvt-42ea-5xtg-31zr"
             const url = `http://localhost:8005/?youtubeUrl=${youtubeUrl}`
@@ -140,7 +140,7 @@ export default function StudioEntry() {
             })
         }
 
-        LiveMe();
+        InstaLive();
     }, [])
 
 
