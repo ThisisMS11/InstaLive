@@ -12,9 +12,12 @@ const Studio = () => {
         <StudioProvider>
 
 
-            {/* {!gotoStudio ? <div className='flex items-center justify-center p-10'> <StudioEntry setGotoStudio={setGotoStudio} /> </div> : <MainStudio />} */}
 
-            <MainStudio />
+
+                {/* {!gotoStudio ? <div className='flex items-center justify-center h-[98vh] overflow-y-hidden border-2 '> <StudioEntry setGotoStudio={setGotoStudio} /> </div> : <MainStudio />} */}
+
+                <MainStudio />
+
 
         </StudioProvider>
 

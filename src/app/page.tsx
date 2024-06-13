@@ -7,12 +7,17 @@ import { signIn, useSession } from "next-auth/react";
 import { MoveRight } from 'lucide-react';
 import GoogleIcon from "@/app/assets/google.svg";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 function DashBoardButton() {
+
+  const router = useRouter();
+
   return (
     <button
       className="cursor-pointer flex px-4 py-2 relative bg-gradient-to-r text-white from-indigo-500 to-purple-500 rounded-md mx-auto z-10"
       style={{ pointerEvents: 'auto' }}
+      onClick={()=>{router.push('/dashboard')}}
     >
       DashBoard
       <motion.div

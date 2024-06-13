@@ -23,13 +23,12 @@ const DashBoard = () => {
   }
 
   return (
-    <div className='flex items-center justify-center p-10'>
-
+    <div className='flex h-[100vh] items-center justify-center p-10'>
 
       <DashBoardCard buttonRef={buttonref} setYoutubeChannelInfo={setYoutubeChannelInfo} />
 
       <DialogBox buttonRef={buttonref} youtubeChannelInfo={youtubeChannelInfo} />
-    </div>
+    </div>  
   );
 };
 

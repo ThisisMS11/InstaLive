@@ -16,10 +16,12 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 
+
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Image from 'next/image';
 import { Loader } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const DialogBox = ({ buttonRef, youtubeChannelInfo }: { buttonRef: React.RefObject<HTMLButtonElement>, youtubeChannelInfo: any }) => {
     const [formData, setFormData] = useState({
@@ -27,6 +29,8 @@ const DialogBox = ({ buttonRef, youtubeChannelInfo }: { buttonRef: React.RefObje
         description: '',
         privacy: ''
     });
+
+    const router = useRouter();
 
     useEffect(() => {
         if (youtubeChannelInfo) {
@@ -55,6 +59,7 @@ const DialogBox = ({ buttonRef, youtubeChannelInfo }: { buttonRef: React.RefObje
     };
 
     const handleLiveStream =()=>{
+        router.push('/studio')
         console.log({formData})
     }
 
