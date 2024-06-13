@@ -13,7 +13,7 @@ import classNames from 'classnames';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Video, VideoOff, Mic, MicOff } from 'lucide-react';
-import { useStudio } from '@/app/context/StudioContext'
+import { useStudio} from '@/app/context/StudioContext'
 
 
 export default function StudioEntry({ setGotoStudio }: { setGotoStudio: (data: boolean) => void }) {
@@ -138,7 +138,7 @@ export default function StudioEntry({ setGotoStudio }: { setGotoStudio: (data: b
                 <form className="flex justify-between flex-col w-full gap-4">
                     <Label htmlFor="name">Display Name</Label>
                     <Input id="name" placeholder="Name of your display" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
-                    <Button className="w-full" onClick={() => setGotoStudio(true)}>Enter Studio</Button>
+                    <Button className="w-full" onClick={() =>{ setGotoStudio(true)}}>Enter Studio</Button>
                 </form>
             </CardFooter>
         </Card>

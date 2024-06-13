@@ -3,6 +3,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
+    ResizableHandle,
+    ResizablePanel,
+    ResizablePanelGroup,
+} from "@/components/ui/resizable"
+import {
     Card,
     CardContent,
     CardFooter,
@@ -10,12 +15,14 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import classNames from 'classnames';
-import { Video, VideoOff, Mic, MicOff } from 'lucide-react';
+import { Video, VideoOff, Mic, MicOff, Podcast, MonitorUp, CircleX } from 'lucide-react';
 import { useStudio } from "@/app/context/StudioContext";
 import { io } from 'socket.io-client';
 import axios from "axios";
 import { type } from "os";
-
+import ChatBox from "./ChatBox";
+import Graph from "./StreamStatisticsGraph";
+import StatTable from "./StatTable";
 
 export default function StudioEntry() {
 
@@ -111,23 +118,23 @@ export default function StudioEntry() {
         videoRef.current.srcObject = media;
     }
 
-    useEffect(() => {
-        if (mediaStream) {
-            const mediaRecorder = new MediaRecorder(mediaStream, {
-                audioBitsPerSecond: 128000,
-                videoBitsPerSecond: 2500000,
-                // @ts-ignore
-                framerate: 25
-            })
+    // useEffect(() => {
+    //     if (mediaStream) {
+    //         const mediaRecorder = new MediaRecorder(mediaStream, {
+    //             audioBitsPerSecond: 128000,
+    //             videoBitsPerSecond: 2500000,
+    //             // @ts-ignore
+    //             framerate: 25
+    //         })
 
-            mediaRecorder.ondataavailable = ev => {
-                console.log('Binary Stream Available', ev.data)
-                socket.current.emit('binarystream', ev.data)
-            }
+    //         mediaRecorder.ondataavailable = ev => {
+    //             console.log('Binary Stream Available', ev.data)
+    //             socket.current.emit('binarystream', ev.data)
+    //         }
 
-            mediaRecorder.start(25)
-        }
-    }, [mediaStream])
+    //         mediaRecorder.start(25)
+    //     }
+    // }, [mediaStream])
 
 
     useEffect(() => {
@@ -148,39 +155,82 @@ export default function StudioEntry() {
 
 
     return (
-        <Card className="grid grid-cols-12">
-            {/* <CardHeader>
-                <CardTitle className="text-center">Main {displayName}</CardTitle>
-            </CardHeader> */}
-            <div className="col-span-10 gap-4">
+        <>
 
-                <CardContent className=" bb items-center justify-center flex flex-col">
 
-                    <div className="w-[65rem] h-[40rem] rounded-lg border bg-card text-card-foreground shadow-sm">
-                        <video ref={videoRef} autoPlay className="w-full h-full object-cover" playsInline muted/>
+            <ResizablePanelGroup
+                direction="horizontal"
+                className=" rounded-lg border mt-14 z-10"
+            >
+
+                <ResizablePanel defaultSize={20}>
+
+                    <ResizablePanelGroup direction="vertical">
+                        <ResizablePanel defaultSize={50}>
+                            <Graph />
+                        </ResizablePanel>
+                        <ResizableHandle />
+                        <ResizablePanel defaultSize={50}>
+                            <StatTable />
+                        </ResizablePanel>
+                    </ResizablePanelGroup>
+                </ResizablePanel>
+
+                <ResizableHandle />
+
+                <ResizablePanel defaultSize={50}>
+
+                    <div className="col-span-9 gap-4">
+
+                        <CardContent className="p-10 items-center justify-center flex flex-col gap-2">
+                            <div>
+                                <p className="text-center text-2xl">Main Display</p>
+                            </div>
+
+                            <div className="w-[95%] h-[34rem] rounded-lg border bg-card text-card-foreground shadow-sm">
+                                <video ref={videoRef} autoPlay className="w-full h-full object-cover" playsInline muted />
+                            </div>
+
+                            {/* <div className="col-span-2 space-y-1.5 rounded-lg border bg-card text-card-foreground shadow-sm">
+    <div ref={audioRef} className="h-full w-full bg-gray-200 relative flex items-end justify-center">
+        <div className={classNames('w-full', { 'bg-red-500': audioLevel > 90, 'bg-orange-500': audioLevel > 60 && audioLevel <= 90, 'bg-green-500': audioLevel <= 60 })} style={{ height: `${audioLevel}%` }}></div>
+    </div>
+</div> */}
+
+                            {/* ButtonGroup to toggle audio and video */}
+                            <div className=" mt-2 flex justify-center gap-10 border-2 bg-white py-2 px-4">
+                                <Button >
+                                    {true ? <Mic /> : <MicOff />}
+                                </Button>
+                                <Button >
+                                    {true ? <Video /> : <VideoOff />}
+                                </Button>
+                                <Button onClick={handleStreaming} >
+                                    {true ? <MonitorUp /> : <VideoOff />}
+                                </Button>
+                                {true ? <CircleX color="#e70d0d" size='38' />
+                                    : <VideoOff />}
+                            </div>
+
+                        </CardContent>
                     </div>
-                    {/* <div className="col-span-2 space-y-1.5 rounded-lg border bg-card text-card-foreground shadow-sm">
-                        <div ref={audioRef} className="h-full w-full bg-gray-200 relative flex items-end justify-center">
-                            <div className={classNames('w-full', { 'bg-red-500': audioLevel > 90, 'bg-orange-500': audioLevel > 60 && audioLevel <= 90, 'bg-green-500': audioLevel <= 60 })} style={{ height: `${audioLevel}%` }}></div>
-                        </div>
-                    </div> */}
+                </ResizablePanel>
+                <ResizableHandle />
 
-                    {/* ButtonGroup to toggle audio and video */}
-                    {/* <div className="bb mt-2 flex justify-center gap-10">
-                        <Button onClick={handleAudioToggle}>
-                            {isAudioOn ? <Mic /> : <MicOff />}
-                        </Button>
-                        <Button onClick={handleVideoToggle}>
-                            {isVideoOn ? <Video /> : <VideoOff />}
-                        </Button>
-                    </div> */}
-
-                    <button onClick={handleStreaming} className="border-2 border-black p-4 rounded-md">Click Me to start Streaming</button>
-
-                </CardContent>
-            </div>
+                <ResizablePanel defaultSize={30}>
+                    <ResizablePanelGroup direction="vertical">
+                        <ResizablePanel defaultSize={50}>
+                            <Graph />
+                        </ResizablePanel>
+                        <ResizableHandle />
+                        <ResizablePanel defaultSize={50}>
+                            <ChatBox />
+                        </ResizablePanel>
+                    </ResizablePanelGroup>
+                </ResizablePanel>
 
 
-        </Card>
+            </ResizablePanelGroup>
+        </>
     );
 }
