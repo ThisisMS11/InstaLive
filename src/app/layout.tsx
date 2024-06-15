@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import Providers from '@/components/Providers'
-import Navbar from "@/components/Navbar";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import Providers from '@/components/Providers';
+import Navbar from '@/components/Navbar';
+import './globals.css';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "InstaLive",
-  description: "Will make you go live.",
+  title: 'InstaLive',
+  description: 'Will make you go live.',
 };
 
 export default function RootLayout({
@@ -21,9 +21,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           <Navbar />
-          <div className="pt-[40px]">
-            {children}
-          </div>
+          <div className="pt-[40px]">{children}</div>
         </Providers>
       </body>
     </html>
