@@ -1,1 +1,2 @@
-I did some ui changes for home page and Now you should be trying to improve Studio Design and Make it ready for chatmessages and live Stream , bottom menu and other stuff related.
+Add prettier .
+Start working on real stuff now.
