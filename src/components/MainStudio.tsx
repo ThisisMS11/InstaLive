@@ -27,144 +27,82 @@ import {
 import { useStudio } from '@/app/context/StudioContext';
 import { io } from 'socket.io-client';
 import axios from 'axios';
-import { type } from 'os';
 import ChatBox from './ChatBox';
 import Graph from './StreamStatisticsGraph';
 import StatTable from './StatTable';
 
-export default function StudioEntry() {
+import { useAppSelector } from '@/hooks/redux';
+
+export default function StudioEntry({ socket }: { socket: any }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  // const audioRef = useRef<HTMLAudioElement>(null);
-
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
+  const broadcastData = useAppSelector((state) => state.broadcasts);
+  const [weAreLive, setWeAreLive] = useState<boolean>(false);
+  // const socket = useRef<any>(null);
 
-  const socket = useRef<any>(null);
-  // const mediaRecorder = useRef<MediaRecorder | null>(null);
-
-  let liveStreamRecorder;
-
-  // const [audioLevel, setAudioLevel] = useState<number>(0);
-  // const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
-
-  const transitionToLive = async () => {
+  const transitionToLive = async (status: string) => {
     const url = `${process.env.NEXT_PUBLIC_URL}/api/youtube/broadcast/status`;
     try {
       const response = await axios.put(url, {
-        youtubeBroadcastId: 'GWodIL8vJ-k',
-        status: 'testing',
+        youtubeBroadcastId: broadcastData.id,
+        status: status,
       });
       const data = response.data;
       console.log({ data });
       return data;
     } catch (error) {
       console.error(
-        'Some error occurred while updating broadcast status:',
+        'Some error occurred while updating broadcast status to live.',
         error
       );
-      throw error;
-    }
-  };
-
-  const InitiateRecording = async () => {
-    const videoElement = videoRef.current as HTMLVideoElement & {
-      captureStream?(frameRate?: number): MediaStream;
-    };
-
-    if (videoElement && videoElement.captureStream) {
-      const videoStream = videoElement.captureStream(30); // Capture video at 30FPS
-
-      console.log({ videoStream });
-
-      try {
-        // Capture audio stream
-        const audioStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: false,
-        });
-
-        // Combine video and audio streams
-        const combinedStream = new MediaStream([
-          ...videoStream.getVideoTracks(),
-          ...audioStream.getAudioTracks(),
-        ]);
-
-        console.log({ combinedStream });
-
-        liveStreamRecorder = new MediaRecorder(combinedStream, {
-          audioBitsPerSecond: 128000,
-          videoBitsPerSecond: 2500000,
-          mimeType: 'video/webm;codecs=vp8,opus',
-          //@ts-ignore
-          framerate: 30,
-        });
-
-        liveStreamRecorder.ondataavailable = (e: any) => {
-          console.log('Data is available and sent.');
-          console.log(typeof e.data);
-          console.log(e.data);
-
-          socket.current.emit('binarystream', e.data);
-        };
-
-        // Start recording and dump data every second
-        liveStreamRecorder.start(1000);
-      } catch (error) {
-        console.error('Error accessing microphone:', error);
-      }
-    } else {
-      console.error('captureStream is not supported on this browser.');
     }
   };
 
   const handleStreaming = async () => {
+    setWeAreLive(true);
+
     const media = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: true,
     });
 
     setMediaStream(media);
-
     // @ts-ignore
     videoRef.current.srcObject = media;
+
+    transitionToLive('live');
   };
 
-  // useEffect(() => {
-  //     if (mediaStream) {
-  //         const mediaRecorder = new MediaRecorder(mediaStream, {
-  //             audioBitsPerSecond: 128000,
-  //             videoBitsPerSecond: 2500000,
-  //             // @ts-ignore
-  //             framerate: 25
-  //         })
-
-  //         mediaRecorder.ondataavailable = ev => {
-  //             console.log('Binary Stream Available', ev.data)
-  //             socket.current.emit('binarystream', ev.data)
-  //         }
-
-  //         mediaRecorder.start(25)
-  //     }
-  // }, [mediaStream])
+  const handleStopLiveStream = async () => {
+    transitionToLive('complete');
+  };
 
   useEffect(() => {
-    const InstaLive = () => {
-      console.log('live Me called');
-      const youtubeUrl =
-        'rtmp://a.rtmp.youtube.com/live2/w8vy-4dvt-42ea-5xtg-31zr';
-      const url = `http://localhost:8005/?youtubeUrl=${youtubeUrl}`;
-      socket.current = io(url, {
-        transports: ['websocket'],
-      });
-    };
+    console.log('mediastream changed');
 
-    InstaLive();
-  }, []);
+    if (mediaStream) {
+      const mediaRecorder = new MediaRecorder(mediaStream, {
+        mimeType: 'video/webm; codecs=vp9,opus',
+        audioBitsPerSecond: 128000,
+        videoBitsPerSecond: 2500000,
+        //@ts-ignore
+        framerate: 25,
+      });
+
+      mediaRecorder.ondataavailable = (ev) => {
+        console.log('Binary Stream Available', ev.data);
+        socket.current.emit('binarystream', ev.data);
+      };
+
+      mediaRecorder.start(25);
+    }
+  }, [mediaStream]);
 
   return (
     <>
       <ResizablePanelGroup
         direction="horizontal"
-        className=" rounded-lg border mt-14 z-10"
+        className="rounded-lg border mt-14 z-10"
       >
         <ResizablePanel defaultSize={20}>
           <ResizablePanelGroup direction="vertical">
@@ -188,29 +126,36 @@ export default function StudioEntry() {
               </div>
 
               <div className="w-[95%] h-[34rem] rounded-lg border bg-card text-card-foreground shadow-sm">
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  className="w-full h-full object-cover"
-                  playsInline
-                  muted
-                />
+                {weAreLive ? (
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    className="w-full h-full object-cover"
+                    playsInline
+                    muted
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-200 bg-opacity-50 backdrop-blur-md">
+                    <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-4 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+                      <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+                      <span
+                        className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl"
+                        onClick={handleStreaming}
+                      >
+                        Go Live
+                      </span>
+                    </button>
+                  </div>
+                )}
               </div>
 
-              {/* <div className="col-span-2 space-y-1.5 rounded-lg border bg-card text-card-foreground shadow-sm">
-    <div ref={audioRef} className="h-full w-full bg-gray-200 relative flex items-end justify-center">
-        <div className={classNames('w-full', { 'bg-red-500': audioLevel > 90, 'bg-orange-500': audioLevel > 60 && audioLevel <= 90, 'bg-green-500': audioLevel <= 60 })} style={{ height: `${audioLevel}%` }}></div>
-    </div>
-</div> */}
-
-              {/* ButtonGroup to toggle audio and video */}
-              <div className=" mt-2 flex justify-center gap-10 border-2 bg-white py-2 px-4">
-                <Button>{true ? <Mic /> : <MicOff />}</Button>
-                <Button>{true ? <Video /> : <VideoOff />}</Button>
+              <div className="mt-2 flex justify-center gap-10 border-2 bg-white py-2 px-4">
                 <Button onClick={handleStreaming}>
                   {true ? <MonitorUp /> : <VideoOff />}
                 </Button>
-                {true ? <CircleX color="#e70d0d" size="38" /> : <VideoOff />}
+                <Button onClick={handleStopLiveStream}>
+                  {true ? <CircleX color="#e70d0d" size="38" /> : <VideoOff />}
+                </Button>
               </div>
             </CardContent>
           </div>

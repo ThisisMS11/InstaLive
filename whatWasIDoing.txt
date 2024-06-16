@@ -1,2 +1,1 @@
-Add prettier .
-Start working on real stuff now.
+complete the live stream flow so far we are able to store the details of the livestream and broadcast.
