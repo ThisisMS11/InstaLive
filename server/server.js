@@ -5,6 +5,11 @@ import { config } from 'dotenv';
 import http from 'http';
 import ffmpeg from 'fluent-ffmpeg';
 import { PassThrough } from 'stream';
+import {
+  fileTypeFromBlob,
+  fileTypeFromBuffer,
+  fileTypeFromStream,
+} from 'file-type';
 
 config();
 
@@ -31,6 +36,8 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
   console.log(`Socket connected to ${socket.id}`);
   const youtubeUrl = socket.handshake.query.youtubeUrl;
+
+  console.log('sending stream to : ', youtubeUrl);
 
   const passThroughStream = new PassThrough();
 
@@ -72,8 +79,11 @@ io.on('connection', (socket) => {
 
   ffmpegCommand.run();
 
-  socket.on('binarystream', (stream) => {
+  socket.on('binarystream', async (stream) => {
     try {
+      const type_ = await fileTypeFromBuffer(stream);
+      // console.log({type_});
+
       passThroughStream.write(stream);
     } catch (err) {
       if (err.code === 'EPIPE') {

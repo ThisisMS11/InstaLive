@@ -2,7 +2,9 @@
 import { SessionProvider } from 'next-auth/react';
 import { Provider } from 'react-redux';
 import React, { ReactNode } from 'react';
-import { store } from '@/redux/store';
+import { store, persistor } from '@/redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
+
 interface Props {
   children: ReactNode;
 }
@@ -10,7 +12,9 @@ interface Props {
 const Providers = (props: Props) => {
   return (
     <Provider store={store}>
-      <SessionProvider>{props.children}</SessionProvider>
+      <PersistGate loading={null} persistor={persistor}>
+        <SessionProvider>{props.children}</SessionProvider>
+      </PersistGate>
     </Provider>
   );
 };
