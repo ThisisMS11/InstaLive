@@ -1,13 +1,14 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BackgroundBeams } from '@/components/ui/background-beams';
 import { motion } from 'framer-motion';
 import { HeroHighlight, Highlight } from '@/components/ui/hero-highlight';
 import { signIn, useSession } from 'next-auth/react';
-import { MoveRight } from 'lucide-react';
+import { MoveRight, Hand } from 'lucide-react';
 import GoogleIcon from '@/app/assets/google.svg';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 function DashBoardButton() {
   const router = useRouter();
@@ -56,6 +57,18 @@ function GoogleSignButton() {
 
 export default function HomePage() {
   const session = useSession();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      toast('InstaLive', {
+        description: 'Welcome to InstaLive !',
+        duration: 5000,
+        icon: <Hand />,
+      });
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  });
   return (
     <>
       <div className="h-[100vh] w-full rounded-md bg-white  flex flex-col items-center justify-center antialiased">

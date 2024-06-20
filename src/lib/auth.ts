@@ -22,7 +22,7 @@ export const authOptions: AuthOptions = {
     }),
   ],
   pages: {
-    signIn: '/auth',
+    signIn: '/',
   },
   secret: process.env.NEXTAUTH_SECRET,
   // defining how sessions are managed in your application, here using jwt strategy.
