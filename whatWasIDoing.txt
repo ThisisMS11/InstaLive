@@ -1,1 +1,3 @@
-I did some ui changes for home page and Now you should be trying to improve Studio Design and Make it ready for chatmessages and live Stream , bottom menu and other stuff related.
+complete the live stream flow so far we are able to store the details of the livestream and broadcast.
+
+add a alert feature for errors . 

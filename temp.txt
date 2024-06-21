@@ -567,3 +567,52 @@ io.on('connection', (socket) => {
 server.listen(PORT, () => {
     console.log(`Listening on PORT ${PORT} for REST API requests`);
 });
+  const InitiateRecording = async () => {
+    const videoElement = videoRef.current as HTMLVideoElement & {
+      captureStream?(frameRate?: number): MediaStream;
+    };
+
+    if (videoElement && videoElement.captureStream) {
+      const videoStream = videoElement.captureStream(30); // Capture video at 30FPS
+
+      console.log({ videoStream });
+
+      try {
+        // Capture audio stream
+        const audioStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: false,
+        });
+
+        // Combine video and audio streams
+        const combinedStream = new MediaStream([
+          ...videoStream.getVideoTracks(),
+          ...audioStream.getAudioTracks(),
+        ]);
+
+        console.log({ combinedStream });
+
+        const liveStreamRecorder = new MediaRecorder(combinedStream, {
+          audioBitsPerSecond: 128000,
+          videoBitsPerSecond: 2500000,
+          mimeType: 'video/webm;codecs=vp8,opus',
+          framerate: 30,
+        });
+
+        liveStreamRecorder.ondataavailable = (e: any) => {
+          console.log('Data is available and sent.');
+          console.log(typeof e.data);
+          console.log(e.data);
+
+          socket.current.emit('binarystream', e.data);
+        };
+
+        // Start recording and dump data every second
+        liveStreamRecorder.start(1000);
+      } catch (error) {
+        console.error('Error accessing microphone:', error);
+      }
+    } else {
+      console.error('captureStream is not supported on this browser.');
+    }
+  };
