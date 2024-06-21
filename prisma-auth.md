@@ -9,12 +9,13 @@ When using NextAuth with Prisma, the creation and management of users and their 
 
 1. **User Signs In**:
    - When a user signs in using Google, NextAuth receives the user information from Google.
-   
 2. **NextAuth Calls the Adapter**:
+
    - NextAuth calls the relevant methods on the Prisma Adapter to handle the sign-in process.
    - The Prisma Adapter has predefined methods for handling common operations like creating a user, linking an account, and managing sessions.
 
 3. **Adapter Creates or Updates User**:
+
    - If the user does not exist in the database, the adapter will create a new user record using Prisma.
    - It will also create an `Account` record linked to the user to store information about the Google account (e.g., provider, providerAccountId, accessToken).
 
@@ -26,10 +27,12 @@ When using NextAuth with Prisma, the creation and management of users and their 
 Here's a more detailed breakdown using your configuration:
 
 1. **User Signs In with Google**:
+
    - The user clicks the "Sign in with Google" button.
    - NextAuth handles the OAuth flow and receives user information from Google.
 
 2. **Adapter in Action**:
+
    - NextAuth calls the `createUser` method on the Prisma Adapter if it's the user's first time signing in.
    - The adapter translates this into a Prisma call, like `prisma.user.create`.
    - It creates a new `User` record in the database.

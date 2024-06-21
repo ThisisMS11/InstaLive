@@ -5,7 +5,6 @@ import DashBoardCard from '@/components/Card';
 import DialogBox from '@/components/DialogBox';
 import { Loader } from 'lucide-react';
 
-
 const DashBoard = () => {
   const { data: session, status } = useSession();
 
@@ -14,21 +13,30 @@ const DashBoard = () => {
   const buttonref = useRef<HTMLButtonElement | null>(null);
 
   if (status === 'loading') {
-    return <div className='flex h-[100vh] fixed top-0 w-full bg-white opacity-60 items-center justify-center gap-2'>
-      <Loader className='animate-spin' />
-      <span className='text-sm font-semibold '>Hang Tight ! Dashboard is Loading ...</span>
-    </div >
+    return (
+      <div className="flex h-[100vh] fixed top-0 w-full bg-white opacity-60 items-center justify-center gap-2">
+        <Loader className="animate-spin" />
+        <span className="text-sm font-semibold ">
+          Hang Tight ! Dashboard is Loading ...
+        </span>
+      </div>
+    );
   } else if (status === 'authenticated') {
-    console.log("User is Authenticated.")
+    console.log('User is Authenticated.');
   }
 
   return (
-    <div className='flex h-[100vh] items-center justify-center p-10'>
+    <div className="flex h-[100vh] items-center justify-center p-10">
+      <DashBoardCard
+        buttonRef={buttonref}
+        setYoutubeChannelInfo={setYoutubeChannelInfo}
+      />
 
-      <DashBoardCard buttonRef={buttonref} setYoutubeChannelInfo={setYoutubeChannelInfo} />
-
-      <DialogBox buttonRef={buttonref} youtubeChannelInfo={youtubeChannelInfo} />
-    </div>  
+      <DialogBox
+        buttonRef={buttonref}
+        youtubeChannelInfo={youtubeChannelInfo}
+      />
+    </div>
   );
 };
 

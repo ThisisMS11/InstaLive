@@ -1,9 +1,9 @@
-"use client";
-import GoogleIcon from "@/app/assets/google.svg";
-import { signIn, useSession } from "next-auth/react";
-import { useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+'use client';
+import GoogleIcon from '@/app/assets/google.svg';
+import { signIn, useSession } from 'next-auth/react';
+import { useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 const SignIn = () => {
   const session = useSession();
   const router = useRouter();
@@ -11,7 +11,7 @@ const SignIn = () => {
   const redirected = useRef(false);
   useEffect(() => {
     if (redirected.current === false && session.data?.user) {
-      router.push("/dashboard");
+      router.push('/dashboard');
       redirected.current = true;
     }
   }, [redirected, session, router]);
@@ -41,14 +41,22 @@ const SignIn = () => {
                 <div className="flex flex-col items-center justify-center gap-4">
                   <p className="font-normal text-2xl text-gray-900">Welcome</p>
 
-                  <p className="font-light text-sm text-gray-600">Log in to continue to InstaLive.</p>
+                  <p className="font-light text-sm text-gray-600">
+                    Log in to continue to InstaLive.
+                  </p>
                   <button
                     className="w-full flex justify-center items-center gap-2 py-3 px-4 border rounded font-light text-md text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 -mt-2"
                     onClick={async () => {
-                      await signIn("google");
+                      await signIn('google');
                     }}
                   >
-                    <Image src={GoogleIcon.src} className="w-5 h-5 mr-2" alt="Github Icon" width={25} height={25} />
+                    <Image
+                      src={GoogleIcon.src}
+                      className="w-5 h-5 mr-2"
+                      alt="Github Icon"
+                      width={25}
+                      height={25}
+                    />
                     Continue with Google
                   </button>
                 </div>
