@@ -51,8 +51,12 @@ const liveStreamSlice = createSlice({
         ingestionAddress,
       };
     },
+
+    emptyLiveStream() {
+      return initialState;
+    },
   },
 });
 
-export const { setLiveStream } = liveStreamSlice.actions;
+export const { setLiveStream, emptyLiveStream } = liveStreamSlice.actions;
 export default liveStreamSlice.reducer;

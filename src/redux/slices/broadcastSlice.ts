@@ -51,7 +51,11 @@ const broadcastSlice = createSlice({
         scheduledStartTime,
       };
     },
+
+    emptyBroadcast() {
+      return initialState;
+    },
   },
 });
-export const { setBroadcast } = broadcastSlice.actions;
+export const { setBroadcast, emptyBroadcast } = broadcastSlice.actions;
 export default broadcastSlice.reducer;

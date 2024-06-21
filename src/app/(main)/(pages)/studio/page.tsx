@@ -3,14 +3,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import StudioEntry from '@/components/StudioEntry';
 import MainStudio from '@/components/MainStudio';
 import { StudioProvider } from '@/app/context/StudioContext';
-import { useAppSelector } from '@/hooks/redux';
+import { useAppSelector, useAppDispatch } from '@/hooks/redux';
 import { io } from 'socket.io-client';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { ShieldAlert } from 'lucide-react';
+import { useDispatch } from 'react-redux';
 
 const Studio = () => {
   const liveStreamData = useAppSelector((state) => state.livestreams);
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const [gotoStudio, setGotoStudio] = useState<boolean>(false);
   const socket = useRef<any>(null);
