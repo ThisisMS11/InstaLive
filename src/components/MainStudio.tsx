@@ -123,29 +123,29 @@ export default function StudioEntry({ socket }: { socket: any }) {
     // @ts-ignore
     videoRef.current.srcObject = media;
 
-    transitionToLive('live');
+    // transitionToLive('live');
   };
 
-  // useEffect(() => {
-  //   console.log('mediastream changed');
+  useEffect(() => {
+    console.log('mediastream changed');
 
-  //   if (mediaStream) {
-  //     const mediaRecorder = new MediaRecorder(mediaStream, {
-  //       mimeType: 'video/webm; codecs=vp9,opus',
-  //       audioBitsPerSecond: 128000,
-  //       videoBitsPerSecond: 2500000,
-  //       //@ts-ignore
-  //       framerate: 25,
-  //     });
+    if (mediaStream) {
+      const mediaRecorder = new MediaRecorder(mediaStream, {
+        mimeType: 'video/webm; codecs=vp9,opus',
+        audioBitsPerSecond: 128000,
+        videoBitsPerSecond: 2500000,
+        //@ts-ignore
+        framerate: 25,
+      });
 
-  //     mediaRecorder.ondataavailable = (ev) => {
-  //       console.log('Binary Stream Available', ev.data);
-  //       socket.current.emit('binarystream', ev.data);
-  //     };
+      mediaRecorder.ondataavailable = (ev) => {
+        console.log('Binary Stream Available', ev.data);
+        socket.current.emit('binarystream', ev.data);
+      };
 
-  //     mediaRecorder.start(25);
-  //   }
-  // }, [mediaStream]);
+      mediaRecorder.start(25);
+    }
+  }, [mediaStream]);
 
   return (
     <>
