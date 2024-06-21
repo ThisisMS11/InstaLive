@@ -7,31 +7,83 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import classNames from 'classnames';
-import {
-  Video,
-  VideoOff,
-  Mic,
-  MicOff,
-  Podcast,
-  MonitorUp,
-  CircleX,
-} from 'lucide-react';
+import { VideoOff, MonitorUp, CircleX } from 'lucide-react';
 import { useStudio } from '@/app/context/StudioContext';
 import { io } from 'socket.io-client';
 import axios from 'axios';
 import ChatBox from './ChatBox';
 import Graph from './StreamStatisticsGraph';
 import StatTable from './StatTable';
+import { toast } from 'sonner';
+import { useAppSelector, useAppDispatch } from '@/hooks/redux';
+import { useRouter } from 'next/navigation';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { emptyLiveStream } from '@/redux/slices/liveStreamSlice';
+import { emptyBroadcast } from '@/redux/slices/broadcastSlice';
 
-import { useAppSelector } from '@/hooks/redux';
+export function AlertDialogDemo({
+  transitionToLive,
+}: {
+  transitionToLive: (status: string) => void;
+}) {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  return (
+    <AlertDialog
+      onOpenChange={(e) => {
+        console.log(e);
+      }}
+    >
+      <AlertDialogTrigger asChild>
+        <Button>
+          Stop Stream <CircleX color="#ffffff" size="30" className="ml-4" />{' '}
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will stop the currently ongoing
+            streaming and broadcast.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction>
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                const response = transitionToLive('complete');
+
+                //@ts-ignore
+                if (response.status == 200) {
+                  dispatch(emptyLiveStream());
+                  dispatch(emptyBroadcast());
+                  router.push('/');
+                }
+              }}
+            >
+              {/** some inputs */}
+              <Button type="submit">Stop</Button>
+            </form>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
 
 export default function StudioEntry({ socket }: { socket: any }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -47,6 +99,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
         youtubeBroadcastId: broadcastData.id,
         status: status,
       });
+
       const data = response.data;
       console.log({ data });
       return data;
@@ -73,30 +126,26 @@ export default function StudioEntry({ socket }: { socket: any }) {
     transitionToLive('live');
   };
 
-  const handleStopLiveStream = async () => {
-    transitionToLive('complete');
-  };
+  // useEffect(() => {
+  //   console.log('mediastream changed');
 
-  useEffect(() => {
-    console.log('mediastream changed');
+  //   if (mediaStream) {
+  //     const mediaRecorder = new MediaRecorder(mediaStream, {
+  //       mimeType: 'video/webm; codecs=vp9,opus',
+  //       audioBitsPerSecond: 128000,
+  //       videoBitsPerSecond: 2500000,
+  //       //@ts-ignore
+  //       framerate: 25,
+  //     });
 
-    if (mediaStream) {
-      const mediaRecorder = new MediaRecorder(mediaStream, {
-        mimeType: 'video/webm; codecs=vp9,opus',
-        audioBitsPerSecond: 128000,
-        videoBitsPerSecond: 2500000,
-        //@ts-ignore
-        framerate: 25,
-      });
+  //     mediaRecorder.ondataavailable = (ev) => {
+  //       console.log('Binary Stream Available', ev.data);
+  //       socket.current.emit('binarystream', ev.data);
+  //     };
 
-      mediaRecorder.ondataavailable = (ev) => {
-        console.log('Binary Stream Available', ev.data);
-        socket.current.emit('binarystream', ev.data);
-      };
-
-      mediaRecorder.start(25);
-    }
-  }, [mediaStream]);
+  //     mediaRecorder.start(25);
+  //   }
+  // }, [mediaStream]);
 
   return (
     <>
@@ -153,8 +202,12 @@ export default function StudioEntry({ socket }: { socket: any }) {
                 <Button onClick={handleStreaming}>
                   {true ? <MonitorUp /> : <VideoOff />}
                 </Button>
-                <Button onClick={handleStopLiveStream}>
-                  {true ? <CircleX color="#e70d0d" size="38" /> : <VideoOff />}
+                <Button>
+                  {true ? (
+                    <AlertDialogDemo transitionToLive={transitionToLive} />
+                  ) : (
+                    <VideoOff />
+                  )}
                 </Button>
               </div>
             </CardContent>
