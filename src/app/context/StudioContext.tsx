@@ -9,6 +9,8 @@ interface StudioContextType {
   setIsAudioOn: (data: boolean) => void;
   displayName: string;
   setDisplayName: (data: string) => void;
+  overlayImage : string;
+  setOverlayImage: (data: string) => void;
 }
 
 const StudioContext = createContext<StudioContextType | undefined>(undefined);
@@ -17,6 +19,7 @@ export const StudioProvider = ({ children }: { children: ReactNode }) => {
   const [isVideoOn, setIsVideoOn] = useState<boolean>(true);
   const [isAudioOn, setIsAudioOn] = useState<boolean>(true);
   const [displayName, setDisplayName] = useState<string>('');
+  const [overlayImage, setOverlayImage] = useState<string>('');
 
   return (
     <StudioContext.Provider
@@ -27,6 +30,8 @@ export const StudioProvider = ({ children }: { children: ReactNode }) => {
         setIsAudioOn,
         displayName,
         setDisplayName,
+        overlayImage,
+        setOverlayImage
       }}
     >
       {children}
