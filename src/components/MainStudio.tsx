@@ -8,17 +8,13 @@ import {
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
 import { CardContent } from '@/components/ui/card';
-import classNames from 'classnames';
 import { VideoOff, MonitorUp, CircleX } from 'lucide-react';
-import { useStudio } from '@/app/context/StudioContext';
-import { io } from 'socket.io-client';
-import axios from 'axios';
 import ChatBox from './ChatBox';
 import Graph from './StreamStatisticsGraph';
 import StatTable from './StatTable';
-import { toast } from 'sonner';
 import { useAppSelector, useAppDispatch } from '@/hooks/redux';
 import { useRouter } from 'next/navigation';
+import axios from 'axios'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -32,6 +28,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { emptyLiveStream } from '@/redux/slices/liveStreamSlice';
 import { emptyBroadcast } from '@/redux/slices/broadcastSlice';
+import OverlayAccordion from './OverlayAccordion';
 
 export function AlertDialogDemo({
   transitionToLive,
@@ -86,11 +83,16 @@ export function AlertDialogDemo({
 }
 
 export default function StudioEntry({ socket }: { socket: any }) {
+
+  console.log('StudioEntry Rendered .')
   const videoRef = useRef<HTMLVideoElement>(null);
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
   const broadcastData = useAppSelector((state) => state.broadcasts);
   const [weAreLive, setWeAreLive] = useState<boolean>(false);
-  // const socket = useRef<any>(null);
+
+  // const { overlayImage, setOverlayImage } = useStudio();
+  const [overlayImage, setOverlayImage] = useState<string>('');
+  
 
   const transitionToLive = async (status: string) => {
     const url = `${process.env.NEXT_PUBLIC_URL}/api/youtube/broadcast/status`;
@@ -127,7 +129,6 @@ export default function StudioEntry({ socket }: { socket: any }) {
   };
 
   useEffect(() => {
-    console.log('mediastream changed');
 
     if (mediaStream) {
       const mediaRecorder = new MediaRecorder(mediaStream, {
@@ -139,13 +140,15 @@ export default function StudioEntry({ socket }: { socket: any }) {
       });
 
       mediaRecorder.ondataavailable = (ev) => {
-        console.log('Binary Stream Available', ev.data);
-        socket.current.emit('binarystream', ev.data);
+        // console.log('Binary Stream Available', ev.data);
+        console.log({overlayImage})
+
+        socket.current.emit('binarystream', { stream: ev.data, overlay: overlayImage });
       };
 
-      mediaRecorder.start(25);
+      mediaRecorder.start(1000);
     }
-  }, [mediaStream]);
+  }, [mediaStream,overlayImage]);
 
   return (
     <>
@@ -218,7 +221,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
         <ResizablePanel defaultSize={30}>
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel defaultSize={50}>
-              <Graph />
+              <OverlayAccordion setOverlayImage={setOverlayImage} />
             </ResizablePanel>
             <ResizableHandle />
             <ResizablePanel defaultSize={50}>
