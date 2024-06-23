@@ -65,6 +65,7 @@ const Studio = () => {
       ) : (
         <MainStudio socket={socket} />
       )}
+      {/* <MainStudio socket={socket} /> */}
     </StudioProvider>
   );
 };
