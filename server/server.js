@@ -79,7 +79,11 @@ io.on('connection', (socket) => {
 
   ffmpegCommand.run();
 
-  socket.on('binarystream', async (stream) => {
+  socket.on('binarystream', async (data) => {
+    const { stream ,overlay} = data;
+
+    console.log("Overlay : ", overlay);
+    
     try {
       const type_ = await fileTypeFromBuffer(stream);
       // console.log({type_});
