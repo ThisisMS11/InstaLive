@@ -44,7 +44,6 @@ const Studio = () => {
         const streamName = liveStreamData.streamName;
 
         const youtubeUrl = `${ingestionAddress}/${streamName}`;
-        console.log({ youtubeUrl });
         const url = `http://localhost:8005/?youtubeUrl=${youtubeUrl}`;
 
         socket.current = io(url, {
