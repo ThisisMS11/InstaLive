@@ -5,11 +5,6 @@ import { config } from 'dotenv';
 import http from 'http';
 import ffmpeg from 'fluent-ffmpeg';
 import { PassThrough } from 'stream';
-import {
-  fileTypeFromBlob,
-  fileTypeFromBuffer,
-  fileTypeFromStream,
-} from 'file-type';
 
 config();
 
@@ -34,60 +29,147 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
+  let ffmpegCommand = null;
+  let passThroughStream = new PassThrough();
+
   console.log(`Socket connected to ${socket.id}`);
   const youtubeUrl = socket.handshake.query.youtubeUrl;
 
-  console.log('sending stream to : ', youtubeUrl);
+  socket.on('without-overlay', () => {
+    console.log('WithoutOverlay Event was hit');
 
-  const passThroughStream = new PassThrough();
+    if (ffmpegCommand) {
+      ffmpegCommand.kill('SIGINT');
+      passThroughStream.end();
+      passThroughStream = new PassThrough();
+    }
 
-  const ffmpegCommand = ffmpeg(passThroughStream)
-    .inputFormat('webm') // Specify the input format if known
-    .videoCodec('libx264')
-    .addOption('-preset', 'ultrafast')
-    .addOption('-tune', 'zerolatency')
-    .fps(25)
-    .addOption('-g', (25 * 2).toString())
-    .addOption('-keyint_min', '25')
-    .addOption('-crf', '25')
-    .addOption('-pix_fmt', 'yuv420p')
-    .addOption('-sc_threshold', '0')
-    .addOption('-profile:v', 'main')
-    .addOption('-level', '3.1')
-    .audioCodec('aac')
-    .audioBitrate('128k')
-    .audioFrequency(44100)
-    .format('flv')
-    .output(youtubeUrl);
+    ffmpegCommand = ffmpeg(passThroughStream)
+      .inputFormat('webm') // Specify the input format if known
+      .videoCodec('libx264')
+      .addOption('-preset', 'ultrafast')
+      .addOption('-tune', 'zerolatency')
+      .fps(25)
+      .addOption('-g', (25 * 2).toString())
+      .addOption('-keyint_min', '25')
+      .addOption('-crf', '25')
+      .addOption('-pix_fmt', 'yuv420p')
+      .addOption('-sc_threshold', '0')
+      .addOption('-profile:v', 'main')
+      .addOption('-level', '3.1')
+      .audioCodec('aac')
+      .audioBitrate('128k')
+      .audioFrequency(44100)
+      .format('flv')
+      .output(youtubeUrl);
 
-  ffmpegCommand.on('start', (commandLine) => {
-    console.log(`Spawned FFmpeg with command: ${commandLine}`);
+    ffmpegCommand.on('start', (commandLine) => {
+      console.log(`Spawned FFmpeg with command: ${commandLine}`);
+    });
+
+    ffmpegCommand.on('stderr', (stderrLine) => {
+      console.error(`FFmpeg stderr: ${stderrLine}`);
+    });
+
+    ffmpegCommand.on('end', () => {
+      console.log('FFmpeg process finished successfully');
+    });
+
+    ffmpegCommand.on('error', (err, stdout, stderr) => {
+      console.error(`FFmpeg process error: ${err.message}`);
+      console.error(`FFmpeg stderr: ${stderr}`);
+    });
+
+    ffmpegCommand.run();
   });
 
-  ffmpegCommand.on('stderr', (stderrLine) => {
-    console.error(`FFmpeg stderr: ${stderrLine}`);
+  socket.on('with-overlay', (overlayImage) => {
+    console.log(
+      '********************************************withOverlay Event was hit'
+    );
+
+    console.log({ overlayImage });
+
+    if (ffmpegCommand) {
+      ffmpegCommand.kill('SIGINT');
+      passThroughStream.end();
+      passThroughStream = new PassThrough();
+    }
+
+    ffmpegCommand = ffmpeg()
+      .input(passThroughStream)
+      .inputFormat('webm') // Ensure the input format for the stream is set
+      .input(overlayImage)
+      .complexFilter([
+        {
+          filter: 'overlay',
+          options: {
+            x: 100, // Positioning the overlay image
+            y: 100, // Adjust as needed
+          },
+        },
+      ])
+      .videoCodec('libx264')
+      .addOption('-preset', 'ultrafast')
+      .addOption('-tune', 'zerolatency')
+      .fps(25)
+      .addOption('-g', (25 * 2).toString())
+      .addOption('-keyint_min', '25')
+      .addOption('-crf', '25')
+      .addOption('-pix_fmt', 'yuv420p')
+      .addOption('-sc_threshold', '0')
+      .addOption('-profile:v', 'main')
+      .addOption('-level', '3.1')
+      .audioCodec('aac')
+      .audioBitrate('128k')
+      .audioFrequency(44100)
+      .format('flv')
+      .output(youtubeUrl);
+
+    ffmpegCommand.on('start', (commandLine) => {
+      console.log(`Spawned FFmpeg with command: ${commandLine}`);
+    });
+
+    ffmpegCommand.on('stderr', (stderrLine) => {
+      console.error(`FFmpeg stderr: ${stderrLine}`);
+    });
+
+    ffmpegCommand.on('end', () => {
+      console.log('FFmpeg process finished successfully');
+    });
+
+    ffmpegCommand.on('error', (err, stdout, stderr) => {
+      console.error(`FFmpeg process error: ${err.message}`);
+      console.error(`FFmpeg stderr: ${stderr}`);
+    });
+
+    ffmpegCommand.run();
   });
 
-  ffmpegCommand.on('end', () => {
-    console.log('FFmpeg process finished successfully');
-  });
+  // if (ffmpegCommand) {
+  //   ffmpegCommand.on('start', (commandLine) => {
+  //     console.log(`Spawned FFmpeg with command: ${commandLine}`);
+  //   });
 
-  ffmpegCommand.on('error', (err, stdout, stderr) => {
-    console.error(`FFmpeg process error: ${err.message}`);
-    console.error(`FFmpeg stderr: ${stderr}`);
-  });
+  //   ffmpegCommand.on('stderr', (stderrLine) => {
+  //     console.error(`FFmpeg stderr: ${stderrLine}`);
+  //   });
 
-  ffmpegCommand.run();
+  //   ffmpegCommand.on('end', () => {
+  //     console.log('FFmpeg process finished successfully');
+  //   });
+
+  //   ffmpegCommand.on('error', (err, stdout, stderr) => {
+  //     console.error(`FFmpeg process error: ${err.message}`);
+  //     console.error(`FFmpeg stderr: ${stderr}`);
+  //   });
+
+  //   ffmpegCommand.run();
+  // }
 
   socket.on('binarystream', async (data) => {
-    const { stream ,overlay} = data;
-
-    console.log("Overlay : ", overlay);
-    
+    const { stream } = data;
     try {
-      const type_ = await fileTypeFromBuffer(stream);
-      // console.log({type_});
-
       passThroughStream.write(stream);
     } catch (err) {
       if (err.code === 'EPIPE') {
@@ -105,7 +187,7 @@ io.on('connection', (socket) => {
       'Client disconnected, ending PassThrough stream and FFmpeg process.'
     );
     passThroughStream.end(); // Properly close the PassThrough stream
-    ffmpegCommand.kill('SIGINT'); // Terminate the FFmpeg process
+    if (ffmpegCommand) ffmpegCommand.kill('SIGINT'); // Terminate the FFmpeg process
   });
 });
 
