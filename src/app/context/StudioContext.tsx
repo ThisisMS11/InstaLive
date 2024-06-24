@@ -9,7 +9,7 @@ interface StudioContextType {
   setIsAudioOn: (data: boolean) => void;
   displayName: string;
   setDisplayName: (data: string) => void;
-  overlayImage : string;
+  overlayImage: string;
   setOverlayImage: (data: string) => void;
 }
 
@@ -31,7 +31,7 @@ export const StudioProvider = ({ children }: { children: ReactNode }) => {
         displayName,
         setDisplayName,
         overlayImage,
-        setOverlayImage
+        setOverlayImage,
       }}
     >
       {children}

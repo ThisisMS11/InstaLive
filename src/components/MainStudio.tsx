@@ -14,7 +14,7 @@ import Graph from './StreamStatisticsGraph';
 import StatTable from './StatTable';
 import { useAppSelector, useAppDispatch } from '@/hooks/redux';
 import { useRouter } from 'next/navigation';
-import axios from 'axios'
+import axios from 'axios';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -83,8 +83,6 @@ export function AlertDialogDemo({
 }
 
 export default function StudioEntry({ socket }: { socket: any }) {
-
-  console.log('StudioEntry Rendered .')
   const videoRef = useRef<HTMLVideoElement>(null);
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
   const broadcastData = useAppSelector((state) => state.broadcasts);
@@ -92,7 +90,6 @@ export default function StudioEntry({ socket }: { socket: any }) {
 
   // const { overlayImage, setOverlayImage } = useStudio();
   const [overlayImage, setOverlayImage] = useState<string>('');
-  
 
   const transitionToLive = async (status: string) => {
     const url = `${process.env.NEXT_PUBLIC_URL}/api/youtube/broadcast/status`;
@@ -113,6 +110,18 @@ export default function StudioEntry({ socket }: { socket: any }) {
     }
   };
 
+  const stopStreaming = () => {
+    if (mediaStream) {
+      mediaStream.getTracks().forEach((track) => track.stop());
+      // Clear the video source object
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
+    }
+    setMediaStream(null);
+    setWeAreLive(false);
+  };
+
   const handleStreaming = async () => {
     setWeAreLive(true);
 
@@ -121,15 +130,24 @@ export default function StudioEntry({ socket }: { socket: any }) {
       audio: true,
     });
 
-    setMediaStream(media);
-    // @ts-ignore
-    videoRef.current.srcObject = media;
+    if (overlayImage === '') {
+      console.log('WithoutOverlay');
+      socket.current.emit('without-overlay');
+    } else {
+      console.log('WithOverlay');
+      socket.current.emit('with-overlay', overlayImage);
+    }
+
+    setTimeout(() => {
+      setMediaStream(media);
+      // @ts-ignore
+      videoRef.current.srcObject = media;
+    }, 2000);
 
     // transitionToLive('live');
   };
 
   useEffect(() => {
-
     if (mediaStream) {
       const mediaRecorder = new MediaRecorder(mediaStream, {
         mimeType: 'video/webm; codecs=vp9,opus',
@@ -140,15 +158,33 @@ export default function StudioEntry({ socket }: { socket: any }) {
       });
 
       mediaRecorder.ondataavailable = (ev) => {
-        // console.log('Binary Stream Available', ev.data);
-        console.log({overlayImage})
-
-        socket.current.emit('binarystream', { stream: ev.data, overlay: overlayImage });
+        socket.current.emit('binarystream', {
+          stream: ev.data,
+          overlay: overlayImage,
+        });
       };
 
       mediaRecorder.start(1000);
     }
-  }, [mediaStream,overlayImage]);
+  }, [mediaStream]);
+
+  useEffect(() => {
+    if (mediaStream && socket.current) {
+      stopStreaming();
+
+      if (overlayImage === '') {
+        console.log('WithoutOverlay');
+        socket.current.emit('without-overlay');
+      } else {
+        console.log('WithOverlay');
+        socket.current.emit('with-overlay', overlayImage);
+      }
+
+      setTimeout(() => {
+        handleStreaming();
+      }, 2000);
+    }
+  }, [overlayImage]);
 
   return (
     <>
@@ -202,9 +238,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
               </div>
 
               <div className="mt-2 flex justify-center gap-10 border-2 bg-white py-2 px-4">
-                <Button onClick={handleStreaming}>
-                  {true ? <MonitorUp /> : <VideoOff />}
-                </Button>
+                <Button>{true ? <MonitorUp /> : <VideoOff />}</Button>
                 <Button>
                   {true ? (
                     <AlertDialogDemo transitionToLive={transitionToLive} />
