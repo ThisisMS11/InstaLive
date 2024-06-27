@@ -1,10 +1,9 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import DashBoardCard from '@/components/Card';
-import DialogBox from '@/components/DialogBox';
+import { DialogBox } from '@/imports/Component_imports';
 import { Loader } from 'lucide-react';
-import Temp from '@/components/Temp';
+import Dashboard from '@/components/Dashboard';
 import axios from 'axios';
 
 const DashBoard = () => {
@@ -64,12 +63,8 @@ const DashBoard = () => {
 
   return (
     <div className="flex h-[100vh] items-center justify-center p-0">
-      {/* <DashBoardCard
-        buttonRef={buttonref}
-        setYoutubeChannelInfo={setYoutubeChannelInfo}
-      /> */}
 
-      <Temp buttonRef={buttonref} />
+      <Dashboard buttonRef={buttonref} />
 
       <DialogBox
         buttonRef={buttonref}

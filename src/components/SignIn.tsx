@@ -1,9 +1,8 @@
 'use client';
 import GoogleIcon from '@/app/assets/google.svg';
-import { signIn, useSession } from 'next-auth/react';
 import { useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { signIn, useSession, Image, useRouter } from '@/imports/Nextjs_imports';
+
 const SignIn = () => {
   const session = useSession();
   const router = useRouter();

@@ -1,13 +1,11 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/imports/Shadcn_imports';
 import { View, Eye, ThumbsUp, ThumbsDown } from 'lucide-react';
 
 const Stats = [

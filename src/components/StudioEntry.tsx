@@ -1,19 +1,18 @@
 'use client';
-
 import React, { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import classNames from 'classnames';
+import { Video, VideoOff, Mic, MicOff } from 'lucide-react';
+import { useStudio } from '@/app/context/StudioContext';
 import {
+  Button,
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import classNames from 'classnames';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Video, VideoOff, Mic, MicOff } from 'lucide-react';
-import { useStudio } from '@/app/context/StudioContext';
+  Input,
+  Label,
+} from '@/imports/Shadcn_imports';
 
 export default function StudioEntry({
   setGotoStudio,

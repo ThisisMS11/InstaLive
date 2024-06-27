@@ -1,14 +1,12 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
-import StudioEntry from '@/components/StudioEntry';
-import MainStudio from '@/components/MainStudio';
+import { StudioEntry, MainStudio } from '@/imports/Component_imports';
 import { StudioProvider } from '@/app/context/StudioContext';
 import { useAppSelector, useAppDispatch } from '@/hooks/redux';
 import { io } from 'socket.io-client';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/imports/Nextjs_imports';
 import { toast } from 'sonner';
 import { ShieldAlert } from 'lucide-react';
-import { useDispatch } from 'react-redux';
 
 const Studio = () => {
   const liveStreamData = useAppSelector((state) => state.livestreams);

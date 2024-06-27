@@ -1,13 +1,12 @@
 'use client';
 import React from 'react';
 import { cn } from '@/utils/cn';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { useRouter, useSession, Image } from '@/imports/Nextjs_imports'
 import logo from '@/app/assets/logo.png';
 
 export default function Navbar({ className }: { className?: string }) {
   const session = useSession();
+  const router = useRouter();
 
   return (
     <div
@@ -15,12 +14,19 @@ export default function Navbar({ className }: { className?: string }) {
     >
       <nav className="border-2 border-gray-200 flex items-center justify-between p-4 rounded-full">
         {/* @ts-ignore */}
-        <Image src={logo} width={40} height={40} />
+        <Image
+          src={logo}
+          width={40}
+          height={40}
+          onClick={() => {
+            router.push('/');
+          }}
+        />
 
         {/* @ts-ignore */}
         {session?.data?.user && (
-          // @ts-ignore
           <Image
+            // @ts-ignore
             src={session?.data?.user.image}
             width={40}
             height={40}
