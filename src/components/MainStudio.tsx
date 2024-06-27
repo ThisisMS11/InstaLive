@@ -180,6 +180,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
         socket.current.emit('with-overlay', overlayImage);
       }
 
+      /* Giving some time to Settle things up */
       setTimeout(() => {
         handleStreaming();
       }, 2000);
