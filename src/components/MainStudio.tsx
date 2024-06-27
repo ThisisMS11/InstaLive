@@ -1,21 +1,13 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from '@/components/ui/resizable';
-import { CardContent } from '@/components/ui/card';
 import { VideoOff, MonitorUp, CircleX } from 'lucide-react';
-import ChatBox from './ChatBox';
-import Graph from './StreamStatisticsGraph';
-import StatTable from './StatTable';
-import { useAppSelector, useAppDispatch } from '@/hooks/redux';
-import { useRouter } from 'next/navigation';
+import { useAppSelector, useAppDispatch, emptyBroadcast, emptyLiveStream } from '@/imports/Redux_imports';
+import { useRouter } from '@/imports/Nextjs_imports';
 import axios from 'axios';
+import { Graph, StatTable, OverlayAccordion, ChatBox } from '@/imports/Component_imports'
 import {
+  Button,
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -25,10 +17,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { emptyLiveStream } from '@/redux/slices/liveStreamSlice';
-import { emptyBroadcast } from '@/redux/slices/broadcastSlice';
-import OverlayAccordion from './OverlayAccordion';
+  CardContent,
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@/imports/Shadcn_imports';
+
 
 export function AlertDialogDemo({
   transitionToLive,
