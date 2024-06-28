@@ -22,6 +22,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/imports/Shadcn_imports';
+import {transitionToLive} from '@/services/youtube'
 
 
 export function AlertDialogDemo({
@@ -79,30 +80,10 @@ export function AlertDialogDemo({
 export default function StudioEntry({ socket }: { socket: any }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
-  const broadcastData = useAppSelector((state) => state.broadcasts);
   const [weAreLive, setWeAreLive] = useState<boolean>(false);
 
   // const { overlayImage, setOverlayImage } = useStudio();
   const [overlayImage, setOverlayImage] = useState<string>('');
-
-  const transitionToLive = async (status: string) => {
-    const url = `${process.env.NEXT_PUBLIC_URL}/api/youtube/broadcast/status`;
-    try {
-      const response = await axios.put(url, {
-        youtubeBroadcastId: broadcastData.id,
-        status: status,
-      });
-
-      const data = response.data;
-      console.log({ data });
-      return data;
-    } catch (error) {
-      console.error(
-        'Some error occurred while updating broadcast status to live.',
-        error
-      );
-    }
-  };
 
   const stopStreaming = () => {
     if (mediaStream) {
