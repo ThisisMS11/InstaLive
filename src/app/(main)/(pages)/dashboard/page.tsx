@@ -1,53 +1,19 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { useSession } from 'next-auth/react';
-import DashBoardCard from '@/components/Card';
-import DialogBox from '@/components/DialogBox';
+import { DialogBox } from '@/imports/Component_imports';
 import { Loader } from 'lucide-react';
-import Temp from '@/components/Temp';
-import axios from 'axios';
+import Dashboard from '@/components/Dashboard';
+import { getYoutubeChannelInfo } from '@/services/user';
 
 const DashBoard = () => {
-  const { data: session, status } = useSession();
-
-  const [youtubeChannelInfo, setYoutubeChannelInfo] = useState<any>();
-  const [isLoading, setisLoading] = useState<boolean>(true);
-
+  const { status } = useSession();
   const buttonref = useRef<HTMLButtonElement | null>(null);
+  const { channel, isError, isLoading } = getYoutubeChannelInfo();
 
-  useEffect(() => {
-    const fetchUserYoutubeChannelInfo = async () => {
-      setisLoading(true);
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_URL}/api/youtube/info`
-        );
-        const data = response.data.data;
-
-        // console.log({ data });
-
-        // Transform the response data to match the YouTube type
-        const youtubeChannelInfo = {
-          channelId: data.id,
-          title: data.snippet.title,
-          description: data.snippet.description,
-          customUrl: data.snippet.customUrl,
-          thumbnail: data.snippet.thumbnails.medium.url,
-        };
-
-        // Update the state with the YouTube channel info
-        setYoutubeChannelInfo(youtubeChannelInfo);
-        setisLoading(false);
-      } catch (error) {
-        console.log(
-          'Error while fetching user YouTube channel information at Card.tsx',
-          error
-        );
-      }
-    };
-
-    fetchUserYoutubeChannelInfo();
-  }, []);
+  if (isError) {
+    console.log("Some Error occured at dashboard page : ");
+  }
 
   if (status === 'loading' || isLoading) {
     return (
@@ -61,20 +27,22 @@ const DashBoard = () => {
   } else if (status === 'authenticated') {
     console.log('User is Authenticated.');
   }
+  
+  // Directly using the channel data from SWR
+  const youtubeChannelInfo = channel ? {
+    channelId: channel.id,
+    title: channel.snippet.title,
+    description: channel.snippet.description,
+    customUrl: channel.snippet.customUrl,
+    thumbnail: channel.snippet.thumbnails.medium.url,
+  } : null;
+
+  console.log('data : ',channel);
 
   return (
     <div className="flex h-[100vh] items-center justify-center p-0">
-      {/* <DashBoardCard
-        buttonRef={buttonref}
-        setYoutubeChannelInfo={setYoutubeChannelInfo}
-      /> */}
-
-      <Temp buttonRef={buttonref} />
-
-      <DialogBox
-        buttonRef={buttonref}
-        youtubeChannelInfo={youtubeChannelInfo}
-      />
+      <Dashboard buttonRef={buttonref} />
+      <DialogBox buttonRef={buttonref} youtubeChannelInfo={youtubeChannelInfo} />
     </div>
   );
 };

@@ -1,28 +1,28 @@
 'use client';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+
+import { useSession, Image, Link } from '@/imports/Nextjs_imports';
 import {
+  Button,
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuItem,
-} from '@/components/ui/dropdown-menu';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import {
   Table,
   TableHeader,
   TableRow,
   TableHead,
   TableBody,
   TableCell,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
+  Badge,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from '@/imports/Shadcn_imports';
 
-export default function Temp({
+export default function Dashboard({
   buttonRef,
 }: {
   buttonRef: React.RefObject<HTMLButtonElement>;

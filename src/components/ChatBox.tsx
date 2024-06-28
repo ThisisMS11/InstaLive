@@ -1,11 +1,4 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/jPA5DmTrGT9
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button, Input, Avatar, AvatarFallback, AvatarImage } from '@/imports/Shadcn_imports'
 
 export default function ChatBox() {
   return (
