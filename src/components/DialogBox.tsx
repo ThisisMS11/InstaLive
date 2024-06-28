@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import AxiosInstance from '@/utils/axios';
-//! to be replaced when types import is available.
-import { broadCastState } from '@/redux/slices/broadcastSlice';
-import { liveStreamState } from '@/redux/slices/liveStreamSlice';
 import {
   setBroadcast,
   setLiveStream,
   useAppDispatch,
-  useAppSelector,
 } from '@/imports/Redux_imports';
 
 import {
@@ -30,6 +25,7 @@ import {
 
 import { Image, useRouter } from '@/imports/Nextjs_imports'
 import { Loader } from 'lucide-react';
+import { CreateLiveStream } from '@/services/youtube'
 
 const DialogBox = ({
   buttonRef,
@@ -78,41 +74,9 @@ const DialogBox = ({
 
   const handleLiveStream = async () => {
     /* this is the place where api call is to be made */
-
     console.log({ formData });
-
     try {
-      const response = await AxiosInstance.post(
-        '/api/youtube/broadcast',
-        formData
-      );
-      const data = response.data;
-
-      const broadCastInstance: broadCastState = {
-        id: data.broadCastResponse.id,
-        title: data.broadCastResponse.snippet.title,
-        description: data.broadCastResponse.snippet.description,
-        channelId: data.broadCastResponse.snippet.channelId,
-        liveChatId: data.broadCastResponse.snippet.liveChatId,
-        privacyStatus: data.broadCastResponse.status.privacyStatus,
-        thumbnail: data.broadCastResponse.snippet.thumbnails.default.url,
-        scheduledStartTime: data.broadCastResponse.snippet.scheduledStartTime,
-      };
-
-      const liveStreamInstance: liveStreamState = {
-        id: data.liveStreamResponse.id,
-        title: data.liveStreamResponse.snippet.title,
-        channelId: data.liveStreamResponse.snippet.channelId,
-        streamName: data.liveStreamResponse.cdn.ingestionInfo.streamName,
-        resolution: data.liveStreamResponse.cdn.resolution,
-        frameRate: data.liveStreamResponse.cdn.frameRate,
-        ingestionAddress:
-          data.liveStreamResponse.cdn.ingestionInfo.ingestionAddress,
-        backupIngestionAddress:
-          data.liveStreamResponse.cdn.ingestionInfo.backupIngestionAddress,
-      };
-
-      console.log({ liveStreamInstance, broadCastInstance });
+      const { liveStreamInstance, broadCastInstance } = await CreateLiveStream(formData);
 
       dispatch(setLiveStream(liveStreamInstance));
       dispatch(setBroadcast(broadCastInstance));
