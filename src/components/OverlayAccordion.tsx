@@ -5,8 +5,8 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/ui/accordion';
-import Image from 'next/image';
+} from '@/imports/Shadcn_imports';
+import { Image } from '@/imports/Nextjs_imports';
 
 const overlays = [
   {
