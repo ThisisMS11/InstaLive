@@ -7,7 +7,7 @@ export {
   CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription
+  CardDescription,
 } from '@/components/ui/card';
 
 export {
