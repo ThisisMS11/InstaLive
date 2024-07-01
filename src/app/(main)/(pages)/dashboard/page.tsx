@@ -12,7 +12,7 @@ const DashBoard = () => {
   const { channel, isError, isLoading } = getYoutubeChannelInfo();
 
   if (isError) {
-    console.log("Some Error occured at dashboard page : ");
+    console.log('Some Error occured at dashboard page : ');
   }
 
   if (status === 'loading' || isLoading) {
@@ -27,22 +27,27 @@ const DashBoard = () => {
   } else if (status === 'authenticated') {
     console.log('User is Authenticated.');
   }
-  
-  // Directly using the channel data from SWR
-  const youtubeChannelInfo = channel ? {
-    channelId: channel.id,
-    title: channel.snippet.title,
-    description: channel.snippet.description,
-    customUrl: channel.snippet.customUrl,
-    thumbnail: channel.snippet.thumbnails.medium.url,
-  } : null;
 
-  console.log('data : ',channel);
+  // Directly using the channel data from SWR
+  const youtubeChannelInfo = channel
+    ? {
+        channelId: channel.id,
+        title: channel.snippet.title,
+        description: channel.snippet.description,
+        customUrl: channel.snippet.customUrl,
+        thumbnail: channel.snippet.thumbnails.medium.url,
+      }
+    : null;
+
+  console.log('data : ', channel);
 
   return (
     <div className="flex h-[100vh] items-center justify-center p-0">
       <Dashboard buttonRef={buttonref} />
-      <DialogBox buttonRef={buttonref} youtubeChannelInfo={youtubeChannelInfo} />
+      <DialogBox
+        buttonRef={buttonref}
+        youtubeChannelInfo={youtubeChannelInfo}
+      />
     </div>
   );
 };
