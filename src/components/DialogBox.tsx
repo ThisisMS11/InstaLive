@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Loader2 } from 'lucide-react';
 import {
   setBroadcast,
   setLiveStream,
@@ -20,12 +21,12 @@ import {
   Input,
   Label,
   RadioGroup,
-  RadioGroupItem
+  RadioGroupItem,
 } from '@/imports/Shadcn_imports';
 
-import { Image, useRouter } from '@/imports/Nextjs_imports'
+import { Image, useRouter } from '@/imports/Nextjs_imports';
 import { Loader } from 'lucide-react';
-import { CreateLiveStream } from '@/services/youtube'
+import { CreateLiveStream } from '@/services/youtube';
 
 const DialogBox = ({
   buttonRef,
@@ -41,7 +42,7 @@ const DialogBox = ({
   });
 
   const router = useRouter();
-
+  const [loadingLiveStream, setLoadingLiveStream] = useState(false);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -76,12 +77,17 @@ const DialogBox = ({
     /* this is the place where api call is to be made */
     console.log({ formData });
     try {
-      const { liveStreamInstance, broadCastInstance } = await CreateLiveStream(formData);
+      setLoadingLiveStream(true);
+
+      const { liveStreamInstance, broadCastInstance } =
+        await CreateLiveStream(formData);
 
       dispatch(setLiveStream(liveStreamInstance));
       dispatch(setBroadcast(broadCastInstance));
 
+      
       router.push('/studio');
+      setLoadingLiveStream(false);
     } catch (error) {
       console.log('Error while creating liveStream  : ', error);
     }
@@ -155,7 +161,14 @@ const DialogBox = ({
                 </div>
               </CardContent>
               <CardFooter>
-                <Button onClick={handleLiveStream}>Create Stream</Button>
+                {loadingLiveStream ? (
+                  <Button disabled>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Please wait
+                  </Button>
+                ) : (
+                  <Button onClick={handleLiveStream}>Create Stream</Button>
+                )}
               </CardFooter>
             </Card>
           </>

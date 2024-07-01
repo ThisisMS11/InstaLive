@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { cn } from '@/utils/cn';
-import { useRouter, useSession, Image } from '@/imports/Nextjs_imports'
+import { useRouter, useSession, Image } from '@/imports/Nextjs_imports';
 import logo from '@/app/assets/logo.png';
 
 export default function Navbar({ className }: { className?: string }) {

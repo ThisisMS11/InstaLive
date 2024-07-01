@@ -1,4 +1,10 @@
-import { Button, Input, Avatar, AvatarFallback, AvatarImage } from '@/imports/Shadcn_imports'
+import {
+  Button,
+  Input,
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/imports/Shadcn_imports';
 
 export default function ChatBox() {
   return (
