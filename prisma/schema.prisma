@@ -47,6 +47,8 @@ model User {
   admin         Boolean       @default(false)
   accounts      Account[]
   youtube       YouTube?
+  livestreams   LiveStream[]
+  broadcasts    Broadcast[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -66,4 +68,49 @@ model YouTube {
 
   user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@unique([userId, channelId], name: "user_channel_unique")
+}
+
+model LiveStream {
+  id                 String    @id @default(cuid())
+  createdBy          String     
+  title              String
+  createdAt          DateTime  @default(now())
+  duration           String?
+  resolution         String?
+  frameRate          String?
+  broadcasts         Broadcast[]
+  ingestionAddress   String?
+  completedAt        DateTime  @updatedAt
+  user               User      @relation(fields : [createdBy],references:[id],onDelete : Cascade)
+}
+
+
+enum privacyStatusEnum {
+  private
+  public
+}
+
+enum BroadcastStatus {
+  ready
+  testing
+  live
+  complete
+}
+
+model Broadcast {
+  id                   String    @id @default(cuid())
+  userId               String
+  title                String
+  description          String
+  liveStreamId         String
+  channelId            String
+  liveChatId           String
+  privacyStatus        privacyStatusEnum
+  thumbnail            String
+  createdAt            DateTime  @default(now())
+  completedAt          DateTime  @updatedAt
+  status               BroadcastStatus
+
+  liveStream           LiveStream   @relation(fields:[liveStreamId],references:[id])
+  user                 User         @relation(fields:[userId],references:[id])
 }
