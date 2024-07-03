@@ -36,14 +36,15 @@ import { transitionToLive, fetchBroadcastStatus } from '@/services/youtube';
 import { toast } from 'sonner';
 
 export function AlertDialogDemo({
-  transitionToLive, stopStreaming
+  transitionToLive,
+  stopStreaming,
 }: {
   transitionToLive: (status: string, broadCastId: string) => void;
   stopStreaming: () => void;
 }) {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const broadcastData = useAppSelector((state) => state.broadcasts)
+  const broadcastData = useAppSelector((state) => state.broadcasts);
   return (
     <AlertDialog
       onOpenChange={(e) => {
@@ -71,7 +72,10 @@ export function AlertDialogDemo({
                 event.preventDefault();
 
                 try {
-                  const response = await transitionToLive('complete', broadcastData.id);
+                  const response = await transitionToLive(
+                    'complete',
+                    broadcastData.id
+                  );
                   //@ts-ignore
                   if (response.status == 200) {
                     stopStreaming();
@@ -86,7 +90,9 @@ export function AlertDialogDemo({
                     router.push('/dashboard');
                   }
                 } catch (error) {
-                  console.log("faced some issue while completing the stream at line81 in Mainstudio.tsx")
+                  console.log(
+                    'faced some issue while completing the stream at line81 in Mainstudio.tsx'
+                  );
                   throw error;
                 }
               }}
@@ -110,10 +116,9 @@ export default function StudioEntry({ socket }: { socket: any }) {
   // const { overlayImage, setOverlayImage } = useStudio();
   const [overlayImage, setOverlayImage] = useState<string>('');
 
-  const broadcastData = useAppSelector((state) => state.broadcasts)
+  const broadcastData = useAppSelector((state) => state.broadcasts);
 
   const { status, isError, isLoading } = fetchBroadcastStatus(broadcastData.id);
-
 
   const stopStreaming = () => {
     if (mediaStream) {
@@ -169,7 +174,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
       });
       router.push('/dasboard');
     }
-  }, [status, isError, isLoading])
+  }, [status, isError, isLoading]);
 
   useEffect(() => {
     if (mediaStream) {
@@ -266,7 +271,10 @@ export default function StudioEntry({ socket }: { socket: any }) {
                 <Button>{true ? <MonitorUp /> : <VideoOff />}</Button>
                 <Button>
                   {true ? (
-                    <AlertDialogDemo transitionToLive={transitionToLive} stopStreaming={stopStreaming} />
+                    <AlertDialogDemo
+                      transitionToLive={transitionToLive}
+                      stopStreaming={stopStreaming}
+                    />
                   ) : (
                     <VideoOff />
                   )}

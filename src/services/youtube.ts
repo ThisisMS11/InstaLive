@@ -44,8 +44,10 @@ export const CreateLiveStream = async (formData: any) => {
   }
 };
 //! i have to pass the id form the frontend here.
-export const transitionToLive: any = async (status: string, broadCastId: string) => {
-
+export const transitionToLive: any = async (
+  status: string,
+  broadCastId: string
+) => {
   const url = `${process.env.NEXT_PUBLIC_URL}/api/youtube/broadcast/status`;
   try {
     const response = await AxiosInstance.put(url, {
@@ -74,8 +76,9 @@ type BroadcastStatusResponse = {
   broadCastStatus: string;
 };
 
-export const fetchBroadcastStatus = (broadCastId: string): FetchBroadcastStatusResult => {
-
+export const fetchBroadcastStatus = (
+  broadCastId: string
+): FetchBroadcastStatusResult => {
   const { data, error, isLoading } = useSWR<BroadcastStatusResponse>(
     `/api/youtube/broadcast/status?broadCastId=${broadCastId}`,
     AxiosFetcher,

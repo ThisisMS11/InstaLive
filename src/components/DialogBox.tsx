@@ -85,7 +85,6 @@ const DialogBox = ({
       dispatch(setLiveStream(liveStreamInstance));
       dispatch(setBroadcast(broadCastInstance));
 
-      
       router.push('/studio');
       setLoadingLiveStream(false);
     } catch (error) {
