@@ -8,7 +8,6 @@ export const PUT = async (req: any) => {
   const { youtubeBroadcastId, status } = await req.json();
   const session = await getServerSession(authOptions);
 
-
   // @ts-ignore
   let access_token = session?.access_token;
 
