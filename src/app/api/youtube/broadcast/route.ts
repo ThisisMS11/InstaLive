@@ -10,6 +10,7 @@ import {
   createLiveStreamDB,
   bindLiveBroadcastAndStream,
 } from '@/app/api/services/youtube';
+import { GetBroadcasts } from '@/app/api/services/broadcasts';
 
 export const POST = async (req: any) => {
   /* get the access token in the request body */
@@ -87,5 +88,25 @@ export const POST = async (req: any) => {
   } catch (error) {
     console.log('error while creating livestream ', error);
     return NextResponse.json({ error }, { status: 401 });
+  }
+};
+
+export const GET = async (req: any) => {
+  const session = await getServerSession(authOptions);
+  // @ts-ignore
+  const userId = session?.user.id;
+
+  if (!userId) {
+    throw new Error('User session is not defined.');
+  }
+
+  try {
+    const broadcasts = await GetBroadcasts(userId);
+    return NextResponse.json({ data: broadcasts }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: 'Error while fetching user broadcasts', error },
+      { status: 401 }
+    );
   }
 };
