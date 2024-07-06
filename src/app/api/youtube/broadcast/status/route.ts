@@ -3,7 +3,7 @@ import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { UpdateBroadcastStatus } from '@/app/api/services/broadcasts'
+import { UpdateBroadcastStatus } from '@/app/api/services/broadcasts';
 
 /* To change the status of a broadcast */
 export const PUT = async (req: any) => {
@@ -39,7 +39,6 @@ export const PUT = async (req: any) => {
     return NextResponse.json({ error }, { status: 401 });
   }
 };
-
 
 export const GET = async (req: any) => {
   try {

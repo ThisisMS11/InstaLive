@@ -172,7 +172,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
         description: 'Stream has been successfully completed',
         duration: 5000,
       });
-      router.push('/dasboard');
+      router.push('/dashboard');
     }
   }, [status, isError, isLoading]);
 

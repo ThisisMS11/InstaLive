@@ -1,5 +1,4 @@
 'use client';
-
 import { useSession, Image, Link } from '@/imports/Nextjs_imports';
 import {
   Button,
@@ -21,13 +20,76 @@ import {
   CardTitle,
   CardContent,
 } from '@/imports/Shadcn_imports';
+import { fetchBroadcastMetrices } from '@/services/youtube';
+import { toast } from 'sonner';
+import { formatDate, calculateDuration } from '@/utils/dateUtils';
+import { Loader, ThumbsUp, Eye, MessageSquareText } from 'lucide-react';
+import Demo from '@/app/assets/backgrounds/bg2.png';
+
+function BroadCastCell({ broadcast }: { broadcast: any }) {
+  const {
+    data: metrices,
+    isError,
+    isLoading,
+  } = fetchBroadcastMetrices(broadcast.id);
+
+  if (isError) {
+    toast('Metrices Error', {
+      description: 'Error while fetching broadcast metrices',
+      duration: 5000,
+    });
+  }
+
+  return (
+    <TableRow key={broadcast.id}>
+      <TableCell className="font-medium w-40 text-center">
+        {broadcast.title}
+      </TableCell>
+      <TableCell className="font-medium">
+        <Image
+          src={Demo || broadcast.thumbnail}
+          alt="Thumbnail not found"
+          className="rounded-md text-center"
+        />
+      </TableCell>
+      <TableCell className="text-center">
+        {formatDate(broadcast.createdAt)}
+      </TableCell>
+      <TableCell className="hidden md:table-cell text-center">
+        {calculateDuration(broadcast.createdAt, broadcast.completedAt)}
+      </TableCell>
+      <TableCell className="text-center">
+        <Badge variant="default">{broadcast.privacyStatus}</Badge>
+      </TableCell>
+      <TableCell className="text-center">
+        <Badge variant="default">{broadcast.status}</Badge>
+      </TableCell>
+      <TableCell className="text-center">
+        {isLoading ? <Loader className="animate-spin" /> : metrices.viewCount}
+      </TableCell>
+      <TableCell className="text-center">
+        {isLoading ? (
+          <Loader className="animate-spin" />
+        ) : (
+          metrices.commentCount
+        )}
+      </TableCell>
+      <TableCell className="text-center">
+        {isLoading ? <Loader className="animate-spin" /> : metrices.likeCount}
+      </TableCell>
+    </TableRow>
+  );
+}
 
 export default function Dashboard({
   buttonRef,
+  broadcasts,
 }: {
   buttonRef: React.RefObject<HTMLButtonElement>;
+  broadcasts: any;
 }) {
   const session = useSession();
+
   return (
     <div className="grid min-h-screen w-full overflow-hidden lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 lg:block">
@@ -225,140 +287,28 @@ export default function Dashboard({
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[100px]">Title</TableHead>
+                  <TableHead className="w-[100px]">Thumbnail</TableHead>
                   <TableHead className="min-w-[150px]">Date</TableHead>
                   <TableHead className="hidden md:table-cell">
                     Duration
                   </TableHead>
-                  <TableHead className="text-right">Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>Privacy Status</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>
+                    <Eye />
+                  </TableHead>
+                  <TableHead>
+                    <MessageSquareText />
+                  </TableHead>
+                  <TableHead>
+                    <ThumbsUp />
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow>
-                  <TableCell className="font-medium">Tech Talk</TableCell>
-                  <TableCell>June 10, 2023</TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    1 hour 15 minutes
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Badge variant="default">Completed</Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoveHorizontalIcon className="w-4 h-4" />
-                          <span className="sr-only">Actions</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>View Stream</DropdownMenuItem>
-                        <DropdownMenuItem>Analytics</DropdownMenuItem>
-                        <DropdownMenuItem>Manage</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Game Night</TableCell>
-                  <TableCell>June 5, 2023</TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    2 hours 30 minutes
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Badge variant="default">Completed</Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoveHorizontalIcon className="w-4 h-4" />
-                          <span className="sr-only">Actions</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>View Stream</DropdownMenuItem>
-                        <DropdownMenuItem>Analytics</DropdownMenuItem>
-                        <DropdownMenuItem>Manage</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Q&A Session</TableCell>
-                  <TableCell>May 25, 2023</TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    1 hour 30 minutes
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Badge variant="default">Completed</Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoveHorizontalIcon className="w-4 h-4" />
-                          <span className="sr-only">Actions</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>View Stream</DropdownMenuItem>
-                        <DropdownMenuItem>Analytics</DropdownMenuItem>
-                        <DropdownMenuItem>Manage</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Product Launch</TableCell>
-                  <TableCell>May 15, 2023</TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    2 hours 45 minutes
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Badge variant="default">Completed</Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoveHorizontalIcon className="w-4 h-4" />
-                          <span className="sr-only">Actions</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>View Stream</DropdownMenuItem>
-                        <DropdownMenuItem>Analytics</DropdownMenuItem>
-                        <DropdownMenuItem>Manage</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">Developer Q&A</TableCell>
-                  <TableCell>April 30, 2023</TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    1 hour 45 minutes
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Badge variant="default">Completed</Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoveHorizontalIcon className="w-4 h-4" />
-                          <span className="sr-only">Actions</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>View Stream</DropdownMenuItem>
-                        <DropdownMenuItem>Analytics</DropdownMenuItem>
-                        <DropdownMenuItem>Manage</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
+                {broadcasts.data.map((broadcast: any) => {
+                  return <BroadCastCell broadcast={broadcast} />;
+                })}
               </TableBody>
             </Table>
           </div>

@@ -93,3 +93,33 @@ export const fetchBroadcastStatus = (
     isError: error,
   };
 };
+
+export const fetchAllBroadcasts = () => {
+  const { data, error, isLoading } = useSWR(
+    `/api/youtube/broadcast`,
+    AxiosFetcher
+  );
+
+  return {
+    broadcasts: data,
+    isLoading: isLoading as boolean,
+    isError: error,
+  };
+};
+
+/* to get the total number of views till present */
+export const fetchBroadcastMetrices = (broadCastId: string) => {
+  const { data, error, isLoading } = useSWR(
+    `/api/youtube/broadcast/stats?broadCastId=${broadCastId}&type=metrics`,
+    AxiosFetcher,
+    {
+      refreshInterval: 2000,
+    }
+  );
+
+  return {
+    data: data?.data,
+    isLoading: isLoading as boolean,
+    isError: error,
+  };
+};
