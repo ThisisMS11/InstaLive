@@ -42,7 +42,7 @@ const Studio = () => {
         const streamName = liveStreamData.streamName;
 
         const youtubeUrl = `${ingestionAddress}/${streamName}`;
-        const url = `http://localhost:8005/?youtubeUrl=${youtubeUrl}`;
+        const url = `${process.env.NEXT_FFMPEG_SERVER}/?youtubeUrl=${youtubeUrl}`;
 
         socket.current = io(url, {
           transports: ['websocket'],
