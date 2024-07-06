@@ -3,11 +3,12 @@ import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { UpdateBroadcastStatus } from '@/app/api/services/broadcasts';
 
+/* To change the status of a broadcast */
 export const PUT = async (req: any) => {
   const { youtubeBroadcastId, status } = await req.json();
   const session = await getServerSession(authOptions);
-
 
   // @ts-ignore
   let access_token = session?.access_token;
@@ -28,6 +29,10 @@ export const PUT = async (req: any) => {
       broadcastStatus: status,
       id: youtubeBroadcastId,
     });
+
+    /* Changing the status in db as well */
+    await UpdateBroadcastStatus(youtubeBroadcastId, status);
+
     return NextResponse.json({ statusUpdateRes });
   } catch (error) {
     console.log('error while updating liveBroadCast status ', error);
@@ -39,7 +44,6 @@ export const GET = async (req: any) => {
   try {
     // Extract the livestream ID from the query parameters
     const url = new URL(req.url);
-
     const id = url.searchParams.get('broadCastId');
 
     console.log({ id });
