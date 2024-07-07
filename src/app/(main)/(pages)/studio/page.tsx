@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StudioEntry, MainStudio } from '@/imports/Component_imports';
 import { StudioProvider } from '@/app/context/StudioContext';
-import { useAppSelector, useAppDispatch } from '@/hooks/redux';
+import { useAppSelector } from '@/hooks/redux';
 import { io } from 'socket.io-client';
 import { useRouter } from '@/imports/Nextjs_imports';
 import { toast } from 'sonner';
@@ -10,7 +10,6 @@ import { ShieldAlert } from 'lucide-react';
 
 const Studio = () => {
   const liveStreamData = useAppSelector((state) => state.livestreams);
-  const dispatch = useAppDispatch();
   const router = useRouter();
   const [gotoStudio, setGotoStudio] = useState<boolean>(false);
   const socket = useRef<any>(null);
@@ -31,7 +30,7 @@ const Studio = () => {
       // Clear the timer on cleanup to avoid multiple toasts
       return () => clearTimeout(timer);
     }
-  }, [liveStreamData.id]);
+  }, [liveStreamData.id,router]);
 
   useEffect(() => {
     const InstaLive = async () => {
@@ -42,7 +41,7 @@ const Studio = () => {
         const streamName = liveStreamData.streamName;
 
         const youtubeUrl = `${ingestionAddress}/${streamName}`;
-        const url = `${process.env.NEXT_FFMPEG_SERVER}/?youtubeUrl=${youtubeUrl}`;
+        const url = `${process.env.NEXT_PUBLIC_FFMPEG_SERVER}/?youtubeUrl=${youtubeUrl}`;
 
         socket.current = io(url, {
           transports: ['websocket'],
@@ -51,7 +50,7 @@ const Studio = () => {
     };
 
     InstaLive();
-  }, [liveStreamData]);
+  }, [liveStreamData,router]);
 
   return (
     <StudioProvider>

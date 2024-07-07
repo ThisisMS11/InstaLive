@@ -1,16 +1,15 @@
-// studioContext.tsx
 'use client';
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface StudioContextType {
   isVideoOn: boolean;
-  setIsVideoOn: (data: boolean) => void;
+  setIsVideoOn: (_data: boolean) => void;
   isAudioOn: boolean;
-  setIsAudioOn: (data: boolean) => void;
+  setIsAudioOn: (_data: boolean) => void;
   displayName: string;
-  setDisplayName: (data: string) => void;
+  setDisplayName: (_data: string) => void;
   overlayImage: string;
-  setOverlayImage: (data: string) => void;
+  setOverlayImage: (_data: string) => void;
 }
 
 const StudioContext = createContext<StudioContextType | undefined>(undefined);

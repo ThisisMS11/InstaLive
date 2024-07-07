@@ -91,7 +91,7 @@ export const POST = async (req: any) => {
   }
 };
 
-export const GET = async (req: any) => {
+export const GET = async () => {
   const session = await getServerSession(authOptions);
   // @ts-ignore
   const userId = session?.user.id;
