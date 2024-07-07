@@ -3,8 +3,8 @@ import React, { useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { DialogBox, Loader } from '@/imports/Component_imports';
 import Dashboard from '@/components/Dashboard';
-import { getYoutubeChannelInfo } from '@/services/user';
-import { fetchAllBroadcasts, fetchBroadcastMetrices } from '@/services/youtube';
+import { useYoutubeChannelInfo } from '@/services/user';
+import { useAllBroadcasts } from '@/services/youtube';
 import { toast } from 'sonner';
 
 const DashBoard = () => {
@@ -15,12 +15,12 @@ const DashBoard = () => {
     channel,
     isError: channelError,
     isLoading: channelLoading,
-  } = getYoutubeChannelInfo();
+  } = useYoutubeChannelInfo();
   const {
     broadcasts,
     isError: broadcastsError,
     isLoading: broadcastsLoading,
-  } = fetchAllBroadcasts();
+  } = useAllBroadcasts();
 
   if (channelError || broadcastsError) {
     console.log('Error occurred:', { channelError, broadcastsError });
@@ -41,12 +41,12 @@ const DashBoard = () => {
   // Directly using the channel data from SWR
   const youtubeChannelInfo = channel
     ? {
-        channelId: channel.id,
-        title: channel.snippet.title,
-        description: channel.snippet.description,
-        customUrl: channel.snippet.customUrl,
-        thumbnail: channel.snippet.thumbnails.medium.url,
-      }
+      channelId: channel.id,
+      title: channel.snippet.title,
+      description: channel.snippet.description,
+      customUrl: channel.snippet.customUrl,
+      thumbnail: channel.snippet.thumbnails.medium.url,
+    }
     : null;
 
   console.log('channel data:', channel);

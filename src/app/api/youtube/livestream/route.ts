@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { GetLivestreams } from '@/app/api/services/livestreams';
 
-export const GET = async (req: any) => {
+export const GET = async () => {
   const session = await getServerSession(authOptions);
   // @ts-ignore
   const userId = session?.user.id;

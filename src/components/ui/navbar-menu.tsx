@@ -3,7 +3,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image, { StaticImageData } from 'next/image';
-import { useRouter } from 'next/navigation';
 const transition = {
   type: 'spring',
   mass: 0.5,
@@ -15,11 +14,11 @@ const transition = {
 
 export const MenuItem = ({
   setActive,
-  active,
+  active, 
   item,
   children,
 }: {
-  setActive: (item: string) => void;
+  setActive: (_item: string) => void;
   active: string | null;
   item: string;
   children?: React.ReactNode;
@@ -66,12 +65,11 @@ export const AvatarItem = ({
   item,
   children,
 }: {
-  setActive: (item: string | null | undefined) => void;
+  setActive: (_item: string | null | undefined) => void;
   active: string | null;
   item: string | null | undefined;
   children?: React.ReactNode;
 }) => {
-  const router = useRouter();
   return (
     <div onMouseEnter={() => setActive(item)} className="relative ">
       <motion.p
@@ -119,7 +117,7 @@ export const Menu = ({
   setActive,
   children,
 }: {
-  setActive: (item: string | null) => void;
+  setActive: (_item: string | null) => void;
   children: React.ReactNode;
 }) => {
   return (
@@ -165,7 +163,6 @@ export const ProductItem = ({
 };
 
 export const LogoItem = ({ src }: { src: StaticImageData }) => {
-  const router = useRouter();
   return (
     <Link href={'http://localhost:3000'} className="flex space-x-2">
       <aside className="flex items-center gap-[10px]">
