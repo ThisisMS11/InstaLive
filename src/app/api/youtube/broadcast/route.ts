@@ -1,4 +1,4 @@
-import { oauth2Client } from '../route';
+import { oauth2Client } from '../google';
 import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
@@ -91,7 +91,7 @@ export const POST = async (req: any) => {
   }
 };
 
-export const GET = async (req: any) => {
+export const GET = async () => {
   const session = await getServerSession(authOptions);
   // @ts-ignore
   const userId = session?.user.id;

@@ -1,4 +1,4 @@
-import { oauth2Client } from '@/app/api/youtube/route';
+import { oauth2Client } from '@/app/api/youtube/google';
 import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
