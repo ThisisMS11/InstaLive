@@ -1,10 +1,10 @@
-import { oauth2Client } from '../route';
+import { oauth2Client } from '../google';
 import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
-export const GET = async (req: any) => {
+export const GET = async () => {
   /* get the access token in the request body */
 
   const session = await getServerSession(authOptions);

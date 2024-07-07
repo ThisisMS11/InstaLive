@@ -1,6 +1,6 @@
 'use client';
 
-import React, { startTransition, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { VideoOff, MonitorUp, CircleX } from 'lucide-react';
 import {
   useAppSelector,
@@ -9,7 +9,6 @@ import {
   emptyLiveStream,
 } from '@/imports/Redux_imports';
 import { useRouter } from '@/imports/Nextjs_imports';
-import axios from 'axios';
 import {
   Graph,
   StatTable,
@@ -32,14 +31,14 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/imports/Shadcn_imports';
-import { transitionToLive, fetchBroadcastStatus } from '@/services/youtube';
+import { transitionToLive, useBroadcastStatus } from '@/services/youtube';
 import { toast } from 'sonner';
 
 export function AlertDialogDemo({
   transitionToLive,
   stopStreaming,
 }: {
-  transitionToLive: (status: string, broadCastId: string) => void;
+  transitionToLive: (_status: string, _broadCastId: string) => void;
   stopStreaming: () => void;
 }) {
   const router = useRouter();
@@ -118,7 +117,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
 
   const broadcastData = useAppSelector((state) => state.broadcasts);
 
-  const { status, isError, isLoading } = fetchBroadcastStatus(broadcastData.id);
+  const { status, isError, isLoading } = useBroadcastStatus(broadcastData.id);
 
   const stopStreaming = () => {
     if (mediaStream) {
@@ -193,7 +192,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
         });
       };
 
-      mediaRecorder.start(1000);
+      mediaRecorder.start(500);
     }
   }, [mediaStream]);
 

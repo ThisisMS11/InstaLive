@@ -17,7 +17,7 @@ import {
 export default function StudioEntry({
   setGotoStudio,
 }: {
-  setGotoStudio: (data: boolean) => void;
+  setGotoStudio: (_data: boolean) => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLDivElement>(null);
@@ -102,23 +102,16 @@ export default function StudioEntry({
   }
 
   useEffect(() => {
-    if (isVideoOn) startVideo();
-    if (isAudioOn) startAudio();
+    startVideo();
+    startAudio();
 
-    return () => {
-      stopVideo();
-      if (audioContext) {
-        audioContext.close();
-        setAudioLevel(0);
-      }
-    };
-  }, []);
+  },[]);
 
   return (
     <Card className="w-[700px]">
       <CardHeader>
         <CardTitle className="text-center">
-          Let's check your camera and audio
+          Let&apos;s check your camera and audio
         </CardTitle>
       </CardHeader>
       <CardContent>

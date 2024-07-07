@@ -22,7 +22,7 @@ const overlays = [
 export default function OverlayAccordion({
   setOverlayImage,
 }: {
-  setOverlayImage: (url: string) => void;
+  setOverlayImage: (_url: string) => void;
 }) {
   return (
     <Accordion type="single" collapsible className="w-full m-4">

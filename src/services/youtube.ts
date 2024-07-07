@@ -66,7 +66,7 @@ export const transitionToLive: any = async (
   }
 };
 
-type FetchBroadcastStatusResult = {
+type useBroadcastStatusResult = {
   status: string | undefined;
   isLoading: boolean;
   isError: any;
@@ -76,9 +76,9 @@ type BroadcastStatusResponse = {
   broadCastStatus: string;
 };
 
-export const fetchBroadcastStatus = (
+export const useBroadcastStatus = (
   broadCastId: string
-): FetchBroadcastStatusResult => {
+): useBroadcastStatusResult => {
   const { data, error, isLoading } = useSWR<BroadcastStatusResponse>(
     `/api/youtube/broadcast/status?broadCastId=${broadCastId}`,
     AxiosFetcher,
@@ -94,7 +94,7 @@ export const fetchBroadcastStatus = (
   };
 };
 
-export const fetchAllBroadcasts = () => {
+export const useAllBroadcasts = () => {
   const { data, error, isLoading } = useSWR(
     `/api/youtube/broadcast`,
     AxiosFetcher
@@ -108,7 +108,7 @@ export const fetchAllBroadcasts = () => {
 };
 
 /* to get the total number of views till present */
-export const fetchBroadcastMetrices = (broadCastId: string) => {
+export const useBroadcastMetrics = (broadCastId: string) => {
   const { data, error, isLoading } = useSWR(
     `/api/youtube/broadcast/stats?broadCastId=${broadCastId}&type=metrics`,
     AxiosFetcher,

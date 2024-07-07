@@ -3,7 +3,7 @@ import {
   getMetrices,
   getLiveStreamDetails,
 } from '@/app/api/services/broadcasts';
-import { oauth2Client } from '@/app/api/youtube/route';
+import { oauth2Client } from '@/app/api/youtube/google';
 import { google } from 'googleapis';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';

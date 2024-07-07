@@ -16,6 +16,7 @@ export default function Navbar({ className }: { className?: string }) {
         {/* @ts-ignore */}
         <Image
           src={logo}
+          alt='Logo'
           width={40}
           height={40}
           onClick={() => {
@@ -28,6 +29,7 @@ export default function Navbar({ className }: { className?: string }) {
           <Image
             // @ts-ignore
             src={session?.data?.user.image}
+            alt='Profile Image'
             width={40}
             height={40}
             className="rounded-full"
