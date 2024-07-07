@@ -306,7 +306,7 @@ export default function Dashboard({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {broadcasts.data.map((broadcast: any) => {
+                {broadcasts && broadcasts.data.map((broadcast: any) => {
                   return <BroadCastCell broadcast={broadcast} key={broadcast.id} />;
                 })}
               </TableBody>
