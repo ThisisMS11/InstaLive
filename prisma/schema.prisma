@@ -49,6 +49,7 @@ model User {
   youtube       YouTube?
   livestreams   LiveStream[]
   broadcasts    Broadcast[]
+  overlays      Overlays[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -112,6 +113,15 @@ model Broadcast {
   completedAt          DateTime  @updatedAt
   status               BroadcastStatus
 
-  liveStream           LiveStream   @relation(fields:[liveStreamId],references:[id])
-  user                 User         @relation(fields:[userId],references:[id])
+  liveStream           LiveStream   @relation(fields:[liveStreamId],references:[id],onDelete : Cascade)
+  user                 User         @relation(fields:[userId],references:[id],onDelete : Cascade)
+}
+
+model Overlays {
+  id                   String       @id @default(cuid())
+  userId               String
+  description          String       @default("NA")
+  public_id            String       @unique
+  url                  String   
+  user                 User         @relation(fields:[userId],references:[id],onDelete : Cascade)
 }

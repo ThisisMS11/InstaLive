@@ -41,7 +41,7 @@ function BroadCastCell({ broadcast }: { broadcast: any }) {
   }
 
   return (
-    <TableRow >
+    <TableRow>
       <TableCell className="font-medium w-40 text-center">
         {broadcast.title}
       </TableCell>
@@ -306,9 +306,12 @@ export default function Dashboard({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {broadcasts && broadcasts.data.map((broadcast: any) => {
-                  return <BroadCastCell broadcast={broadcast} key={broadcast.id} />;
-                })}
+                {broadcasts &&
+                  broadcasts.data.map((broadcast: any) => {
+                    return (
+                      <BroadCastCell broadcast={broadcast} key={broadcast.id} />
+                    );
+                  })}
               </TableBody>
             </Table>
           </div>

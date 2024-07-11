@@ -39,3 +39,21 @@ export async function getLiveStreamDetails(
     id: youtubeBroadcastId,
   });
 }
+
+export async function addOverlay(userId: string, public_id: string, url: string) {
+  return prisma.overlays.create({
+    data: {
+      userId: userId,
+      public_id: public_id,
+      url: url
+    }
+  })
+}
+
+export async function GetOverlays(userId: string) {
+  return prisma.overlays.findMany({
+    where: {
+      userId: userId
+    }
+  })
+}

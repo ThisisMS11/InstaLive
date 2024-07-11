@@ -16,7 +16,7 @@ function DashBoardButton() {
 
   return (
     <button
-      className="cursor-pointer flex px-4 py-2 relative bg-gradient-to-r text-white from-indigo-500 to-purple-500 rounded-md mx-auto z-10"
+      className="cursor-pointer flex px-3 py-1 relative bg-gradient-to-r text-white from-indigo-500 to-purple-500 rounded-md mx-auto z-10"
       style={{ pointerEvents: 'auto' }}
       onClick={() => {
         router.push('/dashboard');
@@ -73,8 +73,8 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
-      <div className="h-[100vh] w-full rounded-md bg-white  flex flex-col items-center justify-center antialiased">
-        <div className="max-w-3xl mx-auto p-4  text-center">
+      <div className="h-[95vh] w-full rounded-md bg-white  flex flex-col items-center justify-evenly antialiased">
+        <div className="max-w-3xl mx-auto   text-center">
           <HeroHighlight>
             <motion.h1
               initial={{
@@ -89,14 +89,14 @@ export default function HomePage() {
                 duration: 0.5,
                 ease: [0.4, 0.0, 0.2, 1],
               }}
-              className="relative z-10 text-lg md:text-7xl  bg-clip-text text-transparent bg-gradient-to-b from-neutral-600 to-neutral-400  text-center font-sans font-bold"
+              className="relative z-10 text-lg md:text-6xl  bg-clip-text text-transparent bg-gradient-to-b from-neutral-600 to-neutral-400  text-center font-sans font-bold"
             >
               LiveStream Just One Name
               <Highlight className="text-black dark:text-white">
                 InstaLive
               </Highlight>
             </motion.h1>
-            <p className="text-neutral-500 max-w-lg mx-auto mt-4 text-2xl text-center relative z-10">
+            <p className="text-neutral-500 max-w-lg mx-auto mt-4 text-xl text-center relative z-10">
               Go live effortlessly and reach your audience everywhere with
               InstaLive
             </p>
