@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <div className="pt-[20px]">
+          <div className="pt-[0px]">
             {children}
             <Toaster />
           </div>

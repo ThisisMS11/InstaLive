@@ -31,7 +31,9 @@ export default function ChatBox() {
         </div>
         <div className="flex items-end justify-end">
           <div className="p-3 bg-gray-300 rounded-lg">
-            <p className="text-sm">Hey, I&apos;m having trouble with my account.</p>
+            <p className="text-sm">
+              Hey, I&apos;m having trouble with my account.
+            </p>
           </div>
         </div>
         <div className="flex items-end justify-start">

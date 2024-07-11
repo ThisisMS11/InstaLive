@@ -17,20 +17,19 @@ const Studio = () => {
   useEffect(() => {
     if (liveStreamData.id === '') {
       const timer = setTimeout(() => {
-        toast('My toast', {
-          className: 'my-classname',
+        toast('Error', {
           description: 'Livestream is not yet Established',
           duration: 5000,
           icon: <ShieldAlert color="#ba2c2c" />,
         });
 
-        router.push('/dashboard');
+        // router.push('/dashboard');
       }, 1000);
 
       // Clear the timer on cleanup to avoid multiple toasts
       return () => clearTimeout(timer);
     }
-  }, [liveStreamData.id,router]);
+  }, [liveStreamData.id, router]);
 
   useEffect(() => {
     const InstaLive = async () => {
@@ -50,18 +49,18 @@ const Studio = () => {
     };
 
     InstaLive();
-  }, [liveStreamData,router]);
+  }, [liveStreamData, router]);
 
   return (
     <StudioProvider>
-      {!gotoStudio ? (
+      {/* {!gotoStudio ? (
         <div className="flex items-center justify-center h-[98vh] overflow-y-hidden">
           <StudioEntry setGotoStudio={setGotoStudio} />
         </div>
       ) : (
         <MainStudio socket={socket} />
-      )}
-      {/* <MainStudio socket={socket} /> */}
+      )} */}
+      <MainStudio socket={socket} />
     </StudioProvider>
   );
 };

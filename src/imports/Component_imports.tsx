@@ -1,4 +1,5 @@
-export { default as DialogBox } from '@/components/DialogBox';
+export { default as LiveStreamDialog } from '@/components/LiveStreamDialog';
+export { default as OverlayUploadDialog } from '@/components/OverlayUploadDialog';
 export { default as StudioEntry } from '@/components/StudioEntry';
 export { default as MainStudio } from '@/components/MainStudio';
 
