@@ -8,8 +8,8 @@ export const POST = async (req: NextRequest) => {
   try {
     const data = await req.formData();
     const file = data.get('overlay') as File | null;
+    const name = data.get('name') as string;
     const session = await getServerSession(authOptions);
-
 
     if (!file) {
       return NextResponse.json(
@@ -40,7 +40,7 @@ export const POST = async (req: NextRequest) => {
     /* add an overlay */
     try {
       // @ts-ignore
-      await addOverlay(session?.user.id, public_id, secure_url);
+      await addOverlay(session?.user.id, public_id, secure_url, name);
     } catch (error) {
       throw error;
     }
@@ -75,4 +75,3 @@ export const GET = async () => {
     );
   }
 };
-

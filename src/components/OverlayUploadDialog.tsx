@@ -11,7 +11,8 @@ import {
   Dialog,
   DialogContent,
   DialogTrigger,
-  DialogClose
+  DialogClose,
+  Input,
 } from '@/imports/Shadcn_imports';
 
 import {
@@ -32,6 +33,7 @@ const OverlayUploadDialog = ({
   buttonRef: React.RefObject<HTMLButtonElement>;
 }) => {
   const [files, setFiles] = useState<any | null>(null);
+  const [overlayName, setOverlayName] = useState<string>('Default Description');
   const overlayForm = new FormData();
   const closeDialogButtonRef = useRef<HTMLButtonElement | null>(null);
   const [isLoading, setisLoading] = useState<any | null>(null);
@@ -48,21 +50,20 @@ const OverlayUploadDialog = ({
           overlayForm.append('overlay', file);
         }
       });
+      overlayForm.append('name', overlayName);
     }
 
     try {
-      const response = await uploadCustomOverlay(overlayForm);
+      await uploadCustomOverlay(overlayForm);
       // @ts-ignore
-      const { url, public_id } = response.data.data;
+      // const { url, public_id } = response.data.data;
 
-      if (closeDialogButtonRef)
-        closeDialogButtonRef.current?.click();
+      if (closeDialogButtonRef) closeDialogButtonRef.current?.click();
 
       toast('Success', {
         description: 'Overlay Successfully Uploaded',
         duration: 3000,
       });
-
     } catch (error) {
       console.log('something went wrong while uploading overlay image', error);
       toast('Error', {
@@ -92,6 +93,12 @@ const OverlayUploadDialog = ({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <Input
+              type="text"
+              placeholder="Name Your Overlay..."
+              value={overlayName}
+              onChange={(e) => setOverlayName(e.target.value)}
+            />
             <FilePond
               files={files as any}
               onupdatefiles={setFiles}
@@ -113,12 +120,15 @@ const OverlayUploadDialog = ({
             )}
           </CardFooter>
 
-          <DialogClose asChild className='hidden'>
-            <Button type="button" variant="secondary" ref={closeDialogButtonRef}>
+          <DialogClose asChild className="hidden">
+            <Button
+              type="button"
+              variant="secondary"
+              ref={closeDialogButtonRef}
+            >
               Close
             </Button>
           </DialogClose>
-
         </Card>
       </DialogContent>
     </Dialog>
