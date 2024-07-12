@@ -104,8 +104,7 @@ export default function StudioEntry({
   useEffect(() => {
     startVideo();
     startAudio();
-
-  },[]);
+  }, []);
 
   return (
     <Card className="w-[700px]">

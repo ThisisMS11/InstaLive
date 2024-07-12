@@ -12,13 +12,13 @@ export default function Navbar({ className }: { className?: string }) {
     <div
       className={cn('fixed top-5 inset-x-0 max-w-2xl mx-auto z-50', className)}
     >
-      <nav className="border-2 border-gray-200 flex items-center justify-between p-4 rounded-full">
+      <nav className="border-2 border-gray-200 flex items-center justify-between p-2 rounded-full">
         {/* @ts-ignore */}
         <Image
           src={logo}
-          alt='Logo'
-          width={40}
-          height={40}
+          alt="Logo"
+          width={34}
+          height={34}
           onClick={() => {
             router.push('/');
           }}
@@ -29,9 +29,9 @@ export default function Navbar({ className }: { className?: string }) {
           <Image
             // @ts-ignore
             src={session?.data?.user.image}
-            alt='Profile Image'
-            width={40}
-            height={40}
+            alt="Profile Image"
+            width={34}
+            height={34}
             className="rounded-full"
           />
         )}

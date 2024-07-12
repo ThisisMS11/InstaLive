@@ -1,7 +1,7 @@
 'use client';
 import React, { useRef } from 'react';
 import { useSession } from 'next-auth/react';
-import { DialogBox, Loader } from '@/imports/Component_imports';
+import { LiveStreamDialog, Loader } from '@/imports/Component_imports';
 import Dashboard from '@/components/Dashboard';
 import { useYoutubeChannelInfo } from '@/services/user';
 import { useAllBroadcasts } from '@/services/youtube';
@@ -41,21 +41,21 @@ const DashBoard = () => {
   // Directly using the channel data from SWR
   const youtubeChannelInfo = channel
     ? {
-      channelId: channel.id,
-      title: channel.snippet.title,
-      description: channel.snippet.description,
-      customUrl: channel.snippet.customUrl,
-      thumbnail: channel.snippet.thumbnails.medium.url,
-    }
+        channelId: channel.id,
+        title: channel.snippet.title,
+        description: channel.snippet.description,
+        customUrl: channel.snippet.customUrl,
+        thumbnail: channel.snippet.thumbnails.medium.url,
+      }
     : null;
 
   console.log('channel data:', channel);
   console.log('broadcasts data:', broadcasts);
 
   return (
-    <div className="flex h-[100vh] items-center justify-center p-0">
+    <div className="flex items-center justify-center p-0">
       <Dashboard buttonRef={buttonref} broadcasts={broadcasts} />
-      <DialogBox
+      <LiveStreamDialog
         buttonRef={buttonref}
         youtubeChannelInfo={youtubeChannelInfo}
       />
