@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
-import { StudioEntry, MainStudio } from '@/imports/Component_imports';
+import { MainStudio, StudioEntry } from '@/imports/Component_imports';
 import { StudioProvider } from '@/app/context/StudioContext';
 import { useAppSelector } from '@/hooks/redux';
 import { io } from 'socket.io-client';
@@ -17,8 +17,7 @@ const Studio = () => {
   useEffect(() => {
     if (liveStreamData.id === '') {
       const timer = setTimeout(() => {
-        toast('My toast', {
-          className: 'my-classname',
+        toast('Error', {
           description: 'Livestream is not yet Established',
           duration: 5000,
           icon: <ShieldAlert color="#ba2c2c" />,
@@ -30,7 +29,7 @@ const Studio = () => {
       // Clear the timer on cleanup to avoid multiple toasts
       return () => clearTimeout(timer);
     }
-  }, [liveStreamData.id,router]);
+  }, [liveStreamData.id, router]);
 
   useEffect(() => {
     const InstaLive = async () => {
@@ -50,7 +49,7 @@ const Studio = () => {
     };
 
     InstaLive();
-  }, [liveStreamData,router]);
+  }, [liveStreamData, router]);
 
   return (
     <StudioProvider>
