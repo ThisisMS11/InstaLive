@@ -14,7 +14,6 @@ import {
   StatTable,
   OverlayAccordion,
   ChatBox,
-  OverlayUploadDialog,
 } from '@/imports/Component_imports';
 import {
   Button,
@@ -32,10 +31,14 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/imports/Shadcn_imports';
-import { transitionToLive, useBroadcastStatus, useOverlays } from '@/services/youtube';
+import {
+  transitionToLive,
+  useBroadcastStatus,
+  useOverlays,
+} from '@/services/youtube';
 import { toast } from 'sonner';
 import { Loader } from '@/imports/Component_imports';
-import { ShieldAlert } from 'lucide-react'
+import { ShieldAlert } from 'lucide-react';
 
 export function AlertDialogDemo({
   transitionToLive,
@@ -120,19 +123,25 @@ export default function StudioEntry({ socket }: { socket: any }) {
 
   const broadcastData = useAppSelector((state) => state.broadcasts);
 
-  const { status, isError: broadcastStatusError, isLoading: broadcastIsLoading } = useBroadcastStatus(broadcastData.id);
-  const { overlays, isError: overlaysError, isLoading: overlaysIsLoading } = useOverlays();
-
+  const {
+    status,
+    isError: broadcastStatusError,
+    isLoading: broadcastIsLoading,
+  } = useBroadcastStatus(broadcastData.id);
+  const {
+    overlays,
+    isError: overlaysError,
+    isLoading: overlaysIsLoading,
+  } = useOverlays();
 
   if (overlaysError) {
-    console.log("Error Overlays fetching : ", overlays)
+    console.log('Error Overlays fetching : ', overlays);
     toast('Error', {
       description: 'Error fetching overlays',
       duration: 3000,
       icon: <ShieldAlert color="#ba2c2c" />,
     });
   }
-
 
   const stopStreaming = () => {
     if (mediaStream) {
@@ -230,9 +239,8 @@ export default function StudioEntry({ socket }: { socket: any }) {
     }
   }, [overlayImage]);
 
-
   if (overlaysIsLoading) {
-    return <Loader message='Getting Ready for LiveStreaming 😁 ..' />
+    return <Loader message="Getting Ready for LiveStreaming 😁 .." />;
   }
 
   return (
@@ -307,7 +315,10 @@ export default function StudioEntry({ socket }: { socket: any }) {
         <ResizablePanel defaultSize={20}>
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel defaultSize={50}>
-              <OverlayAccordion setOverlayImage={setOverlayImage} overlays={overlays} />
+              <OverlayAccordion
+                setOverlayImage={setOverlayImage}
+                overlays={overlays}
+              />
             </ResizablePanel>
             <ResizableHandle />
             <ResizablePanel defaultSize={50}>

@@ -57,7 +57,12 @@ export {
 
 export { Textarea } from '@/components/ui/textarea';
 
-export { Dialog, DialogContent, DialogTrigger , DialogClose } from '@/components/ui/dialog';
+export {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogClose,
+} from '@/components/ui/dialog';
 export { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 export { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
