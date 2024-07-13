@@ -1,36 +1,36 @@
 import { oauth2Client } from '@/app/api/youtube/google';
 import { google } from 'googleapis';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { createLoggerWithLabel } from '@/app/api/utils/logger';
+import getSessionAccessToken from '@/app/api/utils/session';
 
 type Params = {
   id: string;
 };
 
-export const GET = async (req: any, context: { params: Params }) => {
+const logger = createLoggerWithLabel('LiveChat');
+
+export const GET = async (req: NextRequest, context: { params: Params }) => {
+  // Extract the livestream ID from the query parameters
+  const { id } = context.params;
+
+  if (!id) {
+    logger.error('LiveChat Id not provided');
+    return NextResponse.json({ message: 'ID not found' });
+  }
+
+  await getSessionAccessToken(req)
+
+  // Initialize the YouTube API client
+  const youtube = google.youtube({
+    version: 'v3',
+    auth: oauth2Client,
+  });
+
   try {
-    // Extract the livestream ID from the query parameters
-    const { id } = context.params;
-
-    if (!id) {
-      return NextResponse.json({ message: 'ID not found' });
-    }
-
-    // Retrieve the access token from the session
-    const session = await getServerSession(authOptions);
-
-    // @ts-ignore
-    let access_token = session?.access_token;
-
-    // Set credentials
-    oauth2Client.setCredentials({ access_token });
-
-    // Initialize the YouTube API client
-    const youtube = google.youtube({
-      version: 'v3',
-      auth: oauth2Client,
-    });
+    logger.info(`Fetching LiveChat Messages with ID : ${id}`);
 
     // Get the livestream status
     // @ts-ignore
@@ -39,38 +39,32 @@ export const GET = async (req: any, context: { params: Params }) => {
       part: ['id', 'authorDetails'],
     });
 
-    console.log({ liveChatData });
-
     // Extract the livestream status from the response
     //@ts-ignore
-
     // Return the livestream status
     return NextResponse.json({ liveChatData: liveChatData.data.items });
   } catch (error) {
-    console.log('Error while getting livechatdata status: ', error);
+    logger.error(`Error while getting livechat Data: ${error} `)
     return NextResponse.json({ error }, { status: 500 });
   }
 };
 
-export const POST = async (req: any) => {
+export const POST = async (req: NextRequest) => {
   try {
     // Extract the livestream ID from the query parameters
+
+    //@ts-ignore
     const { liveChatId } = req.query();
 
     const { message } = await req.json();
 
     if (!liveChatId) {
+      logger.error('LiveChatId Missing');
       return NextResponse.json({ message: 'ID not found' });
     }
 
-    // Retrieve the access token from the session
-    const session = await getServerSession(authOptions);
+    await getSessionAccessToken(req);
 
-    // @ts-ignore
-    let access_token = session?.access_token;
-
-    // Set credentials
-    oauth2Client.setCredentials({ access_token });
 
     // Initialize the YouTube API client
     const youtube = google.youtube({
@@ -80,6 +74,7 @@ export const POST = async (req: any) => {
 
     // Get the livestream status
     // @ts-ignore
+    logger.info('Inserting ChatMessage ...')
     const liveChatData = await youtube.liveChatMessages.insert({
       part: ['snippet'],
       requestBody: {
@@ -99,7 +94,7 @@ export const POST = async (req: any) => {
     // Return the livestream status
     return NextResponse.json({ liveChatData: liveChatData.data.items });
   } catch (error) {
-    console.log('Error while Posting Message on live Chat', error);
+    logger.error(`Error while posting ChatMessage : ${error}`)
     return NextResponse.json({ error }, { status: 500 });
   }
 };

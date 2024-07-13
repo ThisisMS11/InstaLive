@@ -5,23 +5,19 @@ import {
 } from '@/app/api/services/broadcasts';
 import { oauth2Client } from '@/app/api/youtube/google';
 import { google } from 'googleapis';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import getSessionAccessToken from '@/app/api/utils/session';
+import { createLoggerWithLabel } from '@/app/api/utils/logger';
+
+const logger = createLoggerWithLabel('Broadcast_Stats')
 
 export const GET = async (req: NextRequest) => {
+
   const { searchParams } = new URL(req.url);
   const type = searchParams.get('type');
-  let youtubeBroadcastId = searchParams.get('broadCastId');
+  let youtubeBroadcastId = searchParams.get('broadcastId');
 
-  console.log(type);
 
-  const session = await getServerSession(authOptions);
-
-  // @ts-ignore
-  let access_token = session?.access_token;
-
-  /* set the credentials */
-  oauth2Client.setCredentials({ access_token });
+  await getSessionAccessToken(req);
 
   /* call the youtube api */
   const youtube = google.youtube({
@@ -33,6 +29,7 @@ export const GET = async (req: NextRequest) => {
 
   try {
     if (youtubeBroadcastId) {
+      logger.info(`Fetching Stats for broadcast with id : ${youtubeBroadcastId}`)
       youtubeBroadcastId = '67HsvAFuxzg';
       switch (type) {
         case 'metrics':
@@ -47,18 +44,19 @@ export const GET = async (req: NextRequest) => {
           return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
       }
     } else {
+      logger.error(`Missing youtubeBroadcastId`)
       return NextResponse.json(
         { error: 'Missing youtubeBroadcastId' },
         { status: 400 }
       );
     }
   } catch (error) {
-    console.error('An error occurred:', error);
+    logger.error(`Error fetching broadcast stats : ${error}`)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
   }
 
-  return NextResponse.json({ data: response });
+  return NextResponse.json({ data: response }, { status: 200 });
 };

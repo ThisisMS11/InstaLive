@@ -45,6 +45,8 @@ const DialogBox = ({
   const [loadingLiveStream, setLoadingLiveStream] = useState(false);
   const dispatch = useAppDispatch();
 
+  console.log('LiveStreamDialog Component Rendered');
+
   useEffect(() => {
     if (youtubeChannelInfo) {
       console.log('YouTube channel info inside DialogBox:', {
@@ -179,4 +181,4 @@ const DialogBox = ({
   );
 };
 
-export default DialogBox;
+export default React.memo(DialogBox);

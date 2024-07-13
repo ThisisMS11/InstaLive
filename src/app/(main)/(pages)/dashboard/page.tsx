@@ -11,6 +11,8 @@ const DashBoard = () => {
   const { status } = useSession();
   const buttonref = useRef<HTMLButtonElement | null>(null);
 
+  console.log('Dashboard page Rendered');
+
   const {
     channel,
     isError: channelError,

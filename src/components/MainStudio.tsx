@@ -44,7 +44,7 @@ export function AlertDialogDemo({
   transitionToLive,
   stopStreaming,
 }: {
-  transitionToLive: (_status: string, _broadCastId: string) => void;
+  transitionToLive: (_status: string, _broadcastId: string) => void;
   stopStreaming: () => void;
 }) {
   const router = useRouter();
