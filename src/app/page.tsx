@@ -10,7 +10,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import Navbar from '@/components/Navbar';
-
 function DashBoardButton() {
   const router = useRouter();
 
@@ -60,6 +59,7 @@ export default function HomePage() {
   const session = useSession();
 
   useEffect(() => {
+
     const timer = setTimeout(() => {
       toast('InstaLive', {
         description: 'Welcome to InstaLive !',

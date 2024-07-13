@@ -3,9 +3,18 @@ import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { createLoggerWithLabel } from '@/app/api/utils/logger'
 
 export const GET = async () => {
   /* get the access token in the request body */
+
+
+  const logger = createLoggerWithLabel('MyLabel');
+
+  logger.info("127.0.0.1 - there's no place like home");
+  logger.warn("127.0.0.1 - there's no place like home");
+  logger.error("127.0.0.1 - there's no place like home");
+
 
   const session = await getServerSession(authOptions);
 
