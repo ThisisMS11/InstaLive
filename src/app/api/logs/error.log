@@ -47,3 +47,33 @@
 2024-07-13T08:17:29.032Z [MyLabel] error: 127.0.0.1 - there's no place like home
 2024-07-13T08:21:04.417Z [MyLabel] error: 127.0.0.1 - there's no place like home
 2024-07-13T08:30:13.055Z [MyLabel] error: 127.0.0.1 - there's no place like home
+2024-07-13T08:37:49.955Z [MyLabel] error: 127.0.0.1 - there's no place like home
+2024-07-13T08:57:07.642Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:57:12.691Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:57:23.583Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:57:26.027Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:57:31.045Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:57:41.075Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:58:01.895Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:58:11.919Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:58:26.943Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:58:36.094Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:59:06.971Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:59:22.705Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:59:26.240Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:59:27.724Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:59:30.009Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:59:40.078Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:59:42.751Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T08:59:45.903Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T09:00:40.054Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T09:00:50.073Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T09:01:05.105Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T09:01:35.122Z [Broadcast] error: Error while fetching user broadcasts: Error: User session is not defined.
+2024-07-13T11:14:30.008Z [Broadcast_Stats] error: Missing youtubeBroadcastId
+2024-07-13T11:14:30.014Z [Broadcast_Stats] error: Missing youtubeBroadcastId
+2024-07-13T11:14:30.018Z [Broadcast_Stats] error: Missing youtubeBroadcastId
+2024-07-13T11:14:36.310Z [Broadcast_Stats] error: Missing youtubeBroadcastId
+2024-07-13T11:14:36.774Z [Broadcast_Stats] error: Missing youtubeBroadcastId
+2024-07-13T11:14:37.101Z [Broadcast_Stats] error: Missing youtubeBroadcastId
+2024-07-13T11:14:37.103Z [Broadcast_Stats] error: Missing youtubeBroadcastId
