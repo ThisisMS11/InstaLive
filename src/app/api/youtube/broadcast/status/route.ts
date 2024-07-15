@@ -11,7 +11,7 @@ const logger = createLoggerWithLabel('Broadcast_Status')
 /* To change the status of a broadcast */
 export const PUT = async (req: NextRequest) => {
   const { youtubeBroadcastId, status } = await req.json();
-  await getSessionAccessToken(req);
+  await getSessionAccessToken();
 
   if (!youtubeBroadcastId || !status) {
     logger.error(`Either of id and status is missing in request body`)
@@ -54,7 +54,7 @@ export const GET = async (req: NextRequest) => {
     return NextResponse.json({ message: 'ID not found' }, { status: 400 });
   }
 
-  await getSessionAccessToken(req);
+  await getSessionAccessToken();
 
   try {
 

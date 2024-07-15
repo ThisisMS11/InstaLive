@@ -1,10 +1,9 @@
 
 import { getServerSession } from 'next-auth';
 import { oauth2Client } from '@/app/api/youtube/google';
-import { NextRequest } from 'next/server';
 import { authOptions } from '@/lib/auth';
 
-const getSessionAccessToken = async (req: NextRequest) => {
+const getSessionAccessToken = async () => {
     const session = await getServerSession(authOptions);
     // @ts-ignore
     const accessToken = session?.access_token;

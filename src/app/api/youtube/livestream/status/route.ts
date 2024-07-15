@@ -19,7 +19,7 @@ export const GET = async (req: NextRequest) => {
 
     logger.info(`Fetching Status for liveStream with id ${id}`);
 
-    await getSessionAccessToken(req);
+    await getSessionAccessToken();
 
     const youtube = google.youtube({
       version: 'v3',

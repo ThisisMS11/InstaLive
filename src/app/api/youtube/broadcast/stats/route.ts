@@ -17,7 +17,7 @@ export const GET = async (req: NextRequest) => {
   let youtubeBroadcastId = searchParams.get('broadcastId');
 
 
-  await getSessionAccessToken(req);
+  await getSessionAccessToken();
 
   /* call the youtube api */
   const youtube = google.youtube({
