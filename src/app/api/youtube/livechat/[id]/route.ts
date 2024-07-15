@@ -1,8 +1,6 @@
 import { oauth2Client } from '@/app/api/youtube/google';
 import { google } from 'googleapis';
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
 import { createLoggerWithLabel } from '@/app/api/utils/logger';
 import getSessionAccessToken from '@/app/api/utils/session';
 
@@ -21,7 +19,7 @@ export const GET = async (req: NextRequest, context: { params: Params }) => {
     return NextResponse.json({ message: 'ID not found' });
   }
 
-  await getSessionAccessToken(req)
+  await getSessionAccessToken();
 
   // Initialize the YouTube API client
   const youtube = google.youtube({
@@ -63,7 +61,7 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ message: 'ID not found' });
     }
 
-    await getSessionAccessToken(req);
+    await getSessionAccessToken();
 
 
     // Initialize the YouTube API client

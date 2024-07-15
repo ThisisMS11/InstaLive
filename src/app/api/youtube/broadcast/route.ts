@@ -49,7 +49,7 @@ const handleCreateBroadcast = async (req: NextRequest, youtube: any, session: an
 
 export const POST = async (req: NextRequest) => {
   try {
-    const session = await getSessionAccessToken(req);
+    const session = await getSessionAccessToken();
     const youtube = google.youtube({ version: 'v3', auth: oauth2Client });
     const { broadCastResponse, liveStreamResponse } = await handleCreateBroadcast(req, youtube, session);
 

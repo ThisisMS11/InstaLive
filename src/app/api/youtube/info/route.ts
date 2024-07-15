@@ -1,16 +1,16 @@
 import { oauth2Client } from '../google';
 import { google } from 'googleapis';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createLoggerWithLabel } from '@/app/api/utils/logger'
 import getSessionAccessToken from '../../utils/session';
 
 const logger = createLoggerWithLabel('Youtube');
 
-export const GET = async (req: NextRequest) => {
+export const GET = async () => {
   /* get the access token in the request body */
   logger.info("Fetching User Youtube Channel Information");
 
-  await getSessionAccessToken(req);
+  await getSessionAccessToken();
 
   /* call the youtube api */
   const youtube = google.youtube({
