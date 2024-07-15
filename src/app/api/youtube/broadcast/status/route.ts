@@ -1,20 +1,22 @@
 import { oauth2Client } from '@/app/api/youtube/google';
 import { google } from 'googleapis';
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { NextRequest, NextResponse } from 'next/server';
 import { UpdateBroadcastStatus } from '@/app/api/services/broadcasts';
+import getSessionAccessToken from '@/app/api/utils/session';
+import { createLoggerWithLabel } from '@/app/api/utils/logger';
+
+
+const logger = createLoggerWithLabel('Broadcast_Status')
 
 /* To change the status of a broadcast */
-export const PUT = async (req: any) => {
+export const PUT = async (req: NextRequest) => {
   const { youtubeBroadcastId, status } = await req.json();
-  const session = await getServerSession(authOptions);
+  await getSessionAccessToken();
 
-  // @ts-ignore
-  let access_token = session?.access_token;
-
-  /* set the credentials */
-  oauth2Client.setCredentials({ access_token });
+  if (!youtubeBroadcastId || !status) {
+    logger.error(`Either of id and status is missing in request body`)
+    throw new Error('Either of id and status is missing in request body')
+  }
 
   /* call the youtube api */
   const youtube = google.youtube({
@@ -24,6 +26,7 @@ export const PUT = async (req: any) => {
 
   /* get the videos */
   try {
+    logger.info(`Updating the status of broadcast with id : ${youtubeBroadcastId}`);
     const statusUpdateRes = await youtube.liveBroadcasts.transition({
       part: ['id,snippet,contentDetails,status'],
       broadcastStatus: status,
@@ -31,35 +34,29 @@ export const PUT = async (req: any) => {
     });
 
     /* Changing the status in db as well */
+    logger.info(`Updating the status of broadcast in Db`);
     await UpdateBroadcastStatus(youtubeBroadcastId, status);
 
     return NextResponse.json({ statusUpdateRes });
   } catch (error) {
-    console.log('error while updating liveBroadCast status ', error);
+    logger.error(`Error updating the status of broadcast : ${error}`);
     return NextResponse.json({ error }, { status: 401 });
   }
 };
 
-export const GET = async (req: any) => {
+export const GET = async (req: NextRequest) => {
+  // Extract the livestream ID from the query parameters
+  const url = new URL(req.url);
+  const id = url.searchParams.get('broadcastId');
+
+  if (!id) {
+    logger.error(`Broadcast Id not found`);
+    return NextResponse.json({ message: 'ID not found' }, { status: 400 });
+  }
+
+  await getSessionAccessToken();
+
   try {
-    // Extract the livestream ID from the query parameters
-    const url = new URL(req.url);
-    const id = url.searchParams.get('broadCastId');
-
-    console.log({ id });
-
-    if (!id) {
-      return NextResponse.json({ message: 'ID not found' });
-    }
-
-    // Retrieve the access token from the session
-    const session = await getServerSession(authOptions);
-
-    // @ts-ignore
-    let access_token = session?.access_token;
-
-    // Set credentials
-    oauth2Client.setCredentials({ access_token });
 
     // Initialize the YouTube API client
     const youtube = google.youtube({
@@ -67,23 +64,19 @@ export const GET = async (req: any) => {
       auth: oauth2Client,
     });
 
-    // Get the livestream status
+    logger.info(`Fetching Broadcast Status with id : ${id}`);
     // @ts-ignore
     const liveBroadCast = await youtube.liveBroadcasts.list({
       part: ['status'],
       id: id,
     });
 
-    console.log({ liveBroadCast });
-
-    // Extract the livestream status from the response
     //@ts-ignore
     const broadCastStatus = liveBroadCast.data.items[0].status.lifeCycleStatus;
 
-    // Return the livestream status
-    return NextResponse.json({ broadCastStatus });
+    return NextResponse.json({ broadCastStatus }, { status: 200 });
   } catch (error) {
-    console.log('Error while getting livestream status: ', error);
+    logger.error(`Error Fetching Broadcast Status Error : ${error}`);
     return NextResponse.json({ error }, { status: 500 });
   }
-};
+}

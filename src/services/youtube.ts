@@ -47,12 +47,12 @@ export const CreateLiveStream = async (formData: any) => {
 //! i have to pass the id form the frontend here.
 export const transitionToLive: any = async (
   status: string,
-  broadCastId: string
+  broadcastId: string
 ) => {
   const url = `${process.env.NEXT_PUBLIC_URL}/api/youtube/broadcast/status`;
   try {
     const response = await AxiosInstance.put(url, {
-      youtubeBroadcastId: broadCastId,
+      youtubeBroadcastId: broadcastId,
       status: status,
     });
 
@@ -78,10 +78,10 @@ type BroadcastStatusResponse = {
 };
 
 export const useBroadcastStatus = (
-  broadCastId: string
+  broadcastId: string
 ): useBroadcastStatusResult => {
   const { data, error, isLoading } = useSWR<BroadcastStatusResponse>(
-    `/api/youtube/broadcast/status?broadCastId=${broadCastId}`,
+    `/api/youtube/broadcast/status?broadcastId=${broadcastId}`,
     AxiosFetcher,
     {
       refreshInterval: 2000,
@@ -109,12 +109,12 @@ export const useAllBroadcasts = () => {
 };
 
 /* to get the total number of views till present */
-export const useBroadcastMetrics = (broadCastId: string) => {
+export const useBroadcastMetrics = (broadcastId: string) => {
   const { data, error, isLoading } = useSWR(
-    `/api/youtube/broadcast/stats?broadCastId=${broadCastId}&type=metrics`,
+    `/api/youtube/broadcast/stats?broadcastId=${broadcastId}&type=metrics`,
     AxiosFetcher,
     {
-      refreshInterval: 2000,
+      refreshInterval: 60000,
     }
   );
 

@@ -1,7 +1,7 @@
 import prisma from '@/lib/db';
 import { privacyStatusEnum, BroadcastStatus } from '@prisma/client';
 
-export async function createLiveBroadCast(
+export async function createBroadcast(
   youtube: any,
   title: string,
   description: string,
@@ -49,7 +49,7 @@ export async function createLiveStream(youtube: any) {
   return streamResponse.data;
 }
 
-export async function bindLiveBroadcastAndStream(
+export async function bindBroadcastAndStream(
   youtube: any,
   broadcastId: string,
   streamId: string
