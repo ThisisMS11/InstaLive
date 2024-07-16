@@ -21,6 +21,7 @@ export default function StudioEntry({
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLDivElement>(null);
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null)
 
   const {
     isVideoOn,
@@ -29,14 +30,23 @@ export default function StudioEntry({
     setIsAudioOn,
     displayName,
     setDisplayName,
+    startWebCam,
+    stopWebCam
   } = useStudio();
 
   const [audioLevel, setAudioLevel] = useState<number>(0);
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
 
-  const handleVideoToggle = () => {
-    if (isVideoOn) stopVideo();
-    else startVideo();
+  const handleVideoToggle = async () => {
+    if (isVideoOn && localStream) {
+      stopWebCam(localStream, videoRef);
+      setLocalStream(null);
+    }
+    else {
+      const stream = await startWebCam(videoRef);
+      if (stream)
+        setLocalStream(stream);
+    }
 
     setIsVideoOn(!isVideoOn);
   };
@@ -55,26 +65,6 @@ export default function StudioEntry({
       }
     }
     setIsAudioOn(!isAudioOn);
-  };
-
-  const startVideo = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    } catch (error) {
-      console.error('Error accessing webcam:', error);
-    }
-  };
-
-  const stopVideo = () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      const stream = videoRef.current.srcObject as MediaStream;
-      const tracks = stream.getTracks();
-
-      tracks.forEach((track) => track.stop());
-    }
   };
 
   async function startAudio() {
@@ -102,8 +92,20 @@ export default function StudioEntry({
   }
 
   useEffect(() => {
-    startVideo();
-    startAudio();
+    async function initiate() {
+      const stream = await startWebCam(videoRef);
+      if (stream)
+        setLocalStream(stream);
+      startAudio();
+    }
+
+    initiate();
+
+
+    return () => {
+      if (localStream)
+        stopWebCam(localStream, videoRef);
+    }
   }, []);
 
   return (
@@ -116,7 +118,7 @@ export default function StudioEntry({
       <CardContent>
         <div className="grid grid-cols-10 gap-4 h-74">
           <div className="col-span-8 space-y-1.5 rounded-lg border bg-card text-card-foreground shadow-sm">
-            <video ref={videoRef} autoPlay className="w-full h-full" />
+            <video ref={videoRef} autoPlay muted className="w-full h-full" />
           </div>
           <div className="col-span-2 space-y-1.5 rounded-lg border bg-card text-card-foreground shadow-sm">
             <div
@@ -147,7 +149,7 @@ export default function StudioEntry({
       </CardContent>
 
       <CardFooter>
-        <form className="flex justify-between flex-col w-full gap-4">
+        <div className="flex justify-between flex-col w-full gap-4">
           <Label htmlFor="name">Display Name</Label>
           <Input
             id="name"
@@ -158,12 +160,18 @@ export default function StudioEntry({
           <Button
             className="w-full"
             onClick={() => {
+
+              if (localStream) {
+                stopWebCam(localStream, videoRef);
+                setLocalStream(null);
+              }
+
               setGotoStudio(true);
             }}
           >
             Enter Studio
           </Button>
-        </form>
+        </div>
       </CardFooter>
     </Card>
   );
