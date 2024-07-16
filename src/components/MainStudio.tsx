@@ -39,6 +39,7 @@ import {
 import { toast } from 'sonner';
 import { Loader } from '@/imports/Component_imports';
 import { ShieldAlert } from 'lucide-react';
+import { useStudio } from '@/app/context/StudioContext';
 
 export function AlertDialogDemo({
   transitionToLive,
@@ -114,7 +115,7 @@ export function AlertDialogDemo({
 
 export default function StudioEntry({ socket }: { socket: any }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [weAreLive, setWeAreLive] = useState<boolean>(false);
   const router = useRouter();
 
@@ -122,6 +123,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
   const [overlayImage, setOverlayImage] = useState<string>('');
 
   const broadcastData = useAppSelector((state) => state.broadcasts);
+  const { startWebCam, stopWebCam } = useStudio();
 
   const {
     status,
@@ -144,24 +146,17 @@ export default function StudioEntry({ socket }: { socket: any }) {
   }
 
   const stopStreaming = () => {
-    if (mediaStream) {
-      mediaStream.getTracks().forEach((track) => track.stop());
-      // Clear the video source object
-      if (videoRef.current) {
-        videoRef.current.srcObject = null;
-      }
+    if (localStream) {
+      stopWebCam(localStream, videoRef);
     }
-    setMediaStream(null);
+    setLocalStream(null);
     setWeAreLive(false);
   };
 
-  const handleStreaming = async () => {
+  const startStreaming = async () => {
     setWeAreLive(true);
 
-    const media = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
-    });
+    const media = await startWebCam(videoRef);
 
     if (overlayImage === '') {
       console.log('WithoutOverlay');
@@ -172,12 +167,10 @@ export default function StudioEntry({ socket }: { socket: any }) {
     }
 
     setTimeout(() => {
-      setMediaStream(media);
-      // @ts-ignore
-      videoRef.current.srcObject = media;
+      if (media)
+        setLocalStream(media);
     }, 2000);
 
-    // transitionToLive('live');
   };
 
   useEffect(() => {
@@ -200,8 +193,8 @@ export default function StudioEntry({ socket }: { socket: any }) {
   }, [status, broadcastStatusError, broadcastIsLoading]);
 
   useEffect(() => {
-    if (mediaStream) {
-      const mediaRecorder = new MediaRecorder(mediaStream, {
+    if (localStream) {
+      const mediaRecorder = new MediaRecorder(localStream, {
         mimeType: 'video/webm; codecs=vp9,opus',
         audioBitsPerSecond: 128000,
         videoBitsPerSecond: 2500000,
@@ -218,10 +211,10 @@ export default function StudioEntry({ socket }: { socket: any }) {
 
       mediaRecorder.start(500);
     }
-  }, [mediaStream]);
+  }, [localStream]);
 
   useEffect(() => {
-    if (mediaStream && socket.current) {
+    if (localStream && socket.current) {
       stopStreaming();
 
       if (overlayImage === '') {
@@ -234,7 +227,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
 
       /* Giving some time to Settle things up */
       setTimeout(() => {
-        handleStreaming();
+        startStreaming();
       }, 2000);
     }
   }, [overlayImage]);
@@ -285,7 +278,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
                       <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
                       <span
                         className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl"
-                        onClick={handleStreaming}
+                        onClick={startStreaming}
                       >
                         Go Live
                       </span>
