@@ -112,10 +112,10 @@ export const useAllBroadcasts = () => {
 export const useBroadcastMetrics = (broadcastId: string) => {
   const { data, error, isLoading } = useSWR(
     `/api/youtube/broadcast/stats?broadcastId=${broadcastId}&type=metrics`,
-    AxiosFetcher,
-    {
-      refreshInterval: 60000,
-    }
+    AxiosFetcher
+    // {
+    //   refreshInterval: 60000,
+    // }
   );
 
   return {
