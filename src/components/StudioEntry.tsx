@@ -21,7 +21,7 @@ export default function StudioEntry({
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLDivElement>(null);
-  const [localStream, setLocalStream] = useState<MediaStream | null>(null)
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
 
   const {
     isVideoOn,
@@ -31,7 +31,7 @@ export default function StudioEntry({
     displayName,
     setDisplayName,
     startWebCam,
-    stopWebCam
+    stopWebCam,
   } = useStudio();
 
   const [audioLevel, setAudioLevel] = useState<number>(0);
@@ -41,11 +41,9 @@ export default function StudioEntry({
     if (isVideoOn && localStream) {
       stopWebCam(localStream, videoRef);
       setLocalStream(null);
-    }
-    else {
+    } else {
       const stream = await startWebCam(videoRef);
-      if (stream)
-        setLocalStream(stream);
+      if (stream) setLocalStream(stream);
     }
 
     setIsVideoOn(!isVideoOn);
@@ -94,18 +92,15 @@ export default function StudioEntry({
   useEffect(() => {
     async function initiate() {
       const stream = await startWebCam(videoRef);
-      if (stream)
-        setLocalStream(stream);
+      if (stream) setLocalStream(stream);
       startAudio();
     }
 
     initiate();
 
-
     return () => {
-      if (localStream)
-        stopWebCam(localStream, videoRef);
-    }
+      if (localStream) stopWebCam(localStream, videoRef);
+    };
   }, []);
 
   return (
@@ -160,7 +155,6 @@ export default function StudioEntry({
           <Button
             className="w-full"
             onClick={() => {
-
               if (localStream) {
                 stopWebCam(localStream, videoRef);
                 setLocalStream(null);

@@ -1,35 +1,29 @@
-import { NextResponse, NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
 import {
   getMetrices,
   getLiveStreamDetails,
 } from '@/app/api/services/broadcasts';
-import { oauth2Client } from '@/app/api/youtube/google';
-import { google } from 'googleapis';
-import getSessionAccessToken from '@/app/api/utils/session';
+import { getYoutubeClient } from '@/app/api/utils/youtubeClient';
 import { createLoggerWithLabel } from '@/app/api/utils/logger';
+import { makeResponse } from '@/app/api/common/helpers/reponseMaker';
 
-const logger = createLoggerWithLabel('Broadcast_Stats')
+const logger = createLoggerWithLabel('Broadcast_Stats');
 
 export const GET = async (req: NextRequest) => {
-
   const { searchParams } = new URL(req.url);
   const type = searchParams.get('type');
   let youtubeBroadcastId = searchParams.get('broadcastId');
 
-
-  await getSessionAccessToken();
-
   /* call the youtube api */
-  const youtube = google.youtube({
-    version: 'v3',
-    auth: oauth2Client,
-  });
+  const youtube = await getYoutubeClient();
 
   let response;
 
   try {
     if (youtubeBroadcastId) {
-      logger.info(`Fetching Stats for broadcast with id : ${youtubeBroadcastId}`)
+      logger.info(
+        `Fetching Stats for broadcast with id : ${youtubeBroadcastId}`
+      );
       youtubeBroadcastId = '67HsvAFuxzg';
       switch (type) {
         case 'metrics':
@@ -41,22 +35,21 @@ export const GET = async (req: NextRequest) => {
           response = response.data.items[0].liveStreamingDetails;
           break;
         default:
-          return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
+          return makeResponse(400, false, 'Invalid type', null);
       }
     } else {
-      logger.error(`Missing youtubeBroadcastId`)
-      return NextResponse.json(
-        { error: 'Missing youtubeBroadcastId' },
-        { status: 400 }
-      );
+      logger.error(`Missing youtubeBroadcastId`);
+      return makeResponse(400, false, 'Missing youtubeBroadcastId', null);
     }
   } catch (error) {
-    logger.error(`Error fetching broadcast stats : ${error}`)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    logger.error(`Error fetching broadcast stats : ${error}`);
+    return makeResponse(500, false, 'Internal Server Error', error);
   }
 
-  return NextResponse.json({ data: response }, { status: 200 });
+  return makeResponse(
+    200,
+    true,
+    'Fetched Broadcast stats successfully',
+    response
+  );
 };
