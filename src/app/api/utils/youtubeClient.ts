@@ -18,8 +18,7 @@ export const getSessionAccessToken = async () => {
 
 export const getYoutubeClient = async () => {
   if (!youtubeClient) {
-    
-    if (!oauth2Client.credentials || !oauth2Client.credentials.access_token) 
+    if (!oauth2Client.credentials || !oauth2Client.credentials.access_token)
       await getSessionAccessToken();
 
     youtubeClient = google.youtube({

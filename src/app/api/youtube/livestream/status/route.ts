@@ -1,7 +1,5 @@
-import { oauth2Client } from '@/app/api/youtube/google';
-import { google } from 'googleapis';
 import { NextRequest } from 'next/server';
-import {getYoutubeClient} from '@/app/api/utils/youtubeClient';
+import { getYoutubeClient } from '@/app/api/utils/youtubeClient';
 import { createLoggerWithLabel } from '@/app/api/utils/logger';
 import { makeResponse } from '@/app/api/common/helpers/reponseMaker';
 
@@ -19,7 +17,6 @@ export const GET = async (req: NextRequest) => {
     }
 
     logger.info(`Fetching Status for liveStream with id ${id}`);
-
 
     const youtube = await getYoutubeClient();
 
