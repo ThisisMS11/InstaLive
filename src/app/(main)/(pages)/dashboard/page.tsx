@@ -11,13 +11,13 @@ const DashBoard = () => {
   const { status } = useSession();
   const buttonref = useRef<HTMLButtonElement | null>(null);
 
-  console.log('Dashboard page Rendered');
 
   const {
     channel,
     isError: channelError,
     isLoading: channelLoading,
   } = useYoutubeChannelInfo();
+
   const {
     broadcasts,
     isError: broadcastsError,
@@ -40,6 +40,8 @@ const DashBoard = () => {
     console.log('User is Authenticated.');
   }
 
+  console.count('Dashboard page Rendered');
+
   // Directly using the channel data from SWR
   const youtubeChannelInfo = channel
     ? {
@@ -51,8 +53,8 @@ const DashBoard = () => {
       }
     : null;
 
-  console.log('channel data:', channel);
-  console.log('broadcasts data:', broadcasts);
+  // console.log('channel data:', channel);
+  // console.log('broadcasts data:', broadcasts);
 
   return (
     <div className="flex items-center justify-center p-0">
