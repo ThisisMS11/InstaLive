@@ -1,6 +1,6 @@
 'use client';
 import { useSession, Image, Link } from '@/imports/Nextjs_imports';
-import React from 'react'
+import React from 'react';
 import {
   Button,
   DropdownMenu,
@@ -415,6 +415,5 @@ function VideoIcon(props) {
     </svg>
   );
 }
-
 
 export default React.memo(Dashboard);

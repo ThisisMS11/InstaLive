@@ -1,14 +1,14 @@
 import { oauth2Client } from '../google';
 import { google } from 'googleapis';
-import { NextResponse } from 'next/server';
-import { createLoggerWithLabel } from '@/app/api/utils/logger'
+import { createLoggerWithLabel } from '@/app/api/utils/logger';
 import getSessionAccessToken from '../../utils/session';
+import { makeResponse } from '../../common/helpers/reponseMaker';
 
 const logger = createLoggerWithLabel('Youtube');
 
 export const GET = async () => {
   /* get the access token in the request body */
-  logger.info("Fetching User Youtube Channel Information");
+  logger.info('Fetching User Youtube Channel Information');
 
   await getSessionAccessToken();
 
@@ -27,9 +27,19 @@ export const GET = async () => {
 
     //@ts-ignore
     const channelData = response.data.items[0]; // Assuming you only have one channel
-    return NextResponse.json({ data: channelData });
+    return makeResponse(
+      200,
+      true,
+      'Youtube Channel Information Fetch Successfully',
+      channelData
+    );
   } catch (error) {
     logger.info(`Error Fetching User Youtube Channel Information : ${error}`);
-    return NextResponse.json({ error }, { status: 401 });
+    return makeResponse(
+      401,
+      false,
+      'Error Fetching User Youtube Channel Information',
+      error
+    );
   }
 };

@@ -2,7 +2,7 @@ import { google } from 'googleapis';
 import { NextResponse, NextRequest } from 'next/server';
 import { authOptions } from '@/lib/auth';
 import { oauth2Client } from '@/app/api/youtube/google';
-import getSessionAccessToken from '@/app/api/utils/session'
+import getSessionAccessToken from '@/app/api/utils/session';
 
 import {
   createBroadcast,
@@ -14,20 +14,34 @@ import {
 import { GetBroadcasts } from '@/app/api/services/broadcasts';
 import { createLoggerWithLabel } from '@/app/api/utils/logger';
 import { getServerSession } from 'next-auth';
+import { makeResponse } from '../../common/helpers/reponseMaker';
 
 const logger = createLoggerWithLabel('Broadcast');
 
-const handleCreateBroadcast = async (req: NextRequest, youtube: any, session: any) => {
+const handleCreateBroadcast = async (
+  req: NextRequest,
+  youtube: any,
+  session: any
+) => {
   const { title, description, privacy } = await req.json();
 
   logger.info(`Creating Broadcast...`);
-  const broadCastResponse = await createBroadcast(youtube, title, description, privacy);
+  const broadCastResponse = await createBroadcast(
+    youtube,
+    title,
+    description,
+    privacy
+  );
 
   logger.info(`Creating LiveStream...`);
   const liveStreamResponse = await createLiveStream(youtube);
 
   logger.info(`Binding LiveStream and Broadcast`);
-  await bindBroadcastAndStream(youtube, broadCastResponse.id, liveStreamResponse.id);
+  await bindBroadcastAndStream(
+    youtube,
+    broadCastResponse.id,
+    liveStreamResponse.id
+  );
 
   // @ts-ignore
   const userId = session?.user?.id;
@@ -51,15 +65,22 @@ export const POST = async (req: NextRequest) => {
   try {
     const session = await getSessionAccessToken();
     const youtube = google.youtube({ version: 'v3', auth: oauth2Client });
-    const { broadCastResponse, liveStreamResponse } = await handleCreateBroadcast(req, youtube, session);
+    const { broadCastResponse, liveStreamResponse } =
+      await handleCreateBroadcast(req, youtube, session);
 
-    return NextResponse.json({
+    const response = {
       broadCastResponse,
       liveStreamResponse,
-    });
+    };
+    return makeResponse(200, true, 'LiveStream Created Successfully', response);
   } catch (error) {
     logger.error(`Error while creating livestream: ${error} `);
-    return NextResponse.json({ message: 'Error while creating livestream or broadcast', error }, { status: 500 });
+    return makeResponse(
+      500,
+      false,
+      'Error while creating livestream or broadcast',
+      error
+    );
   }
 };
 
@@ -74,9 +95,14 @@ export const GET = async () => {
     }
 
     const broadcasts = await GetBroadcasts(userId);
-    return NextResponse.json({ data: broadcasts }, { status: 200 });
+    return makeResponse(200, true, 'Fetched All past broadcasts', broadcasts);
   } catch (error) {
     logger.error(`Error while fetching user broadcasts: ${error}`);
-    return NextResponse.json({ message: 'Error while fetching user broadcasts', error }, { status: 500 });
+    return makeResponse(
+      500,
+      false,
+      'Error while fetching user broadcasts',
+      error
+    );
   }
 };
