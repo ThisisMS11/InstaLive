@@ -1,8 +1,6 @@
-import { oauth2Client } from '@/app/api/youtube/google';
-import { google } from 'googleapis';
 import { NextRequest } from 'next/server';
 import { createLoggerWithLabel } from '@/app/api/utils/logger';
-import getSessionAccessToken from '@/app/api/utils/session';
+import {getYoutubeClient} from '@/app/api/utils/youtubeClient';
 import { makeResponse } from '@/app/api/common/helpers/reponseMaker';
 
 type Params = {
@@ -20,13 +18,9 @@ export const GET = async (req: NextRequest, context: { params: Params }) => {
     return makeResponse(400, false, 'ID not found', null);
   }
 
-  await getSessionAccessToken();
 
   // Initialize the YouTube API client
-  const youtube = google.youtube({
-    version: 'v3',
-    auth: oauth2Client,
-  });
+  const youtube = await getYoutubeClient();
 
   try {
     logger.info(`Fetching LiveChat Messages with ID : ${id}`);
@@ -58,12 +52,8 @@ export const POST = async (req: NextRequest) => {
       return makeResponse(400, false, 'ID not found', null);
     }
 
-    await getSessionAccessToken();
 
-    const youtube = google.youtube({
-      version: 'v3',
-      auth: oauth2Client,
-    });
+    const youtube = await getYoutubeClient();
 
     /* Get the livestream status */
     // @ts-ignore

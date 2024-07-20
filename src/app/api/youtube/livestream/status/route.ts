@@ -1,7 +1,7 @@
 import { oauth2Client } from '@/app/api/youtube/google';
 import { google } from 'googleapis';
 import { NextRequest } from 'next/server';
-import getSessionAccessToken from '@/app/api/utils/session';
+import {getYoutubeClient} from '@/app/api/utils/youtubeClient';
 import { createLoggerWithLabel } from '@/app/api/utils/logger';
 import { makeResponse } from '@/app/api/common/helpers/reponseMaker';
 
@@ -20,12 +20,8 @@ export const GET = async (req: NextRequest) => {
 
     logger.info(`Fetching Status for liveStream with id ${id}`);
 
-    await getSessionAccessToken();
 
-    const youtube = google.youtube({
-      version: 'v3',
-      auth: oauth2Client,
-    });
+    const youtube = await getYoutubeClient();
 
     // Get the livestream status
     // @ts-ignore
