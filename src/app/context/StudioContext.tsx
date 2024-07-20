@@ -11,11 +11,11 @@ interface StudioContextType {
   overlayImage: string;
   setOverlayImage: (_data: string) => void;
   startWebCam: (
-    ref: React.RefObject<HTMLVideoElement>
+    _ref: React.RefObject<HTMLVideoElement>
   ) => Promise<MediaStream | undefined>;
   stopWebCam: (
-    stream: MediaStream,
-    ref: React.RefObject<HTMLVideoElement>
+    _stream: MediaStream,
+    _ref: React.RefObject<HTMLVideoElement>
   ) => void;
 }
 

@@ -3,7 +3,7 @@ import {
   getMetrices,
   getLiveStreamDetails,
 } from '@/app/api/services/broadcasts';
-import {getYoutubeClient} from '@/app/api/utils/youtubeClient';
+import { getYoutubeClient } from '@/app/api/utils/youtubeClient';
 import { createLoggerWithLabel } from '@/app/api/utils/logger';
 import { makeResponse } from '@/app/api/common/helpers/reponseMaker';
 

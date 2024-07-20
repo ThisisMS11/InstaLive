@@ -1,5 +1,5 @@
 import { createLoggerWithLabel } from '@/app/api/utils/logger';
-import { getYoutubeClient } from '../../utils/youtubeClient'
+import { getYoutubeClient } from '../../utils/youtubeClient';
 import { makeResponse } from '../../common/helpers/reponseMaker';
 
 const logger = createLoggerWithLabel('Youtube');
