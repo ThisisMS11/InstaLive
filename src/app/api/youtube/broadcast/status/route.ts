@@ -1,8 +1,6 @@
-import { oauth2Client } from '@/app/api/youtube/google';
-import { google } from 'googleapis';
 import { NextRequest } from 'next/server';
 import { UpdateBroadcastStatus } from '@/app/api/services/broadcasts';
-import getSessionAccessToken from '@/app/api/utils/session';
+import { getYoutubeClient } from '@/app/api/utils/youtubeClient';
 import { createLoggerWithLabel } from '@/app/api/utils/logger';
 import { makeResponse } from '@/app/api/common/helpers/reponseMaker';
 
@@ -11,7 +9,6 @@ const logger = createLoggerWithLabel('Broadcast_Status');
 /* To change the status of a broadcast */
 export const PUT = async (req: NextRequest) => {
   const { youtubeBroadcastId, status } = await req.json();
-  await getSessionAccessToken();
 
   if (!youtubeBroadcastId || !status) {
     logger.error(`Either of id and status is missing in request body`);
@@ -19,10 +16,7 @@ export const PUT = async (req: NextRequest) => {
   }
 
   /* call the youtube api */
-  const youtube = google.youtube({
-    version: 'v3',
-    auth: oauth2Client,
-  });
+  const youtube = await getYoutubeClient();
 
   /* get the videos */
   try {
@@ -47,7 +41,6 @@ export const PUT = async (req: NextRequest) => {
 };
 
 export const GET = async (req: NextRequest) => {
-  // Extract the livestream ID from the query parameters
   const url = new URL(req.url);
   const id = url.searchParams.get('broadcastId');
 
@@ -56,15 +49,9 @@ export const GET = async (req: NextRequest) => {
     return makeResponse(400, false, 'ID not found', null);
   }
 
-  await getSessionAccessToken();
+  const youtube = await getYoutubeClient();
 
   try {
-    // Initialize the YouTube API client
-    const youtube = google.youtube({
-      version: 'v3',
-      auth: oauth2Client,
-    });
-
     logger.info(`Fetching Broadcast Status with id : ${id}`);
     // @ts-ignore
     const liveBroadCast = await youtube.liveBroadcasts.list({

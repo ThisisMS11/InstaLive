@@ -1,7 +1,5 @@
-import { oauth2Client } from '../google';
-import { google } from 'googleapis';
 import { createLoggerWithLabel } from '@/app/api/utils/logger';
-import getSessionAccessToken from '../../utils/session';
+import { getYoutubeClient } from '../../utils/youtubeClient'
 import { makeResponse } from '../../common/helpers/reponseMaker';
 
 const logger = createLoggerWithLabel('Youtube');
@@ -10,13 +8,8 @@ export const GET = async () => {
   /* get the access token in the request body */
   logger.info('Fetching User Youtube Channel Information');
 
-  await getSessionAccessToken();
-
-  /* call the youtube api */
-  const youtube = google.youtube({
-    version: 'v3',
-    auth: oauth2Client,
-  });
+  /* get the youtube client */
+  const youtube = await getYoutubeClient();
 
   try {
     // Get the authenticated user's channel information

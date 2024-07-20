@@ -1,8 +1,6 @@
-import { google } from 'googleapis';
-import { NextResponse, NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
 import { authOptions } from '@/lib/auth';
-import { oauth2Client } from '@/app/api/youtube/google';
-import getSessionAccessToken from '@/app/api/utils/session';
+import { getYoutubeClient } from '@/app/api/utils/youtubeClient';
 
 import {
   createBroadcast,
@@ -21,7 +19,7 @@ const logger = createLoggerWithLabel('Broadcast');
 const handleCreateBroadcast = async (
   req: NextRequest,
   youtube: any,
-  session: any
+  userId: string
 ) => {
   const { title, description, privacy } = await req.json();
 
@@ -43,12 +41,6 @@ const handleCreateBroadcast = async (
     liveStreamResponse.id
   );
 
-  // @ts-ignore
-  const userId = session?.user?.id;
-  if (!userId) {
-    throw new Error('User session is not defined.');
-  }
-
   const newLiveStream = await createLiveStreamDB(liveStreamResponse, userId);
 
   if (newLiveStream.id) {
@@ -63,10 +55,17 @@ const handleCreateBroadcast = async (
 
 export const POST = async (req: NextRequest) => {
   try {
-    const session = await getSessionAccessToken();
-    const youtube = google.youtube({ version: 'v3', auth: oauth2Client });
+    const session = await getServerSession(authOptions);
+    const youtube = await getYoutubeClient();
+
+    // @ts-ignore
+    const userId = session?.user?.id;
+    if (!userId) {
+      throw new Error('User session is not defined.');
+    }
+
     const { broadCastResponse, liveStreamResponse } =
-      await handleCreateBroadcast(req, youtube, session);
+      await handleCreateBroadcast(req, youtube, userId);
 
     const response = {
       broadCastResponse,

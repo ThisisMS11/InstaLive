@@ -3,9 +3,7 @@ import {
   getMetrices,
   getLiveStreamDetails,
 } from '@/app/api/services/broadcasts';
-import { oauth2Client } from '@/app/api/youtube/google';
-import { google } from 'googleapis';
-import getSessionAccessToken from '@/app/api/utils/session';
+import {getYoutubeClient} from '@/app/api/utils/youtubeClient';
 import { createLoggerWithLabel } from '@/app/api/utils/logger';
 import { makeResponse } from '@/app/api/common/helpers/reponseMaker';
 
@@ -16,13 +14,8 @@ export const GET = async (req: NextRequest) => {
   const type = searchParams.get('type');
   let youtubeBroadcastId = searchParams.get('broadcastId');
 
-  await getSessionAccessToken();
-
   /* call the youtube api */
-  const youtube = google.youtube({
-    version: 'v3',
-    auth: oauth2Client,
-  });
+  const youtube = await getYoutubeClient();
 
   let response;
 
