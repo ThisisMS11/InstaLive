@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { createLoggerWithLabel } from '@/app/api/utils/logger';
-import {getYoutubeClient} from '@/app/api/utils/youtubeClient';
+import { getYoutubeClient } from '@/app/api/utils/youtubeClient';
 import { makeResponse } from '@/app/api/common/helpers/reponseMaker';
 
 type Params = {
@@ -17,7 +17,6 @@ export const GET = async (req: NextRequest, context: { params: Params }) => {
     logger.error('LiveChat Id not provided');
     return makeResponse(400, false, 'ID not found', null);
   }
-
 
   // Initialize the YouTube API client
   const youtube = await getYoutubeClient();
@@ -51,7 +50,6 @@ export const POST = async (req: NextRequest) => {
       logger.error('LiveChatId Missing');
       return makeResponse(400, false, 'ID not found', null);
     }
-
 
     const youtube = await getYoutubeClient();
 

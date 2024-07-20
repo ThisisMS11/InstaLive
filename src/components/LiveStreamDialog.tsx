@@ -45,20 +45,7 @@ const DialogBox = ({
   const [loadingLiveStream, setLoadingLiveStream] = useState(false);
   const dispatch = useAppDispatch();
 
-  console.log('LiveStreamDialog Component Rendered');
-
-  useEffect(() => {
-    if (youtubeChannelInfo) {
-      console.log('YouTube channel info inside DialogBox:', {
-        youtubeChannelInfo,
-      });
-      setFormData({
-        title: youtubeChannelInfo.title || '',
-        description: youtubeChannelInfo.description || '',
-        privacy: '',
-      });
-    }
-  }, [youtubeChannelInfo]);
+  console.count('LiveStreamDialog Component Rendered');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -75,9 +62,8 @@ const DialogBox = ({
     }));
   };
 
-  const handleLiveStream = async () => {
+  const InitiateLiveStream = async () => {
     /* this is the place where api call is to be made */
-    console.log({ formData });
     try {
       setLoadingLiveStream(true);
 
@@ -88,6 +74,7 @@ const DialogBox = ({
       dispatch(setBroadcast(broadCastInstance));
 
       router.push('/studio');
+
       setLoadingLiveStream(false);
     } catch (error) {
       console.log('Error while creating liveStream  : ', error);
@@ -168,7 +155,7 @@ const DialogBox = ({
                     Please wait
                   </Button>
                 ) : (
-                  <Button onClick={handleLiveStream}>Create Stream</Button>
+                  <Button onClick={InitiateLiveStream}>Create Stream</Button>
                 )}
               </CardFooter>
             </Card>

@@ -97,6 +97,7 @@ export const useBroadcastStatus = (
 };
 
 export const useAllBroadcasts = () => {
+  console.info('Fetching All Past Broadcast info ...');
   const { data, error, isLoading } = useSWR(
     `/api/youtube/broadcast`,
     AxiosFetcher
@@ -113,10 +114,10 @@ export const useAllBroadcasts = () => {
 export const useBroadcastMetrics = (broadcastId: string) => {
   const { data, error, isLoading } = useSWR(
     `/api/youtube/broadcast/stats?broadcastId=${broadcastId}&type=metrics`,
-    AxiosFetcher
-    // {
-    //   refreshInterval: 60000,
-    // }
+    AxiosFetcher,
+    {
+      refreshInterval: 30000,
+    }
   );
 
   return {
