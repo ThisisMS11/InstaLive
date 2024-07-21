@@ -167,10 +167,8 @@ export default function StudioEntry({ socket }: { socket: any }) {
     }
 
     setTimeout(() => {
-      if (media)
-        setLocalStream(media);
+      if (media) setLocalStream(media);
     }, 2000);
-
   };
 
   useEffect(() => {
