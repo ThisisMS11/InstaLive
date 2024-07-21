@@ -1,15 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import cloudinary from '@/app/api/utils/cloudinary';
 import { addOverlay, GetOverlays } from '@/app/api/services/broadcasts';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { createLoggerWithLabel } from '@/app/api/utils/logger'
+import { createLoggerWithLabel } from '@/app/api/utils/logger';
+import { makeResponse } from '@/app/api/common/helpers/reponseMaker';
 
-const logger = createLoggerWithLabel('Broadcast_Overlay')
+const logger = createLoggerWithLabel('Broadcast_Overlay');
 
 export const POST = async (req: NextRequest) => {
   try {
-    logger.info('Uploading Custom Overlay ...')
+    logger.info('Uploading Custom Overlay ...');
 
     const data = await req.formData();
     const file = data.get('overlay') as File | null;
@@ -17,18 +18,22 @@ export const POST = async (req: NextRequest) => {
     const session = await getServerSession(authOptions);
 
     if (!file) {
-      logger.error('Image File not provided')
-      return NextResponse.json(
-        { message: 'Please provide the image file to be uploaded' },
-        { status: 400 }
+      logger.error('Image File not provided');
+      return makeResponse(
+        400,
+        false,
+        'Please provide the image file to be uploaded',
+        null
       );
     }
 
     if (!['image/png', 'image/jpeg'].includes(file.type)) {
-      logger.error('Image File format did not match png or jpeg')
-      return NextResponse.json(
-        { message: 'Please upload an image file of type png or jpeg' },
-        { status: 400 }
+      logger.error('Image File format did not match png or jpeg');
+      return makeResponse(
+        400,
+        false,
+        'Please upload an image file of type png or jpeg',
+        null
       );
     }
 
@@ -55,18 +60,20 @@ export const POST = async (req: NextRequest) => {
     }
 
     const response = { public_id, url: secure_url };
-    return NextResponse.json({ data: response }, { status: 200 });
+    return makeResponse(200, true, 'Overlay Successfully uploaded', response);
   } catch (error) {
-    logger.error(`Error uploading file to Cloudinary: ${error}`)
-    return NextResponse.json(
-      { message: 'Failed to upload image, please try again later' },
-      { status: 500 }
+    logger.error(`Error uploading file to Cloudinary: ${error}`);
+    return makeResponse(
+      500,
+      false,
+      'Failed to upload image, please try again later',
+      null
     );
   }
 };
 
 export const GET = async () => {
-  logger.info(`Fetching User Overlays ..`)
+  logger.info(`Fetching User Overlays ..`);
   const session = await getServerSession(authOptions);
   // @ts-ignore
   const userId = session?.user.id;
@@ -77,12 +84,9 @@ export const GET = async () => {
 
   try {
     const overlays = await GetOverlays(userId);
-    return NextResponse.json({ data: overlays }, { status: 200 });
+    return makeResponse(200, true, 'Overlays Feteched', overlays);
   } catch (error) {
-    logger.error(`Error Fetching User Overlays .. ${error}`)
-    return NextResponse.json(
-      { message: 'Error while fetching user overlays', error },
-      { status: 401 }
-    );
+    logger.error(`Error Fetching User Overlays .. ${error}`);
+    return makeResponse(401, false, 'Error while fetching user overlays', null);
   }
 };

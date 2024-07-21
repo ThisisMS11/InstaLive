@@ -12,7 +12,7 @@ export const CreateLiveStream = async (formData: any) => {
       formData
     );
 
-    const data = response.data;
+    const data = response.data.data;
 
     const broadCastInstance: broadCastState = {
       id: data.broadCastResponse.id,
@@ -44,7 +44,7 @@ export const CreateLiveStream = async (formData: any) => {
     throw error;
   }
 };
-//! i have to pass the id form the frontend here.
+
 export const transitionToLive: any = async (
   status: string,
   broadcastId: string
@@ -56,8 +56,7 @@ export const transitionToLive: any = async (
       status: status,
     });
 
-    const data = response.data;
-    console.log({ data });
+    const data = response.data.data;
     return data;
   } catch (error) {
     console.error(
@@ -74,7 +73,9 @@ type useBroadcastStatusResult = {
 };
 
 type BroadcastStatusResponse = {
-  broadCastStatus: string;
+  data: {
+    broadCastStatus: string;
+  };
 };
 
 export const useBroadcastStatus = (
@@ -89,13 +90,14 @@ export const useBroadcastStatus = (
   );
 
   return {
-    status: data?.broadCastStatus,
+    status: data?.data?.broadCastStatus,
     isLoading: isLoading as boolean,
     isError: error,
   };
 };
 
 export const useAllBroadcasts = () => {
+  console.info('Fetching All Past Broadcast info ...');
   const { data, error, isLoading } = useSWR(
     `/api/youtube/broadcast`,
     AxiosFetcher
@@ -112,10 +114,10 @@ export const useAllBroadcasts = () => {
 export const useBroadcastMetrics = (broadcastId: string) => {
   const { data, error, isLoading } = useSWR(
     `/api/youtube/broadcast/stats?broadcastId=${broadcastId}&type=metrics`,
-    AxiosFetcher
-    // {
-    //   refreshInterval: 60000,
-    // }
+    AxiosFetcher,
+    {
+      refreshInterval: 30000,
+    }
   );
 
   return {
