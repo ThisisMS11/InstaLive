@@ -71,6 +71,9 @@ export const POST = async (req: NextRequest) => {
       broadCastResponse,
       liveStreamResponse,
     };
+
+    console.log(response);
+
     return makeResponse(200, true, 'LiveStream Created Successfully', response);
   } catch (error) {
     logger.error(`Error while creating livestream: ${error} `);

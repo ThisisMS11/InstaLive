@@ -35,6 +35,8 @@ io.on('connection', (socket) => {
   console.log(`Socket connected to ${socket.id}`);
   const youtubeUrl = socket.handshake.query.youtubeUrl;
 
+  console.log({youtubeUrl});
+
   socket.on('without-overlay', () => {
     console.log('WithoutOverlay Event was hit');
 

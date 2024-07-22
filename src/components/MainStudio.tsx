@@ -8,7 +8,7 @@ import {
   emptyBroadcast,
   emptyLiveStream,
 } from '@/imports/Redux_imports';
-import { useRouter } from '@/imports/Nextjs_imports';
+import { Image, useRouter } from '@/imports/Nextjs_imports';
 import {
   Graph,
   StatTable,
@@ -120,7 +120,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
   const router = useRouter();
 
   // const { overlayImage, setOverlayImage } = useStudio();
-  const [overlayImage, setOverlayImage] = useState<string>('');
+  const [overlayImage, setOverlayImage] = useState<string | undefined>(undefined);
 
   const broadcastData = useAppSelector((state) => state.broadcasts);
   const { startWebCam, stopWebCam } = useStudio();
@@ -261,15 +261,21 @@ export default function StudioEntry({ socket }: { socket: any }) {
                 <p className="text-center text-2xl">Main Display</p>
               </div>
 
-              <div className="w-[95%] h-[34rem] rounded-lg border bg-card text-card-foreground shadow-sm">
+              <div className="relative w-[95%] h-[34rem] rounded-lg border bg-card text-card-foreground shadow-sm">
                 {weAreLive ? (
-                  <video
-                    ref={videoRef}
-                    autoPlay
-                    className="w-full h-full object-cover"
-                    playsInline
-                    muted
-                  />
+                  <>
+                    <video
+                      ref={videoRef}
+                      autoPlay
+                      className="w-full h-full object-cover"
+                      playsInline
+                      muted
+                    />
+                    {/* @ts-ignore  */}
+                    {overlayImage &&
+                      <Image src={overlayImage} className='absolute top-0 left-0 w-full h-full  z-10' alt='Overlay' width={400} height={400} />
+                    }
+                  </>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gray-200 bg-opacity-50 backdrop-blur-md">
                     <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-4 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
