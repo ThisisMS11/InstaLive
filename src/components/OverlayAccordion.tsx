@@ -7,26 +7,15 @@ import {
   TooltipTrigger,
 } from '@/imports/Shadcn_imports';
 import { Image } from '@/imports/Nextjs_imports';
-import { Plus } from 'lucide-react';
+import { Plus, Ban } from 'lucide-react';
 import { useRef } from 'react';
 import { OverlayUploadDialog } from '@/imports/Component_imports';
-
-// const overlays = [
-//   {
-//     src: 'https://res.cloudinary.com/cloudinarymohit/image/upload/v1719056692/bg1_pycpon.png',
-//     description: 'Background-1 Overlay',
-//   },
-//   {
-//     src: 'https://res.cloudinary.com/cloudinarymohit/image/upload/v1719056563/bg2_vqcptj.png',
-//     description: 'Background-2 Overlay',
-//   },
-// ];
 
 export default function OverlayAccordion({
   setOverlayImage,
   overlays,
 }: {
-  setOverlayImage: (_url: string) => void;
+  setOverlayImage: (_url: string | undefined) => void;
   overlays: any;
 }) {
   const buttonref = useRef<HTMLButtonElement | null>(null);
@@ -38,21 +27,38 @@ export default function OverlayAccordion({
           <div className="text-xl flex items-center justify-between">
             <h2>Overlays</h2>
 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Plus
-                    onClick={() => {
-                      buttonref.current?.click();
-                    }}
-                  />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Add a Custom Overlay</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <div className='flex gap-4'>
+
+              <TooltipProvider>
+                <Tooltip >
+                  <TooltipTrigger>
+                    <Ban
+                      onClick={() => {
+                        setOverlayImage(undefined);
+                      }}
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>None</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Plus
+                      onClick={() => {
+                        buttonref.current?.click();
+                      }}
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Add a Custom Overlay</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+
           </div>
+
           <div className="h-80 overflow-y-scroll">
             {overlays.length > 0 ? (
               overlays.map((overlay: any) => (
