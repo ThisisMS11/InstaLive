@@ -158,7 +158,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
 
     const media = await startWebCam(videoRef);
 
-    if (overlayImage === '') {
+    if (overlayImage == undefined) {
       console.log('WithoutOverlay');
       socket.current.emit('without-overlay');
     } else {
@@ -215,7 +215,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
     if (localStream && socket.current) {
       stopStreaming();
 
-      if (overlayImage === '') {
+      if (overlayImage == undefined) {
         console.log('WithoutOverlay');
         socket.current.emit('without-overlay');
       } else {
