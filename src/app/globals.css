@@ -66,6 +66,7 @@
   }
 }
 
+/* Blinking Red Dot CSS start*/
 @layer base {
   * {
     @apply border-border;
@@ -78,3 +79,19 @@
 .bb {
   @apply border-2 border-black;
 }
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.5), 0 0 20px 10px rgba(255, 0, 0, 0.3), 0 0 30px 15px rgba(255, 0, 0, 0.1);
+  }
+  50% {
+    opacity: 0.5;
+    box-shadow: 0 0 5px 2.5px rgba(255, 0, 0, 0.5), 0 0 10px 5px rgba(255, 0, 0, 0.3), 0 0 15px 7.5px rgba(255, 0, 0, 0.1);
+  }
+}
+.animate-blink {
+  animation: blink 1s infinite;
+}
+
+/* Blinking Red dot css ends */
