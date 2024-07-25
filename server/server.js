@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
   console.log(`Socket connected to ${socket.id}`);
   const youtubeUrl = socket.handshake.query.youtubeUrl;
 
-  console.log({youtubeUrl});
+  console.log({ youtubeUrl });
 
   socket.on('without-overlay', () => {
     console.log('WithoutOverlay Event was hit');
@@ -87,7 +87,7 @@ io.on('connection', (socket) => {
 
   socket.on('with-overlay', (overlayImage) => {
     console.log(
-      '********************************************withOverlay Event was hit'
+      'withOverlay Event was hit'
     );
 
     console.log({ overlayImage });
@@ -103,13 +103,8 @@ io.on('connection', (socket) => {
       .inputFormat('webm') // Ensure the input format for the stream is set
       .input(overlayImage)
       .complexFilter([
-        {
-          filter: 'overlay',
-          options: {
-            x: 100, // Positioning the overlay image
-            y: 100, // Adjust as needed
-          },
-        },
+        '[1][0]scale2ref=w=iw:h=ih[overlay][video]',
+        '[video][overlay]overlay=x=0:y=0'
       ])
       .videoCodec('libx264')
       .addOption('-preset', 'ultrafast')
