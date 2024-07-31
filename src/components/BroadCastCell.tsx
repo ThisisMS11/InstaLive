@@ -46,17 +46,17 @@ export default function BroadCastCell({ broadcast }: { broadcast: any }) {
         <Badge variant="default">{broadcast.status}</Badge>
       </TableCell>
       <TableCell className="text-center">
-        {isLoading ? <Loader className="animate-spin" /> : metrices.viewCount}
+        {isLoading ? <Loader className="animate-spin" /> : metrices?.viewCount}
       </TableCell>
       <TableCell className="text-center">
         {isLoading ? (
           <Loader className="animate-spin" />
         ) : (
-          metrices.commentCount
+          metrices?.commentCount
         )}
       </TableCell>
       <TableCell className="text-center">
-        {isLoading ? <Loader className="animate-spin" /> : metrices.likeCount}
+        {isLoading ? <Loader className="animate-spin" /> : metrices?.likeCount}
       </TableCell>
     </TableRow>
   );

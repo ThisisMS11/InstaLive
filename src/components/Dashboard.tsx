@@ -1,5 +1,5 @@
 'use client';
-import { useSession, Image, Link } from '@/imports/Nextjs_imports';
+import { useSession, Image, Link, useRouter } from '@/imports/Nextjs_imports';
 import React from 'react';
 import {
   Button,
@@ -21,6 +21,7 @@ import {
 } from '@/imports/Shadcn_imports';
 import { ThumbsUp, Eye, MessageSquareText } from 'lucide-react';
 import BroadCastCell from './BroadCastCell';
+import { useAppSelector } from '@/imports/Redux_imports';
 
 function Dashboard({
   buttonRef,
@@ -30,6 +31,8 @@ function Dashboard({
   broadcasts: any;
 }) {
   const session = useSession();
+  const router = useRouter();
+  const liveStreamData = useAppSelector((state) => state.livestreams);
 
   console.log('Dashboard Component Rendered');
 
@@ -90,45 +93,58 @@ function Dashboard({
           <div className="flex-1">
             <h1 className="font-semibold text-lg">Dashboard</h1>
           </div>
-          <div className="flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full"
-              onClick={() => {
-                buttonRef.current?.click();
-              }}
-            >
-              <PlusIcon className="h-4 w-4" />
-              <span className="sr-only">Create New Stream</span>
-            </Button>
-            <Button variant="outline" size="icon" className="rounded-full">
-              <SettingsIcon className="h-4 w-4" />
-              <span className="sr-only">Settings</span>
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <Image
-                    // @ts-ignore
-                    src={session?.data?.user.image}
-                    width={32}
-                    height={32}
-                    className="rounded-full"
-                    alt="Avatar"
-                  />
-                  <span className="sr-only">Toggle user menu</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuItem>Support</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Logout</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 ">
+            <div className='flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4'>
+
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full"
+                onClick={() => {
+                  buttonRef.current?.click();
+                }}
+              >
+                <PlusIcon className="h-4 w-4" />
+                <span className="sr-only">Create New Stream</span>
+              </Button>
+              <Button variant="outline" size="icon" className="rounded-full">
+                <SettingsIcon className="h-4 w-4" />
+                <span className="sr-only">Settings</span>
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    <Image
+                      // @ts-ignore
+                      src={session?.data?.user.image}
+                      width={32}
+                      height={32}
+                      className="rounded-full"
+                      alt="Avatar"
+                    />
+                    <span className="sr-only">Toggle user menu</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                  <DropdownMenuItem>Support</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+            </div>
+
+            {liveStreamData &&
+              liveStreamData.id !== '' && <button className="relative flex items-center justify-center p-2   font-bold rounded-lg shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300" onClick={() => router.push('/studio')}>
+                <span className="absolute left-4 h-2 w-2 bg-red-500 rounded-full animate-blink"></span>
+                <p className="pl-8 opacity-70">Go Live</p>
+              </button>
+            }
+
+
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
@@ -225,7 +241,7 @@ function Dashboard({
 
           <CardTitle>Past Streams</CardTitle>
 
-          <div className="border shadow-sm rounded-lg p-2">
+          <div className="border shadow-sm rounded-lg p-2 h-[18rem] overflow-y-scroll">
             <Table>
               <TableHeader>
                 <TableRow>
