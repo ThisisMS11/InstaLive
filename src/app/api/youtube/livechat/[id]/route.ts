@@ -28,7 +28,7 @@ export const GET = async (req: NextRequest, context: { params: Params }) => {
     // @ts-ignore
     const liveChatData = await youtube.liveChatMessages.list({
       liveChatId: id,
-      part: ['id', 'authorDetails'],
+      part: ['id', 'snippet', 'authorDetails'],
     });
 
     //@ts-ignore
@@ -40,10 +40,10 @@ export const GET = async (req: NextRequest, context: { params: Params }) => {
   }
 };
 
-export const POST = async (req: NextRequest) => {
+export const POST = async (req: NextRequest, context: { params: Params }) => {
   try {
     //@ts-ignore
-    const { liveChatId } = req.query();
+    const { id: liveChatId } = context.params;
     const { message } = await req.json();
 
     if (!liveChatId) {

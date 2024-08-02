@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Button,
   Input,
@@ -5,45 +7,38 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@/imports/Shadcn_imports';
+import { useSession } from 'next-auth/react';
 
 export default function ChatBox() {
+  const session = useSession();
+
   return (
     <div className="flex items-center bg-white rounded-lg shadow max-w-lg h-full w-[100%]  relative  ">
       <div className="flex items-center p-4 border-b absolute top-0 my-4 w-full">
         <Avatar>
-          <AvatarImage src="/placeholder-user.jpg" />
-          <AvatarFallback>SD</AvatarFallback>
+          {/* @ts-ignore */}
+          <AvatarImage src={session ? session?.data?.user.image : './placeholder-user.jpg'} />
+          <AvatarFallback>MS</AvatarFallback>
         </Avatar>
         <div className="ml-3">
-          <div className="font-semibold">Sofia Davis</div>
-          <div className="text-sm text-gray-500">m@example.com</div>
+          {/* @ts-ignore */}
+          <div className="font-semibold">{session && session.data.user.name}</div>
         </div>
-        <Button variant="ghost" className="ml-auto p-2">
-          <PlusIcon className="h-6 w-6" />
-        </Button>
       </div>
 
       <div className="space-y-2 p-4 w-full">
+        {/* user waala  */}
         <div className="flex items-end justify-start">
           <div className="p-3 bg-gray-100 rounded-lg">
             <p className="text-sm">Hi, how can I help you today?</p>
           </div>
         </div>
+        {/* my message  */}
         <div className="flex items-end justify-end">
           <div className="p-3 bg-gray-300 rounded-lg">
             <p className="text-sm">
               Hey, I&apos;m having trouble with my account.
             </p>
-          </div>
-        </div>
-        <div className="flex items-end justify-start">
-          <div className="p-3 bg-gray-100 rounded-lg">
-            <p className="text-sm">What seems to be the problem?</p>
-          </div>
-        </div>
-        <div className="flex items-end justify-end">
-          <div className="p-3 bg-gray-300 rounded-lg">
-            <p className="text-sm">I can&apos;t log in.</p>
           </div>
         </div>
       </div>
@@ -77,23 +72,3 @@ function PaperclipIcon(props) {
   );
 }
 
-// @ts-ignore
-function PlusIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M5 12h14" />
-      <path d="M12 5v14" />
-    </svg>
-  );
-}
