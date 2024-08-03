@@ -319,7 +319,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
             </ResizablePanel>
             <ResizableHandle />
             <ResizablePanel defaultSize={50}>
-              <ChatBox />
+              <ChatBox liveChatId={broadcastData.liveChatId} />
             </ResizablePanel>
           </ResizablePanelGroup>
         </ResizablePanel>

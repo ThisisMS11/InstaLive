@@ -6,10 +6,15 @@ import Dashboard from '@/components/Dashboard';
 import { useYoutubeChannelInfo } from '@/services/user';
 import { useAllBroadcasts } from '@/services/youtube';
 import { toast } from 'sonner';
+import {
+  setYoutubeChannelInfo,
+  useAppDispatch,
+} from '@/imports/Redux_imports';
 
 const DashBoard = () => {
   const { status } = useSession();
   const buttonref = useRef<HTMLButtonElement | null>(null);
+  const dispatch = useAppDispatch()
 
 
   const {
@@ -42,19 +47,19 @@ const DashBoard = () => {
 
   console.count('Dashboard page Rendered');
 
-  // Directly using the channel data from SWR
   const youtubeChannelInfo = channel
     ? {
-        channelId: channel.id,
-        title: channel.snippet.title,
-        description: channel.snippet.description,
-        customUrl: channel.snippet.customUrl,
-        thumbnail: channel.snippet.thumbnails.medium.url,
-      }
+      channelId: channel.id,
+      title: channel.snippet.title,
+      description: channel.snippet.description,
+      thumbnail: channel.snippet.thumbnails.medium.url,
+      customUrl: channel.snippet.customUrl
+    }
     : null;
 
-  // console.log('channel data:', channel);
-  // console.log('broadcasts data:', broadcasts);
+  if (youtubeChannelInfo) {
+    dispatch(setYoutubeChannelInfo(youtubeChannelInfo));
+  }
 
   return (
     <div className="flex items-center justify-center p-0">

@@ -24,7 +24,7 @@ export const GET = async (req: NextRequest) => {
       logger.info(
         `Fetching Stats for broadcast with id : ${youtubeBroadcastId}`
       );
-      youtubeBroadcastId = '67HsvAFuxzg';
+      // youtubeBroadcastId = '67HsvAFuxzg';
       switch (type) {
         case 'metrics':
           response = await getMetrices(youtube, youtubeBroadcastId);
@@ -32,7 +32,7 @@ export const GET = async (req: NextRequest) => {
           break;
         case 'stream':
           response = await getLiveStreamDetails(youtube, youtubeBroadcastId);
-          response = response.data.items[0].liveStreamingDetails;
+          response = response.data.items[0];
           break;
         default:
           return makeResponse(400, false, 'Invalid type', null);
