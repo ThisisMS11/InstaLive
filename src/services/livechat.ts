@@ -6,7 +6,7 @@ export const useGetLiveMessages = (livechatId: string) => {
   // const livechatId2 = 'Cg0KC1pJSzNOMkpsMkNJKicKGFVDZWYxLThlT3BKZ3VkN3N6VlBsWlFBURILWklLM04ySmwyQ0k'
 
   const { data, error, isLoading, mutate } = useSWR(
-    `/api/youtube/livechat/${livechatId}`,
+    `/api/v1/youtube/livechat/${livechatId}`,
     AxiosFetcher,
     { refreshInterval: 5000, dedupingInterval: 4000 }
   );
@@ -28,7 +28,7 @@ export const postLivechatMessage = async (
   // const livechatId2 = 'Cg0KC1pJSzNOMkpsMkNJKicKGFVDZWYxLThlT3BKZ3VkN3N6VlBsWlFBURILWklLM04ySmwyQ0k'
   try {
     const response = await AxiosInstance.post(
-      `/api/youtube/livechat/${livechatId}`,
+      `/api/v1/youtube/livechat/${livechatId}`,
       {
         message,
       }

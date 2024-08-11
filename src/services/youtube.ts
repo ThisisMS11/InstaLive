@@ -8,7 +8,7 @@ import axios from 'axios';
 export const CreateLiveStream = async (formData: any) => {
   try {
     const response = await AxiosInstance.post(
-      '/api/youtube/broadcast',
+      '/api/v1/youtube/broadcast',
       formData
     );
 
@@ -49,7 +49,7 @@ export const transitionToLive: any = async (
   status: string,
   broadcastId: string
 ) => {
-  const url = `${process.env.NEXT_PUBLIC_URL}/api/youtube/broadcast/status`;
+  const url = `${process.env.NEXT_PUBLIC_URL}/api/v1/youtube/broadcast/status`;
   try {
     const response = await AxiosInstance.put(url, {
       youtubeBroadcastId: broadcastId,
@@ -82,7 +82,7 @@ export const useBroadcastStatus = (
   broadcastId: string
 ): useBroadcastStatusResult => {
   const { data, error, isLoading } = useSWR<BroadcastStatusResponse>(
-    `/api/youtube/broadcast/status?broadcastId=${broadcastId}`,
+    `/api/v1/youtube/broadcast/status?broadcastId=${broadcastId}`,
     AxiosFetcher,
     {
       refreshInterval: 2000,
@@ -99,7 +99,7 @@ export const useBroadcastStatus = (
 export const useAllBroadcasts = () => {
   console.info('Fetching All Past Broadcast info ...');
   const { data, error, isLoading } = useSWR(
-    `/api/youtube/broadcast`,
+    `/api/v1/youtube/broadcast`,
     AxiosFetcher
   );
 
@@ -113,7 +113,7 @@ export const useAllBroadcasts = () => {
 /* to get the total number of views till present */
 export const useBroadcastMetrics = (broadcastId: string) => {
   const { data, error, isLoading } = useSWR(
-    `/api/youtube/broadcast/stats?broadcastId=${broadcastId}&type=metrics`,
+    `/api/v1/youtube/broadcast/stats?broadcastId=${broadcastId}&type=metrics`,
     AxiosFetcher,
     {
       refreshInterval: 30000,
@@ -129,7 +129,7 @@ export const useBroadcastMetrics = (broadcastId: string) => {
 
 export const uploadCustomOverlay = async (overlayForm: any) => {
   return await axios.post(
-    `${process.env.NEXT_PUBLIC_URL}/api/youtube/broadcast/overlay`,
+    `${process.env.NEXT_PUBLIC_URL}/api/v1/youtube/broadcast/overlay`,
     overlayForm,
     {
       headers: {
@@ -141,7 +141,7 @@ export const uploadCustomOverlay = async (overlayForm: any) => {
 
 export const useOverlays = () => {
   const { data, error, isLoading } = useSWR(
-    `/api/youtube/broadcast/overlay`,
+    `/api/v1/youtube/broadcast/overlay`,
     AxiosFetcher
   );
 

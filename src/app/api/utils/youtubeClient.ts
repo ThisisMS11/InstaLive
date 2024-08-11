@@ -1,6 +1,6 @@
 import { google } from 'googleapis';
 import { getServerSession } from 'next-auth';
-import { oauth2Client } from '@/app/api/youtube/google';
+import { oauth2Client } from '@/app/api/utils/oauth2Client';
 import { authOptions } from '@/lib/auth';
 
 let youtubeClient: any = null;
