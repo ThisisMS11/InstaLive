@@ -12,7 +12,7 @@ import {
 import { GetBroadcasts } from '@/app/api/services/broadcasts';
 import { createLoggerWithLabel } from '@/app/api/utils/logger';
 import { getServerSession } from 'next-auth';
-import { makeResponse } from '../../common/helpers/reponseMaker';
+import { makeResponse } from '@/app/api/common/helpers/reponseMaker';
 
 const logger = createLoggerWithLabel('Broadcast');
 

@@ -333,7 +333,7 @@ export default function StudioEntry() {
     //     }
     // }
     const transitionToLive = async () => {
-        const url = `${process.env.NEXT_PUBLIC_URL}/api/youtube/broadcast/status`;
+        const url = `${process.env.NEXT_PUBLIC_URL}/api/v1/youtube/broadcast/status`;
         try {
             const response = await axios.put(url, {
                 youtubeBroadcastId: "GWodIL8vJ-k",
