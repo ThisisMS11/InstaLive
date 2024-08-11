@@ -36,7 +36,7 @@ export async function getLiveStreamDetails(
 ) {
   return youtube.videos.list({
     id: youtubeBroadcastId,
-    part: ['id','snippet','liveStreamingDetails']
+    part: ['id', 'snippet', 'liveStreamingDetails'],
   });
 }
 

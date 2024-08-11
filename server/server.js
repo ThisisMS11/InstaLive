@@ -86,9 +86,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('with-overlay', (overlayImage) => {
-    console.log(
-      'withOverlay Event was hit'
-    );
+    console.log('withOverlay Event was hit');
 
     console.log({ overlayImage });
 
@@ -104,7 +102,7 @@ io.on('connection', (socket) => {
       .input(overlayImage)
       .complexFilter([
         '[1][0]scale2ref=w=iw:h=ih[overlay][video]',
-        '[video][overlay]overlay=x=0:y=0'
+        '[video][overlay]overlay=x=0:y=0',
       ])
       .videoCodec('libx264')
       .addOption('-preset', 'ultrafast')

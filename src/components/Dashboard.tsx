@@ -94,8 +94,7 @@ function Dashboard({
             <h1 className="font-semibold text-lg">Dashboard</h1>
           </div>
           <div className="flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4 ">
-            <div className='flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4'>
-
+            <div className="flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
               <Button
                 variant="outline"
                 size="icon"
@@ -134,17 +133,17 @@ function Dashboard({
                   <DropdownMenuItem>Logout</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-
             </div>
 
-            {liveStreamData &&
-              liveStreamData.id !== '' && <button className="relative flex items-center justify-center p-2   font-bold rounded-lg shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300" onClick={() => router.push('/studio')}>
+            {liveStreamData && liveStreamData.id !== '' && (
+              <button
+                className="relative flex items-center justify-center p-2   font-bold rounded-lg shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300"
+                onClick={() => router.push('/studio')}
+              >
                 <span className="absolute left-4 h-2 w-2 bg-red-500 rounded-full animate-blink"></span>
                 <p className="pl-8 opacity-70">Go Live</p>
               </button>
-            }
-
-
+            )}
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">

@@ -59,9 +59,6 @@ export default function HomePage() {
   const session = useSession();
 
   useEffect(() => {
-
-    
-
     const timer = setTimeout(() => {
       toast('InstaLive', {
         description: 'Welcome to InstaLive !',
@@ -69,7 +66,6 @@ export default function HomePage() {
         icon: <Hand />,
       });
     }, 1000);
-
 
     return () => clearTimeout(timer);
   });
