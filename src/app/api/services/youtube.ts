@@ -17,7 +17,7 @@ export async function createBroadcast(
       },
       status: {
         privacyStatus: privacy,
-        selfDeclaredMadeForKids : true,
+        selfDeclaredMadeForKids: true,
       },
       contentDetails: {
         enableAutoStart: false,

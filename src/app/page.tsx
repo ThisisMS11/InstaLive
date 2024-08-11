@@ -69,6 +69,10 @@ export default function HomePage() {
 
     return () => clearTimeout(timer);
   });
+
+  // @ts-ignore
+  console.log(session);
+
   return (
     <>
       <Navbar />
