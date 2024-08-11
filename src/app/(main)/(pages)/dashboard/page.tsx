@@ -6,16 +6,12 @@ import Dashboard from '@/components/Dashboard';
 import { useYoutubeChannelInfo } from '@/services/user';
 import { useAllBroadcasts } from '@/services/youtube';
 import { toast } from 'sonner';
-import {
-  setYoutubeChannelInfo,
-  useAppDispatch,
-} from '@/imports/Redux_imports';
+import { setYoutubeChannelInfo, useAppDispatch } from '@/imports/Redux_imports';
 
 const DashBoard = () => {
   const { status } = useSession();
   const buttonref = useRef<HTMLButtonElement | null>(null);
-  const dispatch = useAppDispatch()
-
+  const dispatch = useAppDispatch();
 
   const {
     channel,
@@ -49,12 +45,12 @@ const DashBoard = () => {
 
   const youtubeChannelInfo = channel
     ? {
-      channelId: channel.id,
-      title: channel.snippet.title,
-      description: channel.snippet.description,
-      thumbnail: channel.snippet.thumbnails.medium.url,
-      customUrl: channel.snippet.customUrl
-    }
+        channelId: channel.id,
+        title: channel.snippet.title,
+        description: channel.snippet.description,
+        thumbnail: channel.snippet.thumbnails.medium.url,
+        customUrl: channel.snippet.customUrl,
+      }
     : null;
 
   if (youtubeChannelInfo) {

@@ -25,7 +25,7 @@ const jsonFormatWithSource = format((info) => {
     function: caller.getFunctionName() || 'anonymous',
     file: caller.getFileName(),
     line: caller.getLineNumber(),
-  };  
+  };
   return info;
 });
 
@@ -53,9 +53,13 @@ const logger: Logger = createLogger({
 if (process.env.NODE_ENV !== 'production') {
   logger.add(
     new transports.Console({
-      format: combine(colorize({ all: true }), timestamp(), printf(({ level, message, label, timestamp }) => {
-        return `${timestamp} [${label}] ${level}: ${message}`;
-      })),
+      format: combine(
+        colorize({ all: true }),
+        timestamp(),
+        printf(({ level, message, label, timestamp }) => {
+          return `${timestamp} [${label}] ${level}: ${message}`;
+        })
+      ),
     })
   );
 }

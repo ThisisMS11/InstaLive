@@ -27,10 +27,9 @@ export default function OverlayAccordion({
           <div className="text-xl flex items-center justify-between">
             <h2>Overlays</h2>
 
-            <div className='flex gap-4'>
-
+            <div className="flex gap-4">
               <TooltipProvider>
-                <Tooltip >
+                <Tooltip>
                   <TooltipTrigger>
                     <Ban
                       onClick={() => {
@@ -56,7 +55,6 @@ export default function OverlayAccordion({
                 </Tooltip>
               </TooltipProvider>
             </div>
-
           </div>
 
           <div className="h-80 overflow-y-scroll">

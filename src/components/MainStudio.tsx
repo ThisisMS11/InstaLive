@@ -120,7 +120,9 @@ export default function StudioEntry({ socket }: { socket: any }) {
   const router = useRouter();
 
   // const { overlayImage, setOverlayImage } = useStudio();
-  const [overlayImage, setOverlayImage] = useState<string | undefined>(undefined);
+  const [overlayImage, setOverlayImage] = useState<string | undefined>(
+    undefined
+  );
 
   const broadcastData = useAppSelector((state) => state.broadcasts);
   const { startWebCam, stopWebCam } = useStudio();
@@ -180,7 +182,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
     //     await transitionToLive('live', broadcastData.id);
     //   })();
     // }
-    console.log({status});
+    console.log({ status });
 
     if (status == 'complete') {
       toast('Stream Completed', {
@@ -273,9 +275,15 @@ export default function StudioEntry({ socket }: { socket: any }) {
                       muted
                     />
                     {/* @ts-ignore  */}
-                    {overlayImage &&
-                      <Image src={overlayImage} className='absolute top-0 left-0 w-full h-full  z-10' alt='Overlay' width={400} height={400} />
-                    }
+                    {overlayImage && (
+                      <Image
+                        src={overlayImage}
+                        className="absolute top-0 left-0 w-full h-full  z-10"
+                        alt="Overlay"
+                        width={400}
+                        height={400}
+                      />
+                    )}
                   </>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gray-200 bg-opacity-50 backdrop-blur-md">

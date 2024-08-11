@@ -13,7 +13,7 @@ const rootPersistConfig = {
 const rootReducer = combineReducers({
   livestreams: livestreamReducer,
   broadcasts: broadcastReducer,
-  youtubeChannelInfo: youtubeChannelInfoReducer
+  youtubeChannelInfo: youtubeChannelInfoReducer,
 });
 
 export { rootPersistConfig, rootReducer };
