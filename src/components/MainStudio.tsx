@@ -173,13 +173,14 @@ export default function StudioEntry({ socket }: { socket: any }) {
 
   useEffect(() => {
     // console.log('broadcast status ');
-    // console.log({ status, broadcastStatusError, broadcastIsLoading });
+    console.log({ status, broadcastStatusError, broadcastIsLoading });
 
-    if (status === 'testing') {
-      (async () => {
-        await transitionToLive('live', broadcastData.id);
-      })();
-    }
+    // if (status === 'testing') {
+    //   (async () => {
+    //     await transitionToLive('live', broadcastData.id);
+    //   })();
+    // }
+    console.log({status});
 
     if (status == 'complete') {
       toast('Stream Completed', {

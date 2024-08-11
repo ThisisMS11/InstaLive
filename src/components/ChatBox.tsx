@@ -12,14 +12,16 @@ import { LiveChatMessage, LiveChatMessageAuthor } from '@/app/types/livechat'
 import { useGetLiveMessages } from '@/services/livechat'
 import { useAppSelector } from '@/imports/Redux_imports'
 import { Loader } from 'lucide-react';
+import {data} from '@/components/demoChatData'
+
 
 export default function ChatBox({ liveChatId }: { liveChatId: string }) {
   const session = useSession();
 
   const [message, setMessage] = useState<String>('');
   const youtubeChannelInfo = useAppSelector((state) => state.youtubeChannelInfo);
+  // const liveChatMessages = data.data;
 
-  console.log(youtubeChannelInfo)
 
   const {
     messages: liveChatMessages,
