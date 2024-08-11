@@ -1,6 +1,47 @@
-   // Extract the livestream ID from the query parameters
-        const url = new URL(req.url);
+https://chatgpt.com/c/754da465-3d44-4c79-9004-5f0bc2353a47
 
-        const id = url.searchParams.get('id');
+To create comprehensive documentation for your StreamYard clone, we can cover several aspects, including project overview, architecture, features, setup instructions, API documentation, and more. I'll need some specific information to tailor the documentation to your project:
 
-        console.log({ id });
+### 1. **Project Overview**
+   - **Project Name**: What do you want to name your project?
+   - **Purpose**: What is the main purpose or goal of the project?
+   - **Target Audience**: Who is the intended user of your project?
+
+### 2. **Architecture**
+   - **Technology Stack**: What technologies are you using? (e.g., Next.js, Node.js, WebRTC, etc.)
+   - **System Design**: Can you provide a high-level overview of the system architecture? (e.g., how components interact, microservices, third-party services like YouTube API, etc.)
+   - **Data Flow**: How does data flow between different parts of the application? Do you have any diagrams?
+
+### 3. **Features**
+   - **List of Features**: What are the core features of your application? (e.g., live streaming, chat integration, screen sharing, etc.)
+   - **Unique Selling Points**: Any features that differentiate your project from others like StreamYard?
+
+### 4. **Setup Instructions**
+   - **Installation Steps**: How can a developer set up the project locally?
+   - **Configuration**: Are there any environment variables or configurations needed?
+   - **Dependencies**: What external services or APIs are required?
+
+### 5. **API Documentation**
+   - **Endpoints**: Can you provide a list of API endpoints along with their request/response formats?
+   - **Authentication**: How is authentication handled in your app?
+   - **Error Handling**: How are errors managed and returned to the client?
+
+### 6. **User Guide**
+   - **How to Use**: A guide for end-users on how to use the application.
+   - **Screenshots**: Do you have any screenshots or visuals to include?
+
+### 7. **Deployment**
+   - **Deployment Strategy**: How is the project deployed? (e.g., Vercel, Docker, etc.)
+   - **CI/CD**: Are you using any continuous integration or deployment tools?
+
+### 8. **Contributing**
+   - **Contribution Guidelines**: How can others contribute to the project?
+   - **Code Style**: Any coding standards or practices to follow?
+
+### 9. **FAQs & Troubleshooting**
+   - **Common Issues**: Any known issues or frequently asked questions?
+
+### 10. **License**
+   - **License Type**: Under what license is your project distributed?
+
+Feel free to provide details on any of the above points, and I'll help you craft a detailed and polished documentation for your project!
