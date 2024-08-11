@@ -1,7 +1,3 @@
-Here's the README documentation based on the provided information:
-
----
-
 # InstaLive
 
 ## 1. Project Overview
@@ -140,7 +136,3 @@ To be added later.
 ## 10. License
 
 To be added later.
-
----
-
-You can add the remaining sections as you gather more information or decide on the details.
