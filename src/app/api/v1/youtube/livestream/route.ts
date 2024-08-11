@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { GetLivestreams } from '@/app/api/services/livestreams';
 import { createLoggerWithLabel } from '@/app/api/utils/logger';
-import { makeResponse } from '../../common/helpers/reponseMaker';
+import { makeResponse } from '@/app/api/common/helpers/reponseMaker';
 
 const logger = createLoggerWithLabel('LiveStream');
 
