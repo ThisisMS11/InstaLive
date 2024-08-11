@@ -23,7 +23,7 @@ const Studio = () => {
           icon: <ShieldAlert color="#ba2c2c" />,
         });
 
-        // router.push('/dashboard');
+        router.push('/dashboard');
       }, 1000);
 
       // Clear the timer on cleanup to avoid multiple toasts
@@ -53,14 +53,14 @@ const Studio = () => {
 
   return (
     <StudioProvider>
-      {/* {!gotoStudio ? (
+      {!gotoStudio ? (
         <div className="flex items-center justify-center h-[98vh] overflow-y-hidden">
           <StudioEntry setGotoStudio={setGotoStudio} />
         </div>
       ) : (
         <MainStudio socket={socket} />
-      )} */}
-      <MainStudio socket={socket} />
+      )}
+      {/* <MainStudio socket={socket} /> */}
     </StudioProvider>
   );
 };

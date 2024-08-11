@@ -29,6 +29,7 @@ export const GET = async (req: NextRequest, context: { params: Params }) => {
     const liveChatData = await youtube.liveChatMessages.list({
       liveChatId: id,
       part: ['id', 'snippet', 'authorDetails'],
+      maxResults : 200
     });
 
     //@ts-ignore

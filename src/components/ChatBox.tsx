@@ -9,24 +9,30 @@ import {
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { LiveChatMessage, LiveChatMessageAuthor } from '@/app/types/livechat'
-import { useGetLiveMessages } from '@/services/livechat'
+import { useGetLiveMessages, postLivechatMessage } from '@/services/livechat'
 import { useAppSelector } from '@/imports/Redux_imports'
-import { Loader } from 'lucide-react';
-import {data} from '@/components/demoChatData'
+import { Loader, SendHorizontal } from 'lucide-react';
+import { v4 as uuidv4 } from 'uuid';
+import { data } from '@/components/demoChatData'
+import ScrollToBottom from 'react-scroll-to-bottom';
+import { useAutoAnimate } from '@formkit/auto-animate/react'
+
 
 
 export default function ChatBox({ liveChatId }: { liveChatId: string }) {
   const session = useSession();
-
-  const [message, setMessage] = useState<String>('');
+  const [parent] = useAutoAnimate()
+  const [message, setMessage] = useState<string>('');
   const youtubeChannelInfo = useAppSelector((state) => state.youtubeChannelInfo);
   // const liveChatMessages = data.data;
+  // const [liveChatMessages, setLiveChatMessages] = useState<any>(data.data);
 
 
   const {
     messages: liveChatMessages,
     isError,
     isLoading,
+    mutate
   } = useGetLiveMessages(liveChatId);
 
   console.log({ liveChatMessages, isError, isLoading });
@@ -38,6 +44,36 @@ export default function ChatBox({ liveChatId }: { liveChatId: string }) {
   if (isLoading) {
     return <Loader className="animate-spin" />
   }
+
+  const handleSendMessage = async (e: any) => {
+    e.preventDefault();
+
+    const newMessage = {
+      id: uuidv4(),  // Generate a unique ID
+      snippet: {
+        displayMessage: message
+      },
+      authorDetails: {
+        channelId: youtubeChannelInfo?.channelId,
+        // @ts-ignore
+        profileImageUrl: session?.data?.user.image
+      }
+    };
+
+    // setLiveChatMessages((prev : any) => [...prev, newMessage])
+
+    /* calling the actual api */
+    await postLivechatMessage(liveChatId, message);
+
+    mutate(
+      liveChatMessages ? [...liveChatMessages, newMessage] : [newMessage],
+      {
+        revalidate: false
+      }
+    );
+    setMessage('');
+  };
+
 
   return (
     <div className="flex items-center bg-white rounded-lg shadow max-w-lg h-full w-[100%]  relative  ">
@@ -53,59 +89,47 @@ export default function ChatBox({ liveChatId }: { liveChatId: string }) {
         </div>
       </div>
 
-      <div className="space-y-2 p-4 w-full h-[65%] overflow-y-scroll">
+      <div className="space-y-2 p-2 w-full h-[65%] overlflow-x-hidden " ref={parent}>
         {/* user waala  */}
-        {
-          liveChatMessages && liveChatMessages.map((message: any) => {
-            // am i the author 
-            const isAuthor = message.authorDetails.channelId === youtubeChannelInfo?.channelId;
+        <ScrollToBottom mode="bottom" initialScrollBehavior="auto" className="h-[22rem] overflow-x-hidden" >
+          {
+            liveChatMessages && liveChatMessages.map((message: any) => {
+              // am i the author 
+              const isAuthor = message.authorDetails.channelId === youtubeChannelInfo?.channelId;
 
-            const class1 = isAuthor ? `flex items-end justify-end` : `flex items-end justify-start`;
-            const class2 = isAuthor ? `p-3 bg-gray-300 rounded-lg flex items-center gap-2` : `p-3 bg-gray-100 rounded-lg flex items-center gap-2`;
+              const class1 = isAuthor ? `flex items-end justify-end mt-2` : `flex items-end justify-start mt-2`;
+              const class2 = isAuthor ? `p-3 bg-gray-300 rounded-lg flex items-center gap-2` : `p-3 bg-gray-100 rounded-lg flex items-center gap-2`;
 
-            return (
-              <div className={class1} key={message.id}>
-                <div className={class2}>
-                  <Avatar className='w-8 h-8'>
-                    {/* @ts-ignore */}
-                    <AvatarImage src={message ? message.authorDetails.profileImageUrl : './placeholder-user.jpg'} />
-                    <AvatarFallback>MS</AvatarFallback>
-                  </Avatar>
-                  <p className="text-sm">{message.snippet.displayMessage}</p>
+              return (
+                <div className={class1} key={message.id}>
+                  <div className={class2}>
+                    <Avatar className='w-8 h-8'>
+                      {/* @ts-ignore */}
+                      <AvatarImage src={message ? message.authorDetails.profileImageUrl : './placeholder-user.jpg'} />
+                      <AvatarFallback>MS</AvatarFallback>
+                    </Avatar>
+                    <p className="text-sm">{message.snippet.displayMessage}</p>
+                  </div>
                 </div>
-              </div>
-            );
-          })
-        }
+              );
+            })
+          }
+        </ScrollToBottom>
 
       </div>
 
-      <div className="flex items-center p-4 border-t absolute  bottom-0 my-4 w-full bg-white">
-        <Input placeholder="Type your message..." className="flex-1" />
-        <Button variant="ghost" className="ml-2 p-2">
-          <PaperclipIcon className="h-6 w-6 rotate-90" />
+      <form onSubmit={handleSendMessage} className="flex items-center p-4 border-t absolute  bottom-0  w-full bg-white">
+
+        <Input placeholder="Type your message..." className="flex-1"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)} />
+        <Button variant="ghost" className="ml-2 p-2" type='submit'>
+          <SendHorizontal className="h-6 w-6" />
         </Button>
-      </div>
+      </form>
+
+
     </div>
-  );
-}
-// @ts-ignore
-function PaperclipIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" />
-    </svg>
   );
 }
 
