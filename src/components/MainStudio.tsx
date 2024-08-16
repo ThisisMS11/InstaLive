@@ -177,11 +177,11 @@ export default function StudioEntry({ socket }: { socket: any }) {
     // console.log('broadcast status ');
     console.log({ status, broadcastStatusError, broadcastIsLoading });
 
-    // if (status === 'testing') {
-    //   (async () => {
-    //     await transitionToLive('live', broadcastData.id);
-    //   })();
-    // }
+    if (status === 'testing') {
+      (async () => {
+        await transitionToLive('live', broadcastData.id);
+      })();
+    }
     console.log({ status });
 
     if (status == 'complete') {
@@ -250,7 +250,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
             </ResizablePanel>
             <ResizableHandle />
             <ResizablePanel defaultSize={50} className="mt-10 p-2">
-              <StatTable />
+              <StatTable broadCastId={broadcastData.id} />
             </ResizablePanel>
           </ResizablePanelGroup>
         </ResizablePanel>

@@ -111,10 +111,23 @@ export const useAllBroadcasts = () => {
 };
 
 /* to get the total number of views till present */
-export const useBroadcastMetrics = (broadcastId: string) => {
+export const useBroadcastMetrics = (
+  broadcastId: string,
+  type: string,
+  refreshIntervalinMs: number
+) => {
+  console.table([
+    { Argument: 'broadcastId', Value: broadcastId },
+    { Argument: 'type', Value: type },
+    { Argument: 'refreshIntervalinMs', Value: refreshIntervalinMs },
+  ]);
+
   const { data, error, isLoading } = useSWR(
-    `/api/v1/youtube/broadcast/stats?broadcastId=${broadcastId}&type=metrics`,
-    AxiosFetcher
+    `/api/v1/youtube/broadcast/stats?broadcastId=${broadcastId}&type=${type}`,
+    AxiosFetcher,
+    {
+      refreshInterval: refreshIntervalinMs,
+    }
   );
 
   return {
