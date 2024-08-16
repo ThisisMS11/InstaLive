@@ -6,32 +6,33 @@ import {
   TableHeader,
   TableRow,
 } from '@/imports/Shadcn_imports';
-import { View, Eye, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { Eye, ThumbsUp, MessageSquareQuote } from 'lucide-react';
+import { useBroadcastMetrics } from '@/services/youtube';
+import { Skeleton } from './ui/skeleton';
+import { formatNumber } from '@/utils/utilFuncs';
 
-const Stats = [
-  {
-    symbol: <Eye />,
-    label: 'Total Views',
-    No: '28,0700',
-  },
-  {
-    symbol: <View />,
-    label: 'Current Viewers',
-    No: '15,780',
-  },
-  {
-    symbol: <ThumbsUp />,
-    label: 'Likes',
-    No: '1890',
-  },
-  {
-    symbol: <ThumbsDown />,
-    label: 'Dislikes',
-    No: '149',
-  },
-];
+export default function StatTable({ broadCastId }: { broadCastId: string }) {
+  const {
+    data: metrices,
+    isError: metricError,
+    isLoading: metricsLoading,
+  } = useBroadcastMetrics(broadCastId, 'metrics', 5000);
 
-export default function StatTable() {
+  const {
+    data: streamData,
+    isError: streamDataError,
+    isLoading: streamDataLoading,
+  } = useBroadcastMetrics(broadCastId, 'stream', 5000);
+
+  // Handle errors by logging them and providing fallback data
+  if (metricError) {
+    console.error('Error While Fetching Metric Data:', metricError);
+  }
+
+  if (streamDataError) {
+    console.error('Error While Fetching Stream Data:', streamDataError);
+  }
+
   return (
     <Table>
       <TableHeader>
@@ -42,20 +43,72 @@ export default function StatTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {Stats.map((stat, index) => (
-          <TableRow key={index}>
-            <TableCell className="font-medium">{stat.symbol}</TableCell>
-            <TableCell className="font-medium">{stat.label}</TableCell>
-            <TableCell>{stat.No}</TableCell>
-          </TableRow>
-        ))}
+        <TableRow>
+          <TableCell className="font-medium">
+            <span className="ml-2 absolute left-4 h-2 w-2 bg-red-500 rounded-full animate-blink"></span>
+          </TableCell>
+          <TableCell className="font-medium">Current Viewers</TableCell>
+          <TableCell>
+            {streamDataLoading ? (
+              <Skeleton className="w-8 h-6" />
+            ) : streamDataError ? (
+              'N/A'
+            ) : (
+              formatNumber(
+                streamData?.liveStreamingDetails?.concurrentViewers
+              ) ?? 'N/A'
+            )}
+          </TableCell>
+        </TableRow>
+
+        <TableRow>
+          <TableCell className="font-medium">
+            <Eye />
+          </TableCell>
+          <TableCell className="font-medium">Views</TableCell>
+          <TableCell>
+            {metricsLoading ? (
+              <Skeleton className="w-8 h-6" />
+            ) : metricError ? (
+              'N/A'
+            ) : (
+              formatNumber(metrices?.viewCount) ?? 'N/A'
+            )}
+          </TableCell>
+        </TableRow>
+
+        <TableRow>
+          <TableCell className="font-medium">
+            <ThumbsUp />
+          </TableCell>
+          <TableCell className="font-medium">Likes</TableCell>
+          <TableCell>
+            {metricsLoading ? (
+              <Skeleton className="w-8 h-6" />
+            ) : metricError ? (
+              'N/A'
+            ) : (
+              formatNumber(metrices?.likeCount) ?? 'N/A'
+            )}
+          </TableCell>
+        </TableRow>
+
+        <TableRow>
+          <TableCell className="font-medium">
+            <MessageSquareQuote />
+          </TableCell>
+          <TableCell className="font-medium">Comments</TableCell>
+          <TableCell>
+            {metricsLoading ? (
+              <Skeleton className="w-8 h-6" />
+            ) : metricError ? (
+              'N/A'
+            ) : (
+              formatNumber(metrices?.commentCount) ?? 'N/A'
+            )}
+          </TableCell>
+        </TableRow>
       </TableBody>
-      {/* <TableFooter>
-                <TableRow>
-                    <TableCell colSpan={3}>Total</TableCell>
-                    <TableCell className="text-right">$2,500.00</TableCell>
-                </TableRow>
-            </TableFooter> */}
     </Table>
   );
 }

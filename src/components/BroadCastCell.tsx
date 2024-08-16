@@ -3,16 +3,16 @@ import { Image } from '@/imports/Nextjs_imports';
 import { TableRow, TableCell, Badge } from '@/imports/Shadcn_imports';
 import { useBroadcastMetrics } from '@/services/youtube';
 import { toast } from 'sonner';
-import { formatDate, calculateDuration } from '@/utils/dateUtils';
+import { formatDate, calculateDuration, formatNumber } from '@/utils/utilFuncs';
 import { Loader } from 'lucide-react';
-import Demo from '@/app/assets/backgrounds/bg2.png';
+import DefaultThumbnail from '@/app/assets/default-video-thumbnail.jpg';
 
 export default function BroadCastCell({ broadcast }: { broadcast: any }) {
   const {
     data: metrices,
     isError,
     isLoading,
-  } = useBroadcastMetrics(broadcast.id);
+  } = useBroadcastMetrics(broadcast.id, 'metrics', 300000);
 
   if (isError) {
     toast('Metrices Error', {
@@ -28,7 +28,7 @@ export default function BroadCastCell({ broadcast }: { broadcast: any }) {
       </TableCell>
       <TableCell className="font-medium">
         <Image
-          src={Demo || broadcast.thumbnail}
+          src={DefaultThumbnail || broadcast.thumbnail}
           alt="Thumbnail not found"
           className="rounded-md text-center"
         />
@@ -46,17 +46,25 @@ export default function BroadCastCell({ broadcast }: { broadcast: any }) {
         <Badge variant="default">{broadcast.status}</Badge>
       </TableCell>
       <TableCell className="text-center">
-        {isLoading ? <Loader className="animate-spin" /> : metrices?.viewCount}
+        {isLoading ? (
+          <Loader className="animate-spin" />
+        ) : (
+          formatNumber(metrices?.viewCount)
+        )}
       </TableCell>
       <TableCell className="text-center">
         {isLoading ? (
           <Loader className="animate-spin" />
         ) : (
-          metrices?.commentCount
+          formatNumber(metrices?.commentCount)
         )}
       </TableCell>
       <TableCell className="text-center">
-        {isLoading ? <Loader className="animate-spin" /> : metrices?.likeCount}
+        {isLoading ? (
+          <Loader className="animate-spin" />
+        ) : (
+          formatNumber(metrices?.likeCount)
+        )}
       </TableCell>
     </TableRow>
   );
