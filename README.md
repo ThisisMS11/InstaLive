@@ -11,13 +11,14 @@
 ## 2. Architecture
 
 **Technology Stack**:
+
 - **Frontend**: Next.js 14
 - **Backend**: Node.js (handling WebSockets)
 - **Database**: PostgreSQL (managed with Prisma)
 - **APIs**: YouTube Livestreaming and Data API, FFmpeg
 - **Cloud Services**: Cloudinary for overlay image uploads
 
-**System Design**: 
+**System Design**:
 InstaLive interacts with the YouTube API to manage live broadcasts, streams, and live chat. The platform utilizes WebSockets for real-time communication and data streaming, with FFmpeg handling video processing. PostgreSQL is used for data storage, with Prisma as the ORM.
 
 **Data Flow**:
@@ -36,6 +37,7 @@ Unlike other platforms like StreamYard that charge for customizable overlays, In
 ## 4. Setup Instructions
 
 **Installation Steps**:
+
 1. Clone the repository:
    ```bash
    git clone <repository-url>
@@ -71,6 +73,7 @@ CLOUDINARY_CLOUD_NAME=
 ```
 
 **Dependencies**:
+
 - YouTube Data API v3
 - People API
 
@@ -85,6 +88,7 @@ To be added later.
 ## 7. Deployment
 
 **Deployment Strategy**:
+
 - **Next.js Server**: Deployed on Vercel
 - **WebSocket Server**: Deployed on Render
 
