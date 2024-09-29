@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { LiveStreamDialog, Loader } from '@/imports/Component_imports';
 import Dashboard from '@/components/Dashboard';
 import { useYoutubeChannelInfo } from '@/services/user';
-import { useAllBroadcasts } from '@/services/youtube';
+import { useAllBroadcasts } from '@/services/broadcast';
 import { toast } from 'sonner';
 import { setYoutubeChannelInfo, useAppDispatch } from '@/imports/Redux_imports';
 
