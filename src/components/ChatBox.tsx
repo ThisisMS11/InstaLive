@@ -32,7 +32,7 @@ export default function ChatBox({ liveChatId }: { liveChatId: string }) {
     mutate,
   } = useGetLiveMessages(liveChatId);
 
-  console.log({ liveChatMessages, isError, isLoading });
+  // console.log({ liveChatMessages, isError, isLoading });
 
   if (isError) {
     console.error(
@@ -80,8 +80,8 @@ export default function ChatBox({ liveChatId }: { liveChatId: string }) {
     <div className="flex items-center bg-white rounded-lg shadow max-w-lg h-full w-[100%]  relative  ">
       <div className="flex items-center p-4 border-b absolute top-0 my-4 w-full z-10 bg-white">
         <Avatar>
-          {/* @ts-ignore */}
           <AvatarImage
+            // @ts-ignore 
             src={session ? session?.data?.user.image : './placeholder-user.jpg'}
           />
           <AvatarFallback>MS</AvatarFallback>
