@@ -2,9 +2,6 @@ import useSWR from 'swr';
 import AxiosFetcher from '@/utils/axiosFetcher';
 import AxiosInstance from '@/utils/axios';
 export const useGetLiveMessages = (livechatId: string) => {
-  console.info('Fetching All Livechat Messages ...');
-  // const livechatId2 = 'Cg0KC1pJSzNOMkpsMkNJKicKGFVDZWYxLThlT3BKZ3VkN3N6VlBsWlFBURILWklLM04ySmwyQ0k'
-
   const { data, error, isLoading, mutate } = useSWR(
     `/api/v1/youtube/livechat/${livechatId}`,
     AxiosFetcher,

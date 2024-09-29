@@ -73,9 +73,7 @@ type useBroadcastStatusResult = {
 };
 
 type BroadcastStatusResponse = {
-  data: {
-    broadCastStatus: string;
-  };
+  data: string
 };
 
 export const useBroadcastStatus = (
@@ -88,12 +86,11 @@ export const useBroadcastStatus = (
       refreshInterval: 2000,
     }
   );
-
   return {
-    status: data?.data?.broadCastStatus,
+    status: data?.data,
     isLoading: isLoading as boolean,
     isError: error,
-  };
+  };;
 };
 
 export const useAllBroadcasts = () => {
@@ -116,11 +113,11 @@ export const useBroadcastMetrics = (
   type: string,
   refreshIntervalinMs: number
 ) => {
-  console.table([
-    { Argument: 'broadcastId', Value: broadcastId },
-    { Argument: 'type', Value: type },
-    { Argument: 'refreshIntervalinMs', Value: refreshIntervalinMs },
-  ]);
+  // console.table([
+  //   { Argument: 'broadcastId', Value: broadcastId },
+  //   { Argument: 'type', Value: type },
+  //   { Argument: 'refreshIntervalinMs', Value: refreshIntervalinMs },
+  // ]);
 
   const { data, error, isLoading } = useSWR(
     `/api/v1/youtube/broadcast/stats?broadcastId=${broadcastId}&type=${type}`,

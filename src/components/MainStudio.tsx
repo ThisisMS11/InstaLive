@@ -132,6 +132,8 @@ export default function StudioEntry({ socket }: { socket: any }) {
     isError: broadcastStatusError,
     isLoading: broadcastIsLoading,
   } = useBroadcastStatus(broadcastData.id);
+  // console.log({ status, broadcastStatusError, broadcastIsLoading });
+
   const {
     overlays,
     isError: overlaysError,
@@ -174,8 +176,6 @@ export default function StudioEntry({ socket }: { socket: any }) {
   };
 
   useEffect(() => {
-    // console.log('broadcast status ');
-    console.log({ status, broadcastStatusError, broadcastIsLoading });
 
     if (status === 'testing') {
       (async () => {
