@@ -7,7 +7,7 @@ import {
   TableRow,
 } from '@/imports/Shadcn_imports';
 import { Eye, ThumbsUp, MessageSquareQuote } from 'lucide-react';
-import { useBroadcastMetrics } from '@/services/youtube';
+import { useBroadcastMetrics } from '@/services/broadcast';
 import { Skeleton } from './ui/skeleton';
 import { formatNumber } from '@/utils/utilFuncs';
 

@@ -1,7 +1,7 @@
 'use client';
 import { Image } from '@/imports/Nextjs_imports';
 import { TableRow, TableCell, Badge } from '@/imports/Shadcn_imports';
-import { useBroadcastMetrics } from '@/services/youtube';
+import { useBroadcastMetrics } from '@/services/broadcast';
 import { toast } from 'sonner';
 import { formatDate, calculateDuration, formatNumber } from '@/utils/utilFuncs';
 import { Loader } from 'lucide-react';

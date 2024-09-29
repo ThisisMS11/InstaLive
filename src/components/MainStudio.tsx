@@ -33,9 +33,9 @@ import {
 } from '@/imports/Shadcn_imports';
 import {
   transitionToLive,
-  useBroadcastStatus,
-  useOverlays,
 } from '@/services/youtube';
+import { useOverlays } from '@/services/overlay'
+import { useBroadcastStatus } from '@/services/broadcast'
 import { toast } from 'sonner';
 import { Loader } from '@/imports/Component_imports';
 import { ShieldAlert } from 'lucide-react';

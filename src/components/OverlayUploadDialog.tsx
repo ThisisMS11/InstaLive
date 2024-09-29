@@ -23,7 +23,7 @@ import {
 } from '@/imports/Specific_imports';
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
-import { uploadCustomOverlay } from '@/services/youtube';
+import { uploadCustomOverlay } from '@/services/overlay';
 
 registerPlugin(Orientation, Preview);
 
