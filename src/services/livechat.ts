@@ -1,9 +1,9 @@
 import useSWR from 'swr';
 import AxiosFetcher from '@/utils/axiosFetcher';
 import AxiosInstance from '@/utils/axios';
-export const useGetLiveMessages = (livechatId: string) => {
+export const useGetLiveMessages = (liveChatId: string) => {
   const { data, error, isLoading, mutate } = useSWR(
-    `/api/v1/youtube/livechat/${livechatId}`,
+    `/api/v1/youtube/livechat?liveChatId=${liveChatId}`,
     AxiosFetcher,
     { refreshInterval: 5000, dedupingInterval: 4000 }
   );
@@ -17,15 +17,15 @@ export const useGetLiveMessages = (livechatId: string) => {
 };
 
 export const postLivechatMessage = async (
-  livechatId: string,
+  liveChatId: string,
   message: string
 ) => {
-  console.info('Posting a livechat Message at ', livechatId);
+  console.info('Posting a livechat Message at ', liveChatId);
 
-  // const livechatId2 = 'Cg0KC1pJSzNOMkpsMkNJKicKGFVDZWYxLThlT3BKZ3VkN3N6VlBsWlFBURILWklLM04ySmwyQ0k'
+  // const liveChatId2 = 'Cg0KC1pJSzNOMkpsMkNJKicKGFVDZWYxLThlT3BKZ3VkN3N6VlBsWlFBURILWklLM04ySmwyQ0k'
   try {
     const response = await AxiosInstance.post(
-      `/api/v1/youtube/livechat/${livechatId}`,
+      `/api/v1/youtube/livechat?liveChatId=${liveChatId}`,
       {
         message,
       }

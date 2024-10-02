@@ -3,31 +3,27 @@ import { createLoggerWithLabel } from '@/app/api/utils/logger';
 import { getYoutubeClient } from '@/app/api/utils/youtubeClient';
 import { makeResponse } from '@/app/api/common/helpers/reponseMaker';
 
-type Params = {
-  id: string;
-};
-
 const logger = createLoggerWithLabel('LiveChat');
 
-export const GET = async (req: NextRequest, context: { params: Params }) => {
+export const GET = async (req: NextRequest) => {
   /* Extract the livestream ID from the query parameters */
-  const { id } = context.params;
+  const url = new URL(req.url);
+  const liveChatId = url.searchParams.get('liveChatId');
 
-  if (!id) {
+  if (!liveChatId) {
     logger.error('LiveChat Id not provided');
     return makeResponse(400, false, 'ID not found', null);
   }
 
-  // Initialize the YouTube API client
   const youtube = await getYoutubeClient();
 
   try {
-    logger.info(`Fetching LiveChat Messages with ID : ${id}`);
+    logger.info(`Fetching LiveChat Messages with ID : ${liveChatId}`);
 
     // Get the livestream status
     // @ts-ignore
     const liveChatData = await youtube.liveChatMessages.list({
-      liveChatId: id,
+      liveChatId: liveChatId,
       part: ['id', 'snippet', 'authorDetails'],
       maxResults: 200,
     });
@@ -41,10 +37,11 @@ export const GET = async (req: NextRequest, context: { params: Params }) => {
   }
 };
 
-export const POST = async (req: NextRequest, context: { params: Params }) => {
+export const POST = async (req: NextRequest) => {
   try {
     //@ts-ignore
-    const { id: liveChatId } = context.params;
+    const url = new URL(req.url);
+    const liveChatId = url.searchParams.get('liveChatId');
     const { message } = await req.json();
 
     if (!liveChatId) {
