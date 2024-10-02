@@ -177,11 +177,11 @@ export default function StudioEntry({ socket }: { socket: any }) {
 
   useEffect(() => {
 
-    if (status === 'testing') {
-      (async () => {
-        await transitionToLive('live', broadcastData.id);
-      })();
-    }
+    // if (status === 'testing') {
+    //   (async () => {
+    //     await transitionToLive('live', broadcastData.id);
+    //   })();
+    // }
     console.log({ status });
 
     if (status == 'complete') {

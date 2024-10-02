@@ -5,7 +5,6 @@ import { LiveStreamDialog, Loader } from '@/imports/Component_imports';
 import Dashboard from '@/components/Dashboard';
 import { useYoutubeChannelInfo } from '@/services/user';
 import { useAllBroadcasts } from '@/services/broadcast';
-import { toast } from 'sonner';
 import { setYoutubeChannelInfo, useAppDispatch } from '@/imports/Redux_imports';
 
 const DashBoard = () => {
@@ -13,12 +12,14 @@ const DashBoard = () => {
   const buttonref = useRef<HTMLButtonElement | null>(null);
   const dispatch = useAppDispatch();
 
+  /* To Fetch User youutube Channel information */
   const {
     channel,
     isError: channelError,
     isLoading: channelLoading,
   } = useYoutubeChannelInfo();
 
+  /* fetching information about all the past broadcasts */
   const {
     broadcasts,
     isError: broadcastsError,
@@ -26,11 +27,8 @@ const DashBoard = () => {
   } = useAllBroadcasts();
 
   if (channelError || broadcastsError) {
-    console.log('Error occurred:', { channelError, broadcastsError });
-    toast('Error', {
-      description: 'Some Error Occurred while fetching data',
-      duration: 5000,
-    });
+    if (channelError) console.log({ channelError });
+    if (broadcastsError) console.log({ broadcastsError });
   }
 
   if (channelLoading || broadcastsLoading || status === 'loading') {
@@ -45,12 +43,12 @@ const DashBoard = () => {
 
   const youtubeChannelInfo = channel
     ? {
-        channelId: channel.id,
-        title: channel.snippet.title,
-        description: channel.snippet.description,
-        thumbnail: channel.snippet.thumbnails.medium.url,
-        customUrl: channel.snippet.customUrl,
-      }
+      channelId: channel.id,
+      title: channel.snippet.title,
+      description: channel.snippet.description,
+      thumbnail: channel.snippet.thumbnails.medium.url,
+      customUrl: channel.snippet.customUrl,
+    }
     : null;
 
   if (youtubeChannelInfo) {

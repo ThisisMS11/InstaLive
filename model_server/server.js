@@ -17,7 +17,6 @@ const processMessage = async (messageId) => {
         }
 
         fastify.log.info(`content : ${messageData.content} | author_id : ${messageData.author_id}`);
-
         const isSpam = await detectSpam(messageData.content)
 
         if (isSpam) {
@@ -86,7 +85,7 @@ const pollQueue = async () => {
     while (true) {
         try {
             // Wait for a new message ID in the queue
-            const [_, messageId] = await redis.brpop('message_queue', 0)
+            const [_, messageId] = await redis.brpop('messageIds', 0)
             fastify.log.info(`Processing message: ${messageId}`)
             await processMessage(messageId)
         } catch (error) {

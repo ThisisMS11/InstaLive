@@ -74,3 +74,8 @@ export {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
+export {
+  Skeleton
+}
+from '@/components/ui/skeleton'
+
