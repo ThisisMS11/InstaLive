@@ -111,7 +111,7 @@ export function AlertDialogDemo({
   );
 }
 
-export default function StudioEntry({ socket }: { socket: any }) {
+export default function StudioEntry({ broadcast_socket, model_socket }: { broadcast_socket: any, model_socket: any }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [weAreLive, setWeAreLive] = useState<boolean>(false);
@@ -162,10 +162,10 @@ export default function StudioEntry({ socket }: { socket: any }) {
 
     if (overlayImage == undefined) {
       console.log('WithoutOverlay');
-      socket.current.emit('without-overlay');
+      broadcast_socket.current.emit('without-overlay');
     } else {
       console.log('WithOverlay');
-      socket.current.emit('with-overlay', overlayImage);
+      broadcast_socket.current.emit('with-overlay', overlayImage);
     }
 
     setTimeout(() => {
@@ -201,7 +201,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
       });
 
       mediaRecorder.ondataavailable = (ev) => {
-        socket.current.emit('binarystream', {
+        broadcast_socket.current.emit('binarystream', {
           stream: ev.data,
           overlay: overlayImage,
         });
@@ -212,15 +212,15 @@ export default function StudioEntry({ socket }: { socket: any }) {
   }, [localStream]);
 
   useEffect(() => {
-    if (localStream && socket.current) {
+    if (localStream && broadcast_socket.current) {
       stopStreaming();
 
       if (overlayImage == undefined) {
         console.log('WithoutOverlay');
-        socket.current.emit('without-overlay');
+        broadcast_socket.current.emit('without-overlay');
       } else {
         console.log('WithOverlay');
-        socket.current.emit('with-overlay', overlayImage);
+        broadcast_socket.current.emit('with-overlay', overlayImage);
       }
 
       /* Giving some time to Settle things up */

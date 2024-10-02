@@ -1,15 +1,19 @@
 import Fastify from 'fastify';
 import Redis from 'ioredis';
-const fastify = Fastify({ logger: true });
+import fastifyIO from 'fastify-socket.io';
 
+const fastify = Fastify({ logger: true });
 const redis = new Redis({
   host: 'localhost',
   port: 6379,
 });
 
+fastify.register(fastifyIO);
+
 const processMessage = async (messageId) => {
   try {
-    const messageData = await redis.hgetall(`message:${messageId}`);
+    /*  Collecting information about this message */
+    const messageData = await redis.hgetall(`liveChatData:${messageId}`);
 
     if (!messageData || Object.keys(messageData).length === 0) {
       fastify.log.warn(`Message ${messageId} not found. It may have expired.`);
@@ -17,15 +21,17 @@ const processMessage = async (messageId) => {
     }
 
     fastify.log.info(
-      `content : ${messageData.content} | author_id : ${messageData.author_id}`
+      `processing Message with ID : ${messageData.id}`
     );
-    const isSpam = await detectSpam(messageData.content);
 
-    if (isSpam) {
-      fastify.log.info(`Blocked user ${messageData.author_id} for spam`);
-    }
+    // const isSpam = await detectSpam(messageData.content);
 
-    await redis.del(`message:${messageId}`);
+    // if (isSpam) {
+    //   fastify.log.info(`Blocked user ${messageData.authorChannelId} for spam`);
+    // }
+
+    /* Adding messageId to processedMessageIds set */
+    await redis.sadd('processedMessageIds', messageId);
   } catch (error) {
     fastify.log.error(
       `Error processing message ${messageId}: ${error.message}`
@@ -94,7 +100,7 @@ const pollQueue = async () => {
   while (true) {
     try {
       // Wait for a new message ID in the queue
-      const [_, messageId] = await redis.brpop('messageIds', 0);
+      const [_, messageId] = await redis.blpop('messageQueue', 0);
       fastify.log.info(`Processing message: ${messageId}`);
       await processMessage(messageId);
     } catch (error) {
@@ -110,6 +116,15 @@ const start = async () => {
   try {
     await fastify.listen({ port: 8005 });
     fastify.log.info(`Server is running on port 8005`);
+
+    // Socket.io connection handler
+    fastify.io.on('connection', (socket) => {
+      fastify.log.info('Client connected xxxx');
+
+      socket.on('disconnect', () => {
+        fastify.log.info('Client disconnected');
+      });
+    });
 
     // Start polling the queue
     pollQueue().catch((err) => {

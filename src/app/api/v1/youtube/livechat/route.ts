@@ -36,24 +36,24 @@ export const GET = async (req: NextRequest) => {
 
     if (redisConnected) {
       /* Putting the messages ids into chatMsgIds redis set */
-      const chatMsgIds = 'chatMsgIds';
+      const processedMessageIds = 'processedMessageIds';
+      const messageQueue = 'messageQueue'
 
       /* Batching the inserting of ids so that can be performed in one go */
       const multi = redisClient.multi();
 
       let cnt = 0;
 
-      logger.info(`Batching Message IDs to be put into "chatMsgIds" set and content into "liveChatData" Hash set. `);
+      logger.info(`Batching Message IDs to be put into "processedMessageIds" set and content into "liveChatData" Hash set. `);
       for (const item of livechatItems) {
         const messageId = item.id;
 
-        const exists = await redisClient.sIsMember(chatMsgIds, messageId);
+        const exists = await redisClient.sIsMember(processedMessageIds, messageId);
 
         // console.log(`${messageId} :  ${exists}`);
 
         if (!exists) {
           ++cnt;
-          multi.sAdd(chatMsgIds, messageId);
           multi.hSet(`liveChatData:${messageId}`, {
             id: messageId,
             authorChannelId: item.snippet.authorChannelId,
@@ -61,9 +61,10 @@ export const GET = async (req: NextRequest) => {
             messageContent: item.snippet.textMessageDetails.messageText,
             channelName: item.authorDetails.displayName
           })
+          multi.rPush(messageQueue, messageId);
 
           /* Setting an expire for the redis hash */
-          multi.expire(`chatMsg:${messageId}`, 86400);
+          multi.expire(`liveChatData:${messageId}`, 86400);
         }
       }
 
