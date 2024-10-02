@@ -45,3 +45,17 @@ To create comprehensive documentation for your StreamYard clone, we can cover se
    - **License Type**: Under what license is your project distributed?
 
 Feel free to provide details on any of the above points, and I'll help you craft a detailed and polished documentation for your project!
+
+
+
+Redis commands : 
+smembers set_name ->  to get the content of side a set.
+hget hash_set_name:key attribute_name -> to get a specific field info for a specific record using it's key.
+hgetall hash_set_name:key -> to get all the field and their info.
+scard set_name -> to get the  size of the set.
+keys hash_set_name:* -> to get all the keys of hte hash set
+
+
+del set_name -> to clear the hash set
+del hash_set_name:key -> to delete record with key=key.
+
