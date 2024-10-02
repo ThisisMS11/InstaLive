@@ -9,7 +9,6 @@ import { Loader } from 'lucide-react';
 import DefaultThumbnail from '@/app/assets/default-video-thumbnail.jpg';
 
 export default function BroadCastCell({ broadcast }: { broadcast: any }) {
-
   const {
     data: metrics,
     isError,

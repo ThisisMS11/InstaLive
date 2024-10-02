@@ -43,12 +43,12 @@ const DashBoard = () => {
 
   const youtubeChannelInfo = channel
     ? {
-      channelId: channel.id,
-      title: channel.snippet.title,
-      description: channel.snippet.description,
-      thumbnail: channel.snippet.thumbnails.medium.url,
-      customUrl: channel.snippet.customUrl,
-    }
+        channelId: channel.id,
+        title: channel.snippet.title,
+        description: channel.snippet.description,
+        thumbnail: channel.snippet.thumbnails.medium.url,
+        customUrl: channel.snippet.customUrl,
+      }
     : null;
 
   if (youtubeChannelInfo) {

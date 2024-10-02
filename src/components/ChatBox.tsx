@@ -5,7 +5,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-  Skeleton
+  Skeleton,
 } from '@/imports/Shadcn_imports';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
@@ -45,34 +45,34 @@ export default function ChatBox({ liveChatId }: { liveChatId: string }) {
   }
 
   if (isLoading) {
-    return (<div className="flex items-center bg-white rounded-lg shadow max-w-lg h-full w-[100%]  relative  ">
+    return (
+      <div className="flex items-center bg-white rounded-lg shadow max-w-lg h-full w-[100%]  relative  ">
+        <div className="flex items-center p-4 absolute top-0 my-4 w-full z-10 bg-white border-b">
+          <Skeleton className="rounded-full w-8 h-8" />
+          <div>
+            <Skeleton className="w-28 h-8 ml-4" />
+          </div>
+        </div>
 
-      <div className="flex items-center p-4 absolute top-0 my-4 w-full z-10 bg-white border-b">
-        <Skeleton className='rounded-full w-8 h-8' />
-        <div >
-          <Skeleton className='w-28 h-8 ml-4' />
+        <div className=" w-full flex gap-3 flex-col px-4">
+          <div className="flex justify-start my-2">
+            <Skeleton className="w-[60%] h-8 " />
+          </div>
+          <div className="flex justify-end my-2">
+            <Skeleton className="w-[60%] h-8 " />
+          </div>
+          <div className="flex justify-start my-2">
+            <Skeleton className="w-[60%] h-8 " />
+          </div>
+          <div className="flex justify-end my-2">
+            <Skeleton className="w-[60%] h-8 " />
+          </div>
+          <div className="flex justify-start my-2">
+            <Skeleton className="w-[60%] h-8 " />
+          </div>
         </div>
       </div>
-
-      <div className=' w-full flex gap-3 flex-col px-4'>
-        <div className='flex justify-start my-2'>
-          <Skeleton className='w-[60%] h-8 ' />
-        </div>
-        <div className='flex justify-end my-2'>
-          <Skeleton className='w-[60%] h-8 ' />
-        </div>
-        <div className='flex justify-start my-2'>
-          <Skeleton className='w-[60%] h-8 ' />
-        </div>
-        <div className='flex justify-end my-2'>
-          <Skeleton className='w-[60%] h-8 ' />
-        </div>
-        <div className='flex justify-start my-2'>
-          <Skeleton className='w-[60%] h-8 ' />
-        </div>
-      </div>
-
-    </div>)
+    );
   }
 
   const handleSendMessage = async (e: any) => {
@@ -109,7 +109,7 @@ export default function ChatBox({ liveChatId }: { liveChatId: string }) {
       <div className="flex items-center p-4 border-b absolute top-0 my-4 w-full z-10 bg-white">
         <Avatar>
           <AvatarImage
-            // @ts-ignore 
+            // @ts-ignore
             src={session ? session?.data?.user.image : './placeholder-user.jpg'}
           />
           <AvatarFallback>MS</AvatarFallback>
