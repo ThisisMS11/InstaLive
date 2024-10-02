@@ -49,11 +49,6 @@ export const useBroadcastMetrics = (
     type: string,
     refreshIntervalinMs: number
 ) => {
-    // console.table([
-    //   { Argument: 'broadcastId', Value: broadcastId },
-    //   { Argument: 'type', Value: type },
-    //   { Argument: 'refreshIntervalinMs', Value: refreshIntervalinMs },
-    // ]);
 
     const { data, error, isLoading } = useSWR(
         `/api/v1/youtube/broadcast/stats?broadcastId=${broadcastId}&type=${type}`,
