@@ -2,11 +2,13 @@ import { NextRequest } from 'next/server';
 import { createLoggerWithLabel } from '@/app/api/utils/logger';
 import { getYoutubeClient } from '@/app/api/utils/youtubeClient';
 import { makeResponse } from '@/app/api/common/helpers/reponseMaker';
+import { redisClient, CheckRedisConnection } from '@/app/api/utils/redis'
 
 const logger = createLoggerWithLabel('LiveChat');
 
+/* Get All Messages from LiveChat */
 export const GET = async (req: NextRequest) => {
-  /* Extract the livestream ID from the query parameters */
+
   const url = new URL(req.url);
   const liveChatId = url.searchParams.get('liveChatId');
 
@@ -20,7 +22,6 @@ export const GET = async (req: NextRequest) => {
   try {
     logger.info(`Fetching LiveChat Messages with ID : ${liveChatId}`);
 
-    // Get the livestream status
     // @ts-ignore
     const liveChatData = await youtube.liveChatMessages.list({
       liveChatId: liveChatId,
@@ -30,6 +31,48 @@ export const GET = async (req: NextRequest) => {
 
     //@ts-ignore
     const livechatItems = liveChatData.data.items;
+
+    const redisConnected = await CheckRedisConnection(redisClient);
+
+    if (redisConnected) {
+      /* Putting the messages ids into chatMsgIds redis set */
+      const chatMsgIds = 'chatMsgIds';
+
+      /* Batching the inserting of ids so that can be performed in one go */
+      const multi = redisClient.multi();
+
+      let cnt = 0;
+
+      logger.info(`Batching Message IDs to be put into "chatMsgIds" set and content into "liveChatData" Hash set. `);
+      for (const item of livechatItems) {
+        const messageId = item.id;
+
+        const exists = await redisClient.sIsMember(chatMsgIds, messageId);
+
+        // console.log(`${messageId} :  ${exists}`);
+
+        if (!exists) {
+          ++cnt;
+          multi.sAdd(chatMsgIds, messageId);
+          multi.hSet(`liveChatData:${messageId}`, {
+            id: messageId,
+            authorChannelId: item.snippet.authorChannelId,
+            profileImage: item.authorDetails.profileImageUrl,
+            messageContent: item.snippet.textMessageDetails.messageText,
+            channelName: item.authorDetails.displayName
+          })
+
+          /* Setting an expire for the redis hash */
+          multi.expire(`chatMsg:${messageId}`, 86400);
+        }
+      }
+
+      logger.info(`Ids pushed into redis set and data into  hash set, Total Count : ${cnt}`);
+      await multi.exec();
+    } else {
+      logger.warn('Proceeding without Redis. Data will not be stored.');
+    }
+
     return makeResponse(200, true, 'Fetched livechat data', livechatItems);
   } catch (error) {
     logger.error(`Error while getting livechat Data: ${error} `);
@@ -37,6 +80,8 @@ export const GET = async (req: NextRequest) => {
   }
 };
 
+
+/* Post a Message to the livechat */
 export const POST = async (req: NextRequest) => {
   try {
     //@ts-ignore
@@ -67,10 +112,7 @@ export const POST = async (req: NextRequest) => {
       },
     });
 
-    // Extract the livestream status from the response
     //@ts-ignore
-
-    // Return the livestream status
     const data = liveChatData.data.items;
     return makeResponse(200, true, 'Posted message on livechat', data);
   } catch (error) {
