@@ -12,7 +12,8 @@ const Studio = () => {
   const liveStreamData = useAppSelector((state) => state.livestreams);
   const router = useRouter();
   const [gotoStudio, setGotoStudio] = useState<boolean>(false);
-  const socket = useRef<any>(null);
+  const broadcast_socket = useRef<any>(null);
+  const model_socket = useRef<any>(null);
 
   useEffect(() => {
     if (liveStreamData.id === '') {
@@ -40,14 +41,18 @@ const Studio = () => {
         const streamName = liveStreamData.streamName;
 
         const youtubeUrl = `${ingestionAddress}/${streamName}`;
-        const url = `${process.env.NEXT_PUBLIC_FFMPEG_SERVER}/?youtubeUrl=${youtubeUrl}`;
+        const broadcasting_server_url = `${process.env.NEXT_PUBLIC_FFMPEG_SERVER}/?youtubeUrl=${youtubeUrl}`;
+        const model_server_url = `http://localhost:8005`;
 
-        socket.current = io(url, {
+        broadcast_socket.current = io(broadcasting_server_url, {
           transports: ['websocket'],
         });
+
+        model_socket.current = io(model_server_url, {
+          transports: ['websocket'],
+        })
       }
     };
-
     InstaLive();
   }, [liveStreamData, router]);
 
@@ -58,9 +63,9 @@ const Studio = () => {
           <StudioEntry setGotoStudio={setGotoStudio} />
         </div>
       ) : (
-        <MainStudio socket={socket} />
+        <MainStudio broadcast_socket={broadcast_socket} model_socket={model_socket} />
       )} */}
-      <MainStudio socket={socket} />
+      <MainStudio broadcast_socket={broadcast_socket} model_socket={model_socket} />
     </StudioProvider>
   );
 };
