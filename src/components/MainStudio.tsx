@@ -245,7 +245,7 @@ export default function StudioEntry({ socket }: { socket: any }) {
       >
         <ResizablePanel defaultSize={20}>
           <ResizablePanelGroup direction="vertical">
-            <ResizablePanel defaultSize={50} className="mt-10 p-2">
+            <ResizablePanel defaultSize={50} className=" p-2">
               <Graph />
             </ResizablePanel>
             <ResizableHandle />
