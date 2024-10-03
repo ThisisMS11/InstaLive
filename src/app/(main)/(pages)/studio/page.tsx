@@ -10,51 +10,98 @@ import { ShieldAlert } from 'lucide-react';
 
 const Studio = () => {
   const liveStreamData = useAppSelector((state) => state.livestreams);
+  const broadCastData = useAppSelector((state) => state.broadcasts);
   const router = useRouter();
-  const [gotoStudio, setGotoStudio] = useState<boolean>(false);
+  const [gotoStudio, setGotoStudio] = useState(false);
+  const [errorOccurred, setErrorOccurred] = useState(false); // Add error state
   const broadcast_socket = useRef<any>(null);
   const model_socket = useRef<any>(null);
 
+  // Livestream establishment check
   useEffect(() => {
-    if (liveStreamData.id === '') {
+    if (!liveStreamData?.id) {
       const timer = setTimeout(() => {
-        toast('Error', {
-          description: 'Livestream is not yet Established',
+        toast.error('Livestream is not yet Established', {
           duration: 5000,
-          icon: <ShieldAlert color="#ba2c2c" />,
+          icon: <ShieldAlert size={20} color="red" />,
         });
-
-        // router.push('/dashboard');
+        router.push('/dashboard');
       }, 1000);
 
-      // Clear the timer on cleanup to avoid multiple toasts
       return () => clearTimeout(timer);
     }
-  }, [liveStreamData.id, router]);
+  }, [liveStreamData?.id, router]);
 
+  // Connect to servers for broadcasting and model handling
   useEffect(() => {
     const InstaLive = async () => {
-      console.log('Connecting to the server ....');
+      console.log('Connecting to the server...');
 
-      if (liveStreamData) {
-        const ingestionAddress = liveStreamData.ingestionAddress;
-        const streamName = liveStreamData.streamName;
+      if (liveStreamData && broadCastData) {
+        const { ingestionAddress, streamName } = liveStreamData;
+        const { liveChatId } = broadCastData;
+
+        if (ingestionAddress === '' || streamName === '') {
+          toast.error(
+            'Invalid livestream data. Check the ingestion address or stream name.',
+            { duration: 5000 }
+          );
+          setErrorOccurred(true);
+          return;
+        }
 
         const youtubeUrl = `${ingestionAddress}/${streamName}`;
         const broadcasting_server_url = `${process.env.NEXT_PUBLIC_FFMPEG_SERVER}/?youtubeUrl=${youtubeUrl}`;
-        const model_server_url = `http://localhost:8005`;
+        const model_server_url = `http://localhost:8005/?liveChatId=${liveChatId}`;
 
-        broadcast_socket.current = io(broadcasting_server_url, {
-          transports: ['websocket'],
-        });
+        try {
+          if (!process.env.NEXT_PUBLIC_FFMPEG_SERVER) {
+            throw new Error(
+              'FFMPEG Server URL not found in environment variables'
+            );
+          }
 
-        model_socket.current = io(model_server_url, {
-          transports: ['websocket'],
-        })
+          /* Broadcast socket connection */
+          broadcast_socket.current = io(broadcasting_server_url, {
+            transports: ['websocket'],
+          });
+
+          /* Model socket connection */
+          model_socket.current = io(model_server_url, {
+            transports: ['websocket'],
+          });
+
+          broadcast_socket.current.on('connect_error', (err: any) => {
+            toast.error('Failed to connect to the broadcasting server.', {
+              duration: 5000,
+            });
+            console.error('Broadcast connection error:', err);
+            setErrorOccurred(true);
+          });
+
+          model_socket.current.on('connect_error', (err: any) => {
+            toast.error('Failed to connect to the model server.', {
+              duration: 5000,
+            });
+            console.error('Model connection error:', err);
+            setErrorOccurred(true);
+          });
+        } catch (error) {
+          // @ts-ignore
+          toast.error(`Error initializing sockets: ${error?.message}`, {
+            duration: 5000,
+          });
+          setErrorOccurred(true);
+        }
       }
     };
+
     InstaLive();
-  }, [liveStreamData, router]);
+  }, [liveStreamData, broadCastData]);
+
+  if (errorOccurred) {
+    return <div>Error occurred. Please check livestream data.</div>;
+  }
 
   return (
     <StudioProvider>
@@ -65,7 +112,10 @@ const Studio = () => {
       ) : (
         <MainStudio broadcast_socket={broadcast_socket} model_socket={model_socket} />
       )} */}
-      <MainStudio broadcast_socket={broadcast_socket} model_socket={model_socket} />
+      <MainStudio
+        broadcast_socket={broadcast_socket}
+        model_socket={model_socket}
+      />
     </StudioProvider>
   );
 };

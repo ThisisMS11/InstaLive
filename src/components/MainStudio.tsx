@@ -111,7 +111,13 @@ export function AlertDialogDemo({
   );
 }
 
-export default function StudioEntry({ broadcast_socket, model_socket }: { broadcast_socket: any, model_socket: any }) {
+export default function StudioEntry({
+  broadcast_socket,
+  model_socket,
+}: {
+  broadcast_socket: any;
+  model_socket: any;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [weAreLive, setWeAreLive] = useState<boolean>(false);
@@ -140,11 +146,6 @@ export default function StudioEntry({ broadcast_socket, model_socket }: { broadc
 
   if (overlaysError) {
     console.log('Error Overlays fetching : ', overlays);
-    toast('Error', {
-      description: 'Error fetching overlays',
-      duration: 3000,
-      icon: <ShieldAlert color="#ba2c2c" />,
-    });
   }
 
   const stopStreaming = () => {
@@ -210,6 +211,14 @@ export default function StudioEntry({ broadcast_socket, model_socket }: { broadc
       mediaRecorder.start(500);
     }
   }, [localStream]);
+
+  useEffect(() => {
+    if (model_socket.current) {
+      model_socket.current.on('block-user', (data: any) => {
+        console.log('model_socket data recieved : ', data);
+      });
+    }
+  }, [model_socket]);
 
   useEffect(() => {
     if (localStream && broadcast_socket.current) {

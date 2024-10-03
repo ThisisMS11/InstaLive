@@ -1,1 +1,9 @@
-Test out the  livechat user ban api and then integrate  it with the model server.
+What is done ? 
+I am able to store the livechat message ids perfectly into redis queue and info into sets and I am not absolutely clear with the flow . 
+
+Steps ahead : 
+1. open exclidraw and go through the flow again.
+2. you were working on socket connections between the client and fastify server .you would require to have livechatId at the fastify server in order to make the api call at nextjs server. Use a map to bind obtained socket to something useful 
+3. call the block user api at fastify server line no 29 and complete the rest of the flow , it shouldn't not take long now.
+
+4. I need the livechatId at the fastify server.

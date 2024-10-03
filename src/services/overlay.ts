@@ -17,7 +17,8 @@ export const uploadCustomOverlay = async (overlayForm: any) => {
 export const useOverlays = () => {
   const { data, error, isLoading } = useSWR(
     `/api/v1/youtube/broadcast/overlay`,
-    AxiosFetcher
+    AxiosFetcher,
+    { errorRetryCount: 0, errorRetryInterval: 5000 }
   );
 
   return {

@@ -58,7 +58,7 @@ export default function OverlayAccordion({
           </div>
 
           <div className="h-80 overflow-y-scroll">
-            {overlays.length > 0 ? (
+            {overlays && overlays.length > 0 ? (
               overlays.map((overlay: any) => (
                 <div
                   key={overlay.id}
