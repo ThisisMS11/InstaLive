@@ -1,6 +1,7 @@
 import Fastify from 'fastify';
 import Redis from 'ioredis';
 import fastifyIO from 'fastify-socket.io';
+import fetch from 'node-fetch';
 
 const fastify = Fastify({ logger: true });
 const redis = new Redis({
@@ -9,6 +10,8 @@ const redis = new Redis({
 });
 
 fastify.register(fastifyIO);
+
+const livechatSockets = new Map();
 
 const processMessage = async (messageId) => {
   try {
@@ -20,13 +23,40 @@ const processMessage = async (messageId) => {
       return;
     }
 
-    fastify.log.info(
-      `processing Message with ID : ${messageData.id}`
-    );
+    fastify.log.info(`processing Message with ID : ${messageData.id}`);
 
-    // const isSpam = await detectSpam(messageData.content);
+    /* this works but it will emit this event to all the connected clients so in order to send it to a specific client we would need to use the socket .*/
+    fastify.io.emit('block-user', {
+      name: 'Mohit Saini',
+    });
+
+    // const isSpam = await detectSpam(messageData.messageContent);
 
     // if (isSpam) {
+
+    //   /* making the api call to block this user */
+    //   const url = `http://localhost:3000/api/v1/youtube/livechat/block-user/`;
+    //   const body = {
+    //     "liveChatId": "KicKGFVDcGtWc3REU3FwSGdMdVdRUVhRRHR2ZxILaHJiLVVCZjB4M0U",
+    //     "authorChannelId": "UCc_qv929R7S4WoZkCvYwpAQ",
+    //     "type": "permanent"
+    //   };
+
+    //   try {
+    //     const response = await fetch(url, {
+    //       method: 'POST',
+    //       body: JSON.stringify(body),
+    //       headers: {
+    //         Authorization: `Bearer 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`,
+    //         'Content-Type': 'application/json'
+    //       }
+    //     })
+
+    //     const data = await response.json();
+
+    //   } catch (error) {
+
+    //   }
     //   fastify.log.info(`Blocked user ${messageData.authorChannelId} for spam`);
     // }
 
@@ -119,7 +149,12 @@ const start = async () => {
 
     // Socket.io connection handler
     fastify.io.on('connection', (socket) => {
-      fastify.log.info('Client connected xxxx');
+      fastify.log.info(`Client connected socket ID : ${socket?.id} `);
+
+      const liveChatId = socket.handshake.query.liveChatId;
+
+      /* mapping the socket to liveChatId for further interaction */
+      livechatSockets.set(liveChatId, socket);
 
       socket.on('disconnect', () => {
         fastify.log.info('Client disconnected');

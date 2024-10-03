@@ -6,28 +6,28 @@ const logger = createLoggerWithLabel('Redis');
 const isProduction = process.env.NODE_ENV === 'production';
 
 const redisClient = createClient({
-    password: isProduction ? process.env.REDIS_PASSWORD : undefined,
-    socket: {
-        host: process.env.REDIS_HOST,
-        port: Number(process.env.REDIS_PORT)
-    }
+  password: isProduction ? process.env.REDIS_PASSWORD : undefined,
+  socket: {
+    host: process.env.REDIS_HOST,
+    port: Number(process.env.REDIS_PORT),
+  },
 });
 
 if (!redisClient.isOpen) {
-    redisClient.connect().catch((err) => {
-        logger.error(`Failed to connect to Redis: ${err}`);
-    });
+  redisClient.connect().catch((err) => {
+    logger.error(`Failed to connect to Redis: ${err}`);
+  });
 }
 
 async function CheckRedisConnection(redis: any) {
-    try {
-        await redis.ping();
-        logger.info(`Redis is Connected Successfully.`);
-        return true;
-    } catch (error) {
-        logger.error(`Redis connection failed: ${error}`);
-        return false;
-    }
+  try {
+    await redis.ping();
+    logger.info(`Redis is Connected Successfully.`);
+    return true;
+  } catch (error) {
+    logger.error(`Redis connection failed: ${error}`);
+    return false;
+  }
 }
 
 export { redisClient, CheckRedisConnection };
