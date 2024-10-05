@@ -62,27 +62,29 @@ const Studio = () => {
           }
 
           /* Broadcast socket connection */
+          console.info("Establishing socket connections with model server");
           broadcast_socket.current = io(broadcasting_server_url, {
             transports: ['websocket'],
           });
 
           /* Model socket connection */
+          console.info("Establishing socket connections with model server");
           model_socket.current = io(model_server_url, {
             transports: ['websocket'],
           });
 
           broadcast_socket.current.on('connect_error', (err: any) => {
-            toast.error('Failed to connect to the broadcasting server.', {
-              duration: 5000,
-            });
+            // toast.error('Failed to connect to the broadcasting server.', {
+            //   duration: 5000,
+            // });
             console.error('Broadcast connection error:', err);
             setErrorOccurred(true);
           });
 
           model_socket.current.on('connect_error', (err: any) => {
-            toast.error('Failed to connect to the model server.', {
-              duration: 5000,
-            });
+            // toast.error('Failed to connect to the model server.', {
+            //   duration: 5000,
+            // });
             console.error('Model connection error:', err);
             setErrorOccurred(true);
           });
@@ -105,17 +107,17 @@ const Studio = () => {
 
   return (
     <StudioProvider>
-      {/* {!gotoStudio ? (
+      {!gotoStudio ? (
         <div className="flex items-center justify-center h-[98vh] overflow-y-hidden">
           <StudioEntry setGotoStudio={setGotoStudio} />
         </div>
       ) : (
         <MainStudio broadcast_socket={broadcast_socket} model_socket={model_socket} />
-      )} */}
-      <MainStudio
+      )}
+      {/* <MainStudio
         broadcast_socket={broadcast_socket}
         model_socket={model_socket}
-      />
+      /> */}
     </StudioProvider>
   );
 };

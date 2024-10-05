@@ -64,6 +64,7 @@ export const GET = async (req: NextRequest) => {
             profileImage: item.authorDetails.profileImageUrl,
             messageContent: item.snippet.textMessageDetails.messageText,
             channelName: item.authorDetails.displayName,
+            liveChatId : item.snippet.liveChatId
           });
           multi.rPush(messageQueue, messageId);
 

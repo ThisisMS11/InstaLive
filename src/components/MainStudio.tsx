@@ -174,12 +174,13 @@ export default function StudioEntry({
     }, 2000);
   };
 
+  /* Listening to Changing broadCast status */
   useEffect(() => {
-    // if (status === 'testing') {
-    //   (async () => {
-    //     await transitionToLive('live', broadcastData.id);
-    //   })();
-    // }
+    if (status === 'testing') {
+      (async () => {
+        await transitionToLive('live', broadcastData.id);
+      })();
+    }
     console.log({ status });
 
     if (status == 'complete') {
@@ -191,6 +192,8 @@ export default function StudioEntry({
     }
   }, [status, broadcastStatusError, broadcastIsLoading]);
 
+
+  /* If LocalStream is Available start sending to the server */
   useEffect(() => {
     if (localStream) {
       const mediaRecorder = new MediaRecorder(localStream, {
@@ -212,14 +215,16 @@ export default function StudioEntry({
     }
   }, [localStream]);
 
+  /* Listening to Model Socket events */
   useEffect(() => {
     if (model_socket.current) {
       model_socket.current.on('block-user', (data: any) => {
-        console.log('model_socket data recieved : ', data);
+        console.log('User Block Event Listened with : ', data);
       });
     }
   }, [model_socket]);
 
+  /* Listening to Changing Requirements of Overlays */
   useEffect(() => {
     if (localStream && broadcast_socket.current) {
       stopStreaming();
@@ -239,6 +244,7 @@ export default function StudioEntry({
     }
   }, [overlayImage]);
 
+  /* If Anything is  Loading then let's wait for it */
   if (overlaysIsLoading) {
     return <Loader message="Getting Ready for LiveStreaming 😁 .." />;
   }

@@ -6,8 +6,8 @@ export const useGetLiveMessages = (liveChatId: string) => {
     `/api/v1/youtube/livechat?liveChatId=${liveChatId}`,
     AxiosFetcher,
     {
-      errorRetryCount: 0,
-      errorRetryInterval: 5000,
+      // errorRetryCount: 0,
+      // errorRetryInterval: 5000,
       refreshInterval: 5000,
       dedupingInterval: 4000,
     }
