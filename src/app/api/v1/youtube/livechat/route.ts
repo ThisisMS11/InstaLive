@@ -37,6 +37,7 @@ export const GET = async (req: NextRequest) => {
       /* Putting the messages ids into chatMsgIds redis set */
       const processedMessageIds = 'processedMessageIds';
       const messageQueue = 'messageQueue';
+      const blockedMessageIds = 'blockedMessageIds';
 
       /* Batching the inserting of ids so that can be performed in one go */
       const multi = redisClient.multi();
@@ -54,9 +55,15 @@ export const GET = async (req: NextRequest) => {
           messageId
         );
 
+        /* Checking Whether this message is blocked or not */
+        const isBlocked = await redisClient.sIsMember(
+          blockedMessageIds,
+          messageId
+        )
+
         // console.log(`${messageId} :  ${exists}`);
 
-        if (!exists) {
+        if (!exists && !isBlocked) {
           ++cnt;
           multi.hSet(`liveChatData:${messageId}`, {
             id: messageId,
@@ -64,7 +71,7 @@ export const GET = async (req: NextRequest) => {
             profileImage: item.authorDetails.profileImageUrl,
             messageContent: item.snippet.textMessageDetails.messageText,
             channelName: item.authorDetails.displayName,
-            liveChatId : item.snippet.liveChatId
+            liveChatId: item.snippet.liveChatId
           });
           multi.rPush(messageQueue, messageId);
 
@@ -127,3 +134,45 @@ export const POST = async (req: NextRequest) => {
     return makeResponse(500, false, 'Error while posting chatmessage', error);
   }
 };
+
+
+/* To delete all blocked users, live chat data, processedMessageIds set, and messageQueue */
+export async function DELETE(req: Request) {
+  try {
+    /* Check if Redis is connected */
+    const redisConnected = await CheckRedisConnection(redisClient);
+    if (!redisConnected) {
+      logger.error('Redis is not connected, clearing data failed');
+      return makeResponse(503, false, 'Redis Service Unavailable', null);
+    }
+
+    /* Get all IDs inside the blockedMessageIds set */
+    const blockedIds = await redisClient.sMembers('blockedMessageIds');
+
+    /* Delete each liveChatData:messageId entry from Redis */
+    for (const messageId of blockedIds) {
+      const key = `liveChatData:${messageId}`;
+
+      await redisClient.del(key);
+    }
+
+    /* Delete the blockedMessageIds set */
+    await redisClient.del('blockedMessageIds');
+
+    /* Delete the processedMessageIds set */
+    await redisClient.del('processedMessageIds');
+
+    /* Purge the messageQueue (if any items exist) */
+    const queueLength = await redisClient.lLen('messageQueue');
+    if (queueLength > 0) {
+      await redisClient.del('messageQueue');
+    }
+
+    logger.info('All Redis data related to the stream has been cleared successfully');
+    return makeResponse(200, true, 'All Redis data cleared successfully', null);
+
+  } catch (error) {
+    logger.error(`Error while clearing Redis data: ${error}`);
+    return makeResponse(500, false, 'Error while clearing Redis data', null);
+  }
+}

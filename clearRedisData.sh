@@ -4,9 +4,16 @@
 REDIS_CLI="redis-cli"
 
 # Delete all entries in a specific hash set
-HASH_SET_NAME="processedMessageIds"  # Replace with your actual hash set name
-echo "Deleting hash set: $HASH_SET_NAME"
-$REDIS_CLI DEL "$HASH_SET_NAME"
+processedMessageIds="processedMessageIds"  
+blockedMessageIds="blockedMessageIds" 
+messageQueue="messageQueue"
+
+echo "Deleting hash set: $processedMessageIds"
+$REDIS_CLI DEL "$processedMessageIds"
+echo "Deleting hash set: $blockedMessageIds"
+$REDIS_CLI DEL "$blockedMessageIds"
+echo "Deleting Queue : $messageQueue"
+$REDIS_CLI DEL "$messageQueue"
 
 # Delete all hashes starting with the prefix "liveChatData"
 echo "Deleting all hashes with prefix 'liveChatData'..."

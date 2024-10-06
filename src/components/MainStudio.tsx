@@ -10,7 +10,7 @@ import {
 } from '@/imports/Redux_imports';
 import { Image, useRouter } from '@/imports/Nextjs_imports';
 import {
-  Graph,
+  BlockedUsers,
   StatTable,
   OverlayAccordion,
   ChatBox,
@@ -30,6 +30,9 @@ import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
+  Avatar,
+  AvatarFallback,
+  AvatarImage
 } from '@/imports/Shadcn_imports';
 import { transitionToLive } from '@/services/youtube';
 import { useOverlays } from '@/services/overlay';
@@ -38,6 +41,8 @@ import { toast } from 'sonner';
 import { Loader } from '@/imports/Component_imports';
 import { ShieldAlert } from 'lucide-react';
 import { useStudio } from '@/app/context/StudioContext';
+import { useSWRConfig } from "swr"
+import { useGetBlockedUserInfo } from '@/services/livechat'
 
 export function AlertDialogDemo({
   transitionToLive,
@@ -131,12 +136,14 @@ export default function StudioEntry({
   const broadcastData = useAppSelector((state) => state.broadcasts);
   const { startWebCam, stopWebCam } = useStudio();
 
+  // swr
+  const { mutate } = useSWRConfig();
+
   const {
     status,
     isError: broadcastStatusError,
     isLoading: broadcastIsLoading,
   } = useBroadcastStatus(broadcastData.id);
-  // console.log({ status, broadcastStatusError, broadcastIsLoading });
 
   const {
     overlays,
@@ -197,11 +204,11 @@ export default function StudioEntry({
   useEffect(() => {
     if (localStream) {
       const mediaRecorder = new MediaRecorder(localStream, {
-        mimeType: 'video/webm; codecs=vp9,opus',
+        mimeType: 'video/webm; codecs=h264,opus',
         audioBitsPerSecond: 128000,
-        videoBitsPerSecond: 2500000,
+        videoBitsPerSecond: 4500000,
         //@ts-ignore
-        framerate: 25,
+        framerate: 30,
       });
 
       mediaRecorder.ondataavailable = (ev) => {
@@ -211,18 +218,69 @@ export default function StudioEntry({
         });
       };
 
-      mediaRecorder.start(500);
+      mediaRecorder.start(750);
     }
   }, [localStream]);
 
   /* Listening to Model Socket events */
   useEffect(() => {
     if (model_socket.current) {
-      model_socket.current.on('block-user', (data: any) => {
-        console.log('User Block Event Listened with : ', data);
+      model_socket.current.on('block-user', async (data: any) => {
+        console.log('User Block Event Listened with:', data);
+
+        // Refetch the data to load the most updated data
+        mutate('/api/v1/youtube/livechat/block-user');
+
+        const { messageId } = data;
+
+        console.log('messageId : ', messageId);
+
+        try {
+          // Fetch blocked user information
+          console.log(`Calling useGetBlockedUserInfo ${messageId}`);
+          const { message, isLoading, isError } = useGetBlockedUserInfo(messageId);
+
+          console.log({ message, isLoading, isError });
+
+          if (isError) {
+            console.error(`Error Fetching user information for ${messageId}`);
+            return;
+          }
+
+          if (message && !isLoading) {
+            // Display toast notification
+            console.log('calling the toast ');
+            const timer = setTimeout(() => {
+              toast(`${message.channelName} Blocked`, {
+                description: message.messageContent,
+                duration: 3000,
+                icon: (
+                  <Avatar className="my-auto mr-3">
+                    <AvatarImage src={message.profileImage} />
+                    <AvatarFallback>N/A</AvatarFallback>
+                  </Avatar>
+                ),
+              });
+            }, 1000);
+
+            // Cleanup the timer when the component unmounts
+            return () => clearTimeout(timer);
+          }
+        } catch (error: any) {
+          console.error(`Error fetching blocked user data: ${error?.message}`);
+        }
       });
     }
+
+    // Cleanup the socket event listener on unmount
+    return () => {
+      if (model_socket.current) {
+        model_socket.current.off('block-user');
+      }
+    };
   }, [model_socket]);
+  
+
 
   /* Listening to Changing Requirements of Overlays */
   useEffect(() => {
@@ -258,7 +316,7 @@ export default function StudioEntry({
         <ResizablePanel defaultSize={20}>
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel defaultSize={50} className=" p-2">
-              <Graph />
+              <BlockedUsers />
             </ResizablePanel>
             <ResizableHandle />
             <ResizablePanel defaultSize={50} className="mt-10 p-2">

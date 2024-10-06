@@ -55,7 +55,7 @@ export const useBroadcastMetrics = (
     // {
     //   refreshInterval: refreshIntervalinMs,
     // }
-    { errorRetryCount: 0, errorRetryInterval: 5000 }
+    { errorRetryCount: 1, errorRetryInterval: 5000 }
   );
 
   return {

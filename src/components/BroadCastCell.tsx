@@ -18,7 +18,6 @@ export default function BroadCastCell({ broadcast }: { broadcast: any }) {
   useEffect(() => {
     if (isError) {
       console.error('Error while fetching broadcast metrics: ', isError);
-      toast.error('Failed to load broadcast metrics');
     }
   }, [isError]);
 
