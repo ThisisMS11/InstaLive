@@ -52,19 +52,25 @@ const processMessage = async (messageId) => {
     let isSpam;
     try {
       isSpam = await detectSpam(messageData.messageContent);
+
+      /* for Demo Usage */
+      if (!isSpam)
+        isSpam = messageData.messageContent === "Demo_Abusive_Message";
     } catch (error) {
       fastify.log.error(`Error in spam detection for message ${messageId}: ${error.message}`);
       return;
     }
+
 
     if (isSpam) {
       fastify.log.info(`${messageId} Found Spam, Content : ${messageData.messageContent}`);
       /* making the api call to block this user */
       const url = `http://localhost:3000/api/v1/youtube/livechat/block-user/`;
       const body = {
+        "messageId": messageId,
         "liveChatId": messageData.liveChatId,
         "authorChannelId": messageData.authorChannelId,
-        "type": "temporary"
+        "type": "temporary",
       };
       try {
         fastify.log.info(`Calling Block User api..`);
@@ -78,9 +84,6 @@ const processMessage = async (messageId) => {
         });
         const data = await response.json();
         fastify.log.info(`Blocked user ${data.data.authorChannelId} for spam`);
-
-        /* Add this MessageId into the blockedMessageIds set */
-        await redis.sadd('blockedMessageIds', messageId);
 
         /* Now Emit the blocked user event at the client side , get the socket connection using map.*/
         const socket = livechatSockets.get(messageData.liveChatId);

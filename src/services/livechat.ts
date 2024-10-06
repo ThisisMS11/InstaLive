@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import AxiosFetcher from '@/utils/axiosFetcher';
 import AxiosInstance from '@/utils/axios';
-export const useGetLiveMessages = (liveChatId: string) => {
+export const useGetLiveChatMessages = (liveChatId: string) => {
   const { data, error, isLoading, mutate } = useSWR(
     `/api/v1/youtube/livechat?liveChatId=${liveChatId}`,
     AxiosFetcher,
@@ -26,8 +26,6 @@ export const postLivechatMessage = async (
   message: string
 ) => {
   console.info('Posting a livechat Message at ', liveChatId);
-
-  // const liveChatId2 = 'Cg0KC1pJSzNOMkpsMkNJKicKGFVDZWYxLThlT3BKZ3VkN3N6VlBsWlFBURILWklLM04ySmwyQ0k'
   try {
     const response = await AxiosInstance.post(
       `/api/v1/youtube/livechat?liveChatId=${liveChatId}`,
@@ -40,4 +38,50 @@ export const postLivechatMessage = async (
     console.error('Error while posting livechatMessage : ', error);
     throw error;
   }
+};
+
+/* Get the blocked users information */
+export const useGetBlockedUsersInfo = (
+) => {
+  console.info('Fetching Blocked Users Information');
+
+  const { data, error, isLoading, mutate } = useSWR(
+    `/api/v1/youtube/livechat/block-user`,
+    AxiosFetcher,
+    {
+      errorRetryCount: 2,
+      errorRetryInterval: 3000,
+      refreshInterval: 5000,
+      dedupingInterval: 2000,
+    }
+  );
+
+  return {
+    messages: data?.data,
+    isLoading: isLoading as boolean,
+    isError: error,
+    mutate,
+  };
+};
+
+/* Get the information for a single blocked user*/
+export const useGetBlockedUserInfo = (
+  messageId: string
+) => {
+  console.info(`Fetching Blocked User Information corresponding to Message ${messageId} `);
+
+  const { data, error, isLoading } = useSWR(
+    `/api/v1/youtube/livechat/block-user?messageId=${messageId}`,
+    AxiosFetcher,
+    {
+      errorRetryCount: 2,
+      errorRetryInterval: 1500,
+    }
+  );
+
+  return {
+    message: data?.data,
+    isLoading: isLoading as boolean,
+    isError: error,
+  };
 };
