@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { use, useEffect, useRef, useState } from 'react';
 import { VideoOff, MonitorUp, CircleX } from 'lucide-react';
 import {
   useAppSelector,
@@ -42,7 +42,7 @@ import { Loader } from '@/imports/Component_imports';
 import { ShieldAlert } from 'lucide-react';
 import { useStudio } from '@/app/context/StudioContext';
 import { useSWRConfig } from 'swr';
-import { useGetBlockedUserInfo } from '@/services/livechat';
+import { getBlockedUserInfo } from '@/services/livechat';
 
 export function AlertDialogDemo({
   transitionToLive,
@@ -237,34 +237,26 @@ export default function StudioEntry({
         try {
           // Fetch blocked user information
           console.log(`Calling useGetBlockedUserInfo ${messageId}`);
-          const { message, isLoading, isError } =
-            useGetBlockedUserInfo(messageId);
+          const userInfo = await getBlockedUserInfo(messageId);
 
-          console.log({ message, isLoading, isError });
+          console.log({ userInfo });
 
-          if (isError) {
-            console.error(`Error Fetching user information for ${messageId}`);
-            return;
-          }
-
-          if (message && !isLoading) {
+          if (userInfo) {
             // Display toast notification
             console.log('calling the toast ');
-            const timer = setTimeout(() => {
-              toast(`${message.channelName} Blocked`, {
-                description: message.messageContent,
-                duration: 3000,
-                icon: (
-                  <Avatar className="my-auto mr-3">
-                    <AvatarImage src={message.profileImage} />
-                    <AvatarFallback>N/A</AvatarFallback>
-                  </Avatar>
-                ),
-              });
-            }, 1000);
 
-            // Cleanup the timer when the component unmounts
-            return () => clearTimeout(timer);
+            toast(`${userInfo.channelName} Blocked`, {
+              description: userInfo.messageContent,
+              duration: 2000,
+              position: 'top-center',
+              icon: (
+                <Avatar className="my-auto mr-3">
+                  <AvatarImage src={userInfo.profileImage} />
+                  <AvatarFallback>N/A</AvatarFallback>
+                </Avatar>
+              ),
+            });
+
           }
         } catch (error: any) {
           console.error(`Error fetching blocked user data: ${error?.message}`);
