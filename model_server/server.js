@@ -8,7 +8,7 @@ const fastify = Fastify({
   logger: {
     level: 'info',
     file: './logs/combined.log',
-  }
+  },
 });
 
 const redis = new Redis({
@@ -22,20 +22,19 @@ const schema = {
   properties: {
     SHARED_SECRET: {
       type: 'string',
-    }
-  }
-}
+    },
+  },
+};
 
 const options = {
   confKey: 'config',
   schema,
   dotenv: true,
-  data: process.env
-}
-
+  data: process.env,
+};
 
 fastify.register(fastifyIO);
-fastify.register(fastifyEnv, options)
+fastify.register(fastifyEnv, options);
 
 const livechatSockets = new Map();
 
@@ -55,22 +54,25 @@ const processMessage = async (messageId) => {
 
       /* for Demo Usage */
       if (!isSpam)
-        isSpam = messageData.messageContent === "Demo_Abusive_Message";
+        isSpam = messageData.messageContent === 'Demo_Abusive_Message';
     } catch (error) {
-      fastify.log.error(`Error in spam detection for message ${messageId}: ${error.message}`);
+      fastify.log.error(
+        `Error in spam detection for message ${messageId}: ${error.message}`
+      );
       return;
     }
 
-
     if (isSpam) {
-      fastify.log.info(`${messageId} Found Spam, Content : ${messageData.messageContent}`);
+      fastify.log.info(
+        `${messageId} Found Spam, Content : ${messageData.messageContent}`
+      );
       /* making the api call to block this user */
       const url = `http://localhost:3000/api/v1/youtube/livechat/block-user/`;
       const body = {
-        "messageId": messageId,
-        "liveChatId": messageData.liveChatId,
-        "authorChannelId": messageData.authorChannelId,
-        "type": "temporary",
+        messageId: messageId,
+        liveChatId: messageData.liveChatId,
+        authorChannelId: messageData.authorChannelId,
+        type: 'temporary',
       };
       try {
         fastify.log.info(`Calling Block User api..`);
@@ -79,8 +81,8 @@ const processMessage = async (messageId) => {
           body: JSON.stringify(body),
           headers: {
             Authorization: `Bearer ${fastify.config.SHARED_SECRET}`,
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
         });
         const data = await response.json();
         fastify.log.info(`Blocked user ${data.data.authorChannelId} for spam`);
@@ -90,17 +92,19 @@ const processMessage = async (messageId) => {
         if (socket) {
           fastify.log.info(`Emitting Block User Event to Notify Client`);
           socket.emit('block-user', {
-            messageId
+            messageId,
           });
         } else {
-          fastify.log.info(`Socket is not available for liveChatId : ${messageData.liveChatId}`);
+          fastify.log.info(
+            `Socket is not available for liveChatId : ${messageData.liveChatId}`
+          );
         }
       } catch (error) {
-        fastify.log.error(`Error Blocking with messageId : ${messageId} for spam error : ${error}`);
-
-        fastify.log.info(
-          `Inserting ${messageId} back into message-queue `
+        fastify.log.error(
+          `Error Blocking with messageId : ${messageId} for spam error : ${error}`
         );
+
+        fastify.log.info(`Inserting ${messageId} back into message-queue `);
         await redis.rpush('messageQueue', messageId);
       }
     } else {
@@ -114,9 +118,7 @@ const processMessage = async (messageId) => {
       `Error processing message ${messageId}: ${error.message}`
     );
 
-    fastify.log.info(
-      `Inserting ${messageId} back into message-queue `
-    );
+    fastify.log.info(`Inserting ${messageId} back into message-queue `);
     await redis.rpush('messageQueue', messageId);
   }
 };
@@ -205,7 +207,7 @@ const start = async () => {
       fastify.log.info(`Client connected socket ID : ${socket?.id} `);
 
       const liveChatId = socket.handshake.query.liveChatId;
-      fastify.log.info(`Connected liveChatId : ${liveChatId}`)
+      fastify.log.info(`Connected liveChatId : ${liveChatId}`);
 
       /* mapping the socket to liveChatId for further interaction */
       livechatSockets.set(liveChatId, socket);

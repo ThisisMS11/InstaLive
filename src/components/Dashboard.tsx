@@ -36,9 +36,9 @@ function Dashboard({
 
   console.log('Dashboard Component Rendered');
 
-  const handleLogout = ()=>{
-    return ;
-  }
+  const handleLogout = () => {
+    return;
+  };
 
   return (
     <div className="grid min-h-screen w-full overflow-hidden lg:grid-cols-[280px_1fr]">
@@ -134,7 +134,9 @@ function Dashboard({
                   <DropdownMenuItem>Settings</DropdownMenuItem>
                   <DropdownMenuItem>Support</DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    Logout
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

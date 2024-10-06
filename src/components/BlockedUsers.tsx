@@ -9,7 +9,7 @@ import {
   Button,
 } from '@/imports/Shadcn_imports';
 
-import { useGetBlockedUsersInfo } from '@/services/livechat'
+import { useGetBlockedUsersInfo } from '@/services/livechat';
 export default function Component() {
   // const data = [
   //   {
@@ -47,14 +47,13 @@ export default function Component() {
   const { messages, isLoading, isError } = useGetBlockedUsersInfo();
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   if (isError) {
     console.error(isError);
     return <div>Some Error Occured</div>;
   }
-
 
   return (
     <div className="bg-white p-3 rounded-lg shadow h-full">
@@ -63,7 +62,12 @@ export default function Component() {
         {messages && messages.length > 0 ? (
           messages.map((message: any) => {
             return (
-              <Accordion type="single" collapsible key={message.id} className="shadow">
+              <Accordion
+                type="single"
+                collapsible
+                key={message.id}
+                className="shadow"
+              >
                 <AccordionItem value="item-1">
                   <div className="flex w-full items-center justify-between">
                     <Avatar className="my-auto mr-3">

@@ -59,7 +59,7 @@ export const GET = async (req: NextRequest) => {
         const isBlocked = await redisClient.sIsMember(
           blockedMessageIds,
           messageId
-        )
+        );
 
         // console.log(`${messageId} :  ${exists}`);
 
@@ -71,7 +71,7 @@ export const GET = async (req: NextRequest) => {
             profileImage: item.authorDetails.profileImageUrl,
             messageContent: item.snippet.textMessageDetails.messageText,
             channelName: item.authorDetails.displayName,
-            liveChatId: item.snippet.liveChatId
+            liveChatId: item.snippet.liveChatId,
           });
           multi.rPush(messageQueue, messageId);
 
@@ -90,7 +90,7 @@ export const GET = async (req: NextRequest) => {
 
     return makeResponse(200, true, 'Fetched livechat data', livechatItems);
   } catch (error) {
-    logger.error(`Error while getting livechat Data: ${error} `);
+    logger.error(`Error while getting livechat Data `, error);
     return makeResponse(500, false, 'Error while getting livechat Data', error);
   }
 };
@@ -130,11 +130,10 @@ export const POST = async (req: NextRequest) => {
     const data = liveChatData.data.items;
     return makeResponse(200, true, 'Posted message on livechat', data);
   } catch (error) {
-    logger.error(`Error while posting ChatMessage : ${error}`);
+    logger.error(`Error while posting ChatMessage `, error);
     return makeResponse(500, false, 'Error while posting chatmessage', error);
   }
 };
-
 
 /* To delete all blocked users, live chat data, processedMessageIds set, and messageQueue */
 export async function DELETE(req: Request) {
@@ -168,11 +167,12 @@ export async function DELETE(req: Request) {
       await redisClient.del('messageQueue');
     }
 
-    logger.info('All Redis data related to the stream has been cleared successfully');
+    logger.info(
+      'All Redis data related to the stream has been cleared successfully'
+    );
     return makeResponse(200, true, 'All Redis data cleared successfully', null);
-
   } catch (error) {
-    logger.error(`Error while clearing Redis data: ${error}`);
+    logger.error(`Error while clearing Redis data `, error);
     return makeResponse(500, false, 'Error while clearing Redis data', null);
   }
 }

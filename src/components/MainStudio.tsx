@@ -32,7 +32,7 @@ import {
   ResizablePanelGroup,
   Avatar,
   AvatarFallback,
-  AvatarImage
+  AvatarImage,
 } from '@/imports/Shadcn_imports';
 import { transitionToLive } from '@/services/youtube';
 import { useOverlays } from '@/services/overlay';
@@ -41,8 +41,8 @@ import { toast } from 'sonner';
 import { Loader } from '@/imports/Component_imports';
 import { ShieldAlert } from 'lucide-react';
 import { useStudio } from '@/app/context/StudioContext';
-import { useSWRConfig } from "swr"
-import { useGetBlockedUserInfo } from '@/services/livechat'
+import { useSWRConfig } from 'swr';
+import { useGetBlockedUserInfo } from '@/services/livechat';
 
 export function AlertDialogDemo({
   transitionToLive,
@@ -199,7 +199,6 @@ export default function StudioEntry({
     }
   }, [status, broadcastStatusError, broadcastIsLoading]);
 
-
   /* If LocalStream is Available start sending to the server */
   useEffect(() => {
     if (localStream) {
@@ -238,7 +237,8 @@ export default function StudioEntry({
         try {
           // Fetch blocked user information
           console.log(`Calling useGetBlockedUserInfo ${messageId}`);
-          const { message, isLoading, isError } = useGetBlockedUserInfo(messageId);
+          const { message, isLoading, isError } =
+            useGetBlockedUserInfo(messageId);
 
           console.log({ message, isLoading, isError });
 
@@ -279,8 +279,6 @@ export default function StudioEntry({
       }
     };
   }, [model_socket]);
-  
-
 
   /* Listening to Changing Requirements of Overlays */
   useEffect(() => {
