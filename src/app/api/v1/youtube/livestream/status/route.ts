@@ -37,7 +37,7 @@ export const GET = async (req: NextRequest) => {
       liveStreamStatus
     );
   } catch (error) {
-    logger.error(`Error while fetching livestream status ${error}`);
+    logger.error(`Error while fetching livestream status `, error);
     return makeResponse(
       500,
       false,

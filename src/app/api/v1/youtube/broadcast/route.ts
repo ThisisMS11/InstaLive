@@ -76,7 +76,7 @@ export const POST = async (req: NextRequest) => {
 
     return makeResponse(200, true, 'LiveStream Created Successfully', response);
   } catch (error) {
-    logger.error(`Error while creating livestream: ${error} `);
+    logger.error(`Error while creating livestream`, error);
     return makeResponse(
       500,
       false,
@@ -99,7 +99,7 @@ export const GET = async () => {
     const broadcasts = await GetBroadcasts(userId);
     return makeResponse(200, true, 'Fetched All past broadcasts', broadcasts);
   } catch (error) {
-    logger.error(`Error while fetching user broadcasts: ${error}`);
+    logger.error(`Error while fetching user broadcasts `, error);
     return makeResponse(
       500,
       false,

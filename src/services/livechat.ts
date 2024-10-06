@@ -41,8 +41,7 @@ export const postLivechatMessage = async (
 };
 
 /* Get the blocked users information */
-export const useGetBlockedUsersInfo = (
-) => {
+export const useGetBlockedUsersInfo = () => {
   console.info('Fetching Blocked Users Information');
 
   const { data, error, isLoading, mutate } = useSWR(
@@ -65,10 +64,10 @@ export const useGetBlockedUsersInfo = (
 };
 
 /* Get the information for a single blocked user*/
-export const useGetBlockedUserInfo = (
-  messageId: string
-) => {
-  console.info(`Fetching Blocked User Information corresponding to Message ${messageId} `);
+export const useGetBlockedUserInfo = (messageId: string) => {
+  console.info(
+    `Fetching Blocked User Information corresponding to Message ${messageId} `
+  );
 
   const { data, error, isLoading } = useSWR(
     `/api/v1/youtube/livechat/block-user?messageId=${messageId}`,

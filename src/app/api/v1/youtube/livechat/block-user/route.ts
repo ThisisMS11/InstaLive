@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
     logger.info(`Response: 200 OK`);
     return makeResponse(200, true, `Blocked User with id`, { authorChannelId });
   } catch (error) {
-    logger.error(`Error blocking user: ${error}`);
+    logger.error(`Error blocking user `, error);
     return makeResponse(500, false, `Error while Blocked User with id`, null);
   }
 }
@@ -95,7 +95,7 @@ export async function PUT(req: NextRequest) {
       authorChannelId,
     });
   } catch (error) {
-    logger.error(`Error unblocking user: ${error}`);
+    logger.error(`Error unblocking user `, error);
     return makeResponse(
       500,
       false,
@@ -104,7 +104,6 @@ export async function PUT(req: NextRequest) {
     );
   }
 }
-
 
 /* To get the information of all the blocked users or a specific blocked user by messageId */
 export async function GET(req: Request) {
@@ -125,12 +124,19 @@ export async function GET(req: Request) {
       const key = `liveChatData:${messageId}`;
 
       /* Fetch user data from Redis hash for the given messageId */
-      logger.info(`Fetching Blocked user information with messageId : ${messageId}`);
+      logger.info(
+        `Fetching Blocked user information with messageId : ${messageId}`
+      );
       const userData = await redisClient.hGetAll(key);
 
       if (!userData || Object.keys(userData).length === 0) {
         logger.warn(`No data found for messageId: ${messageId}`);
-        return makeResponse(404, false, 'No data found for the specified messageId', null);
+        return makeResponse(
+          404,
+          false,
+          'No data found for the specified messageId',
+          null
+        );
       }
 
       /* Collect the required fields */
@@ -139,12 +145,17 @@ export async function GET(req: Request) {
         authorChannelId: userData.authorChannelId,
         id: userData.id,
         channelName: userData.channelName,
-        messageContent: userData.messageContent
+        messageContent: userData.messageContent,
       };
 
       /* Return the specific blocked user data */
       logger.info(`Response: 200 OK`);
-      return makeResponse(200, true, 'Blocked user data fetched successfully', userInfo);
+      return makeResponse(
+        200,
+        true,
+        'Blocked user data fetched successfully',
+        userInfo
+      );
     }
 
     /* If no messageId is provided, fetch all blocked users */
@@ -177,7 +188,7 @@ export async function GET(req: Request) {
         authorChannelId: userData.authorChannelId,
         id: userData.id,
         channelName: userData.channelName,
-        messageContent: userData.messageContent
+        messageContent: userData.messageContent,
       };
 
       blockedUsers.push(userInfo);
@@ -185,10 +196,19 @@ export async function GET(req: Request) {
 
     /* Return the collected blocked user data */
     logger.info(`Response: 200 OK`);
-    return makeResponse(200, true, 'Blocked users data fetched successfully', blockedUsers);
-
+    return makeResponse(
+      200,
+      true,
+      'Blocked users data fetched successfully',
+      blockedUsers
+    );
   } catch (error) {
-    logger.error(`Error fetching blocked user data through Redis: ${error}`);
-    return makeResponse(500, false, 'Error while fetching blocked user data', null);
+    logger.error(`Error fetching blocked user data through Redis `, error);
+    return makeResponse(
+      500,
+      false,
+      'Error while fetching blocked user data',
+      null
+    );
   }
 }

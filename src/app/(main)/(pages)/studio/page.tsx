@@ -62,13 +62,13 @@ const Studio = () => {
           }
 
           /* Broadcast socket connection */
-          console.info("Establishing socket connections with model server");
+          console.info('Establishing socket connections with model server');
           broadcast_socket.current = io(broadcasting_server_url, {
             transports: ['websocket'],
           });
 
           /* Model socket connection */
-          console.info("Establishing socket connections with model server");
+          console.info('Establishing socket connections with model server');
           model_socket.current = io(model_server_url, {
             transports: ['websocket'],
           });
@@ -112,7 +112,10 @@ const Studio = () => {
           <StudioEntry setGotoStudio={setGotoStudio} />
         </div>
       ) : (
-        <MainStudio broadcast_socket={broadcast_socket} model_socket={model_socket} />
+        <MainStudio
+          broadcast_socket={broadcast_socket}
+          model_socket={model_socket}
+        />
       )}
       {/* <MainStudio
         broadcast_socket={broadcast_socket}

@@ -42,7 +42,7 @@ export const GET = async (req: NextRequest) => {
       return makeResponse(400, false, 'Missing youtubeBroadcastId', null);
     }
   } catch (error) {
-    logger.error(`Error fetching broadcast stats : ${error}`);
+    logger.error(`Error fetching broadcast stats `, error);
     return makeResponse(500, false, 'Internal Server Error', error);
   }
 
