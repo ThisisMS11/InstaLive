@@ -64,23 +64,16 @@ export const useGetBlockedUsersInfo = () => {
 };
 
 /* Get the information for a single blocked user*/
-export const useGetBlockedUserInfo = (messageId: string) => {
-  console.info(
-    `Fetching Blocked User Information corresponding to Message ${messageId} `
-  );
+export const getBlockedUserInfo = async (messageId: string) => {
 
-  const { data, error, isLoading } = useSWR(
-    `/api/v1/youtube/livechat/block-user?messageId=${messageId}`,
-    AxiosFetcher,
-    {
-      errorRetryCount: 2,
-      errorRetryInterval: 1500,
-    }
-  );
+  try {
+    const response = await AxiosFetcher(
+      `/api/v1/youtube/livechat/block-user?messageId=${messageId}`
+    );
 
-  return {
-    message: data?.data,
-    isLoading: isLoading as boolean,
-    isError: error,
-  };
+    return response.data;
+  } catch (error: any) {
+    console.error(`Error fetching blocked user information: ${error?.message}`);
+    return null;
+  }
 };
