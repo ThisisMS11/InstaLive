@@ -1,6 +1,6 @@
 'use client';
 
-import React, { use, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { VideoOff, MonitorUp, CircleX } from 'lucide-react';
 import {
   useAppSelector,
@@ -39,7 +39,6 @@ import { useOverlays } from '@/services/overlay';
 import { useBroadcastStatus } from '@/services/broadcast';
 import { toast } from 'sonner';
 import { Loader } from '@/imports/Component_imports';
-import { ShieldAlert } from 'lucide-react';
 import { useStudio } from '@/app/context/StudioContext';
 import { useSWRConfig } from 'swr';
 import { getBlockedUserInfo } from '@/services/livechat';
@@ -133,7 +132,7 @@ export default function StudioEntry({
     undefined
   );
 
-  const [broadcastStatus, setBroadcastStatus] = useState<string>('Starting...')
+  const [broadcastStatus, setBroadcastStatus] = useState<string>('Starting...');
 
   const broadcastData = useAppSelector((state) => state.broadcasts);
   const { startWebCam, stopWebCam } = useStudio();
@@ -185,8 +184,7 @@ export default function StudioEntry({
 
   /* Listening to Changing broadCast status */
   useEffect(() => {
-    if (status)
-      setBroadcastStatus(status);
+    if (status) setBroadcastStatus(status);
 
     if (status === 'testing') {
       (async () => {
@@ -326,8 +324,12 @@ export default function StudioEntry({
           <div className="col-span-9 gap-4">
             <CardContent className="p-10 items-center justify-center flex flex-col gap-2">
               <div>
-                <p className="text-center text-2xl">{broadcastData.liveChatId}</p>
-                <p className="text-center text-2xl">{broadcastStatus + "..." || "nothing"}</p>
+                <p className="text-center text-2xl">
+                  {broadcastData.liveChatId}
+                </p>
+                <p className="text-center text-2xl">
+                  {broadcastStatus + '...' || 'nothing'}
+                </p>
               </div>
 
               <div className="relative w-[95%] h-[34rem] rounded-lg border bg-card text-card-foreground shadow-sm">

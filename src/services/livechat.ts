@@ -77,15 +77,13 @@ export const getBlockedUserInfo = async (messageId: string) => {
   }
 };
 
-/* Unblock a banned user in livechat */ 
-export const unBlockLiveChatUser = async (
-  messageId: string,
-) => {
+/* Unblock a banned user in livechat */
+export const unBlockLiveChatUser = async (messageId: string) => {
   try {
     const response = await AxiosInstance.put(
       `/api/v1/youtube/livechat/block-user`,
       {
-        messageId
+        messageId,
       }
     );
     return response.data;
