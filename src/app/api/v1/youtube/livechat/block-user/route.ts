@@ -67,14 +67,13 @@ export async function POST(req: NextRequest) {
     const redisConnected = await CheckRedisConnection(redisClient);
 
     if (redisConnected && banResponse?.data) {
-
       const { id: banId } = banResponse.data;
       logger.info(`Storing ban info for messageId: ${messageId} in Redis`);
 
       await redisClient.sAdd('blockedMessageIds', messageId);
       await redisClient.hSet(`messageBanId:${messageId}`, {
         banId,
-        authorChannelId
+        authorChannelId,
       });
 
       /* Set Redis key expiration to 1 day (86400 seconds) */
@@ -87,7 +86,6 @@ export async function POST(req: NextRequest) {
 
     logger.info(`Response: 200 OK`);
     return makeResponse(200, true, `Blocked User with id`, banResponse?.data);
-
   } catch (error) {
     logger.error(`Error blocking user ${error}`);
     return makeResponse(500, false, `Error while Blocked User with id`, null);
@@ -118,7 +116,9 @@ export async function PUT(req: NextRequest) {
 
         const { banId, authorChannelId } = messageBanData;
 
-        logger.info(`Calling YouTube API to unblock user: [${authorChannelId}] with banId : ${banId}`);
+        logger.info(
+          `Calling YouTube API to unblock user: [${authorChannelId}] with banId : ${banId}`
+        );
         await youtube.liveChatBans.delete({
           id: banId,
         });
@@ -143,7 +143,6 @@ export async function PUT(req: NextRequest) {
     return makeResponse(500, false, `Error processing request`, null);
   }
 }
-
 
 /* To get the information of all the blocked users or a specific blocked user by messageId */
 export async function GET(req: Request) {

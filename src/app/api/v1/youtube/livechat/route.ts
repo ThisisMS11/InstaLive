@@ -130,7 +130,7 @@ export const POST = async (req: NextRequest) => {
 };
 
 /* To delete all blocked users, live chat data, processedMessageIds set, and messageQueue */
-export async function DELETE(req: Request) {
+export async function DELETE() {
   try {
     /* Check if Redis is connected */
     const redisConnected = await CheckRedisConnection(redisClient);

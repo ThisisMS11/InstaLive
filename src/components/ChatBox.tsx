@@ -14,7 +14,7 @@ import {
   postLivechatMessage,
 } from '@/services/livechat';
 import { useAppSelector } from '@/imports/Redux_imports';
-import { Loader, SendHorizontal } from 'lucide-react';
+import { SendHorizontal } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { useAutoAnimate } from '@formkit/auto-animate/react';

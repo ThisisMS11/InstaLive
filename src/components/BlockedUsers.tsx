@@ -54,10 +54,7 @@ const BlockedUsers: React.FC = () => {
 
   const handleUnBlock = async (messageId: string) => {
     try {
-      console.info(
-        'Attempting to unblock liveChatUser with id:',
-        messageId
-      );
+      console.info('Attempting to unblock liveChatUser with id:', messageId);
       const response = await unBlockLiveChatUser(messageId);
 
       if (response?.authorChannelId) {
@@ -77,7 +74,6 @@ const BlockedUsers: React.FC = () => {
   };
 
   const blockedUsers = useMemo(() => messages || [], [messages]);
-
 
   if (isLoading) {
     return <div>Loading...</div>;
