@@ -20,7 +20,7 @@ export const GET = async () => {
     const livestreams = await GetLivestreams(userId);
     return makeResponse(200, true, 'Past LiveStrems Data Fetched', livestreams);
   } catch (error) {
-    logger.error(`Error fetching user livestreams info `, error);
+    logger.error(`Error fetching user livestreams info ${error}`);
     return makeResponse(
       401,
       false,

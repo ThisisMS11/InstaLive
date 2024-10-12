@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import Navbar from '@/components/Navbar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/imports/Shadcn_imports'
 function DashBoardButton() {
   const router = useRouter();
 

@@ -8,7 +8,7 @@ export const useGetLiveChatMessages = (liveChatId: string) => {
     {
       // errorRetryCount: 0,
       // errorRetryInterval: 5000,
-      refreshInterval: 5000,
+      refreshInterval: 10000,
       dedupingInterval: 4000,
     }
   );
@@ -65,7 +65,6 @@ export const useGetBlockedUsersInfo = () => {
 
 /* Get the information for a single blocked user*/
 export const getBlockedUserInfo = async (messageId: string) => {
-
   try {
     const response = await AxiosFetcher(
       `/api/v1/youtube/livechat/block-user?messageId=${messageId}`
@@ -75,5 +74,22 @@ export const getBlockedUserInfo = async (messageId: string) => {
   } catch (error: any) {
     console.error(`Error fetching blocked user information: ${error?.message}`);
     return null;
+  }
+};
+
+/* Unblock a banned user in livechat */ 
+export const unBlockLiveChatUser = async (
+  messageId: string,
+) => {
+  try {
+    const response = await AxiosInstance.put(
+      `/api/v1/youtube/livechat/block-user`,
+      {
+        messageId
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
   }
 };

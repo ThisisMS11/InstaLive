@@ -53,8 +53,7 @@ const createLoggerWithLabel = (label: string) => {
     debug: (message: string) => logger.debug({ label, message }),
     info: (message: string) => logger.info({ label, message }),
     warn: (message: string) => logger.warn({ label, message }),
-    error: (message: string, error?: any) =>
-      logger.error({ label, message, error }),
+    error: (message: string) => logger.error({ label, message }),
   };
 };
 

@@ -35,7 +35,7 @@ export const PUT = async (req: NextRequest) => {
 
     return makeResponse(200, true, 'Updated Broadcast Status', statusUpdateRes);
   } catch (error) {
-    logger.error(`Error updating the status of broadcast `, error);
+    logger.error(`Error updating the status of broadcast ${error}`);
     return makeResponse(401, false, 'Error Fetching BroadCast update', error);
   }
 };
@@ -69,7 +69,7 @@ export const GET = async (req: NextRequest) => {
       broadCastStatus
     );
   } catch (error) {
-    logger.error(`Error Fetching Broadcast Status Error `, error);
+    logger.error(`Error Fetching Broadcast Status Error ${error}`);
     return makeResponse(500, false, 'Error Feteching broadcast status', null);
   }
 };
