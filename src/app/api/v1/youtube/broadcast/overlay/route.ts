@@ -62,7 +62,7 @@ export const POST = async (req: NextRequest) => {
     const response = { public_id, url: secure_url };
     return makeResponse(200, true, 'Overlay Successfully uploaded', response);
   } catch (error) {
-    logger.error(`Error uploading file to Cloudinary `, error);
+    logger.error(`Error uploading file to Cloudinary ${error}`);
     return makeResponse(
       500,
       false,
@@ -86,7 +86,7 @@ export const GET = async () => {
     const overlays = await GetOverlays(userId);
     return makeResponse(200, true, 'Overlays Feteched', overlays);
   } catch (error) {
-    logger.error(`Error Fetching User Overlays ..`, error);
+    logger.error(`Error Fetching User Overlays .. ${error}`);
     return makeResponse(401, false, 'Error while fetching user overlays', null);
   }
 };

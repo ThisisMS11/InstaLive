@@ -25,10 +25,12 @@ export async function POST(req: NextRequest) {
       `Banning livechatUser with id : [${authorChannelId}] with type : ${type}`
     );
 
+    let banResponse;
+
     switch (type) {
       case 'temporary':
-        await youtube.liveChatBans.insert({
-          part: ['snippet'],
+        banResponse = await youtube.liveChatBans.insert({
+          part: ['id', 'snippet'],
           resource: {
             snippet: {
               liveChatId: liveChatId,
@@ -42,8 +44,8 @@ export async function POST(req: NextRequest) {
         });
         break;
       case 'permanent':
-        await youtube.liveChatBans.insert({
-          part: ['snippet'],
+        banResponse = await youtube.liveChatBans.insert({
+          part: ['id', 'snippet'],
           resource: {
             snippet: {
               liveChatId: liveChatId,
@@ -64,14 +66,30 @@ export async function POST(req: NextRequest) {
 
     const redisConnected = await CheckRedisConnection(redisClient);
 
-    if (redisConnected) {
-      logger.info(`Pushed ${messageId} into blockedMessageIds set.`);
-      redisClient.sAdd('blockedMessageIds', messageId);
+    if (redisConnected && banResponse?.data) {
+
+      const { id: banId } = banResponse.data;
+      logger.info(`Storing ban info for messageId: ${messageId} in Redis`);
+
+      await redisClient.sAdd('blockedMessageIds', messageId);
+      await redisClient.hSet(`messageBanId:${messageId}`, {
+        banId,
+        authorChannelId
+      });
+
+      /* Set Redis key expiration to 1 day (86400 seconds) */
+      await redisClient.expire(`messageBanId:${messageId}`, 86400);
+
+      logger.info(`Stored messageId and banId in Redis successfully.`);
+    } else {
+      logger.warn(`Redis service is unavailable or ban response was empty.`);
     }
+
     logger.info(`Response: 200 OK`);
-    return makeResponse(200, true, `Blocked User with id`, { authorChannelId });
+    return makeResponse(200, true, `Blocked User with id`, banResponse?.data);
+
   } catch (error) {
-    logger.error(`Error blocking user `, error);
+    logger.error(`Error blocking user ${error}`);
     return makeResponse(500, false, `Error while Blocked User with id`, null);
   }
 }
@@ -79,31 +97,53 @@ export async function POST(req: NextRequest) {
 /* To unblock a user on livechat */
 export async function PUT(req: NextRequest) {
   try {
-    const { liveChatId, authorChannelId } = await req.json();
+    const { messageId } = await req.json();
+
+    const redisConnected = await CheckRedisConnection(redisClient);
 
     const youtube = await getYoutubeClient();
 
-    logger.info(`Unbanning livechatUser with id : [${authorChannelId}]`);
+    if (redisConnected) {
+      try {
+        logger.info(`Fetching banId for ${messageId} from messageBanId hash`);
 
-    // Call the YouTube API to remove the ban
-    await youtube.liveChatBans.delete({
-      id: authorChannelId, // Use the correct ID format here
-    });
+        const messageBanData = await redisClient.hGetAll(
+          `messageBanId:${messageId}`
+        );
 
-    logger.info(`Unblocked user ${authorChannelId} in live chat ${liveChatId}`);
-    return makeResponse(200, true, `Unblocked User with id`, {
-      authorChannelId,
-    });
+        if (!messageBanData || !messageBanData.banId) {
+          logger.error(`MessageBanData or banId is not available in Redis.`);
+          return makeResponse(404, false, `Ban ID not found`, null);
+        }
+
+        const { banId, authorChannelId } = messageBanData;
+
+        logger.info(`Calling YouTube API to unblock user: [${authorChannelId}] with banId : ${banId}`);
+        await youtube.liveChatBans.delete({
+          id: banId,
+        });
+
+        logger.info(
+          `Removing messageId: ${messageId} from blockedMessageIds set.`
+        );
+        await redisClient.sRem('blockedMessageIds', messageId);
+
+        logger.info(`Unblocked user ${authorChannelId} in live chat ${banId}`);
+        return makeResponse(200, true, `Unblocked User`, { authorChannelId });
+      } catch (error) {
+        logger.error(`Error unblocking user: ${error}`);
+        return makeResponse(500, false, `Error unblocking user`, null);
+      }
+    } else {
+      logger.warn(`Redis service unavailable, operation failed.`);
+      return makeResponse(503, false, `Redis Service Unavailable`, null);
+    }
   } catch (error) {
-    logger.error(`Error unblocking user `, error);
-    return makeResponse(
-      500,
-      false,
-      `Error while Unblocking User with id`,
-      null
-    );
+    logger.error(`Error processing request: ${error}`);
+    return makeResponse(500, false, `Error processing request`, null);
   }
 }
+
 
 /* To get the information of all the blocked users or a specific blocked user by messageId */
 export async function GET(req: Request) {
@@ -203,7 +243,7 @@ export async function GET(req: Request) {
       blockedUsers
     );
   } catch (error) {
-    logger.error(`Error fetching blocked user data through Redis `, error);
+    logger.error(`Error fetching blocked user data through Redis ${error}`);
     return makeResponse(
       500,
       false,

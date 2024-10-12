@@ -15,7 +15,7 @@ const redisClient = createClient({
 
 if (!redisClient.isOpen) {
   redisClient.connect().catch((err) => {
-    logger.error(`Failed to connect to Redis:`, err);
+    logger.error(`Failed to connect to Redis: ${err}`);
   });
 }
 
@@ -25,7 +25,7 @@ async function CheckRedisConnection(redis: any) {
     logger.info(`Redis is Connected Successfully.`);
     return true;
   } catch (error: any) {
-    logger.error(`Redis connection failed: `, error);
+    logger.error(`Redis connection failed: ${error}`);
     return false;
   }
 }

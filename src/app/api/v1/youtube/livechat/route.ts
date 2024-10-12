@@ -31,13 +31,16 @@ export const GET = async (req: NextRequest) => {
     //@ts-ignore
     const livechatItems = liveChatData.data.items;
 
+    const filteredMessages = livechatItems.filter(
+      (item: any) => item.snippet.type === 'textMessageEvent'
+    );
+
     const redisConnected = await CheckRedisConnection(redisClient);
 
     if (redisConnected) {
       /* Putting the messages ids into chatMsgIds redis set */
       const processedMessageIds = 'processedMessageIds';
       const messageQueue = 'messageQueue';
-      const blockedMessageIds = 'blockedMessageIds';
 
       /* Batching the inserting of ids so that can be performed in one go */
       const multi = redisClient.multi();
@@ -47,23 +50,14 @@ export const GET = async (req: NextRequest) => {
       logger.info(
         `Batching Message IDs to be put into "processedMessageIds" set and content into "liveChatData" Hash set. `
       );
-      for (const item of livechatItems) {
+      for (const item of filteredMessages) {
         const messageId = item.id;
-
         const exists = await redisClient.sIsMember(
           processedMessageIds,
           messageId
         );
 
-        /* Checking Whether this message is blocked or not */
-        const isBlocked = await redisClient.sIsMember(
-          blockedMessageIds,
-          messageId
-        );
-
-        // console.log(`${messageId} :  ${exists}`);
-
-        if (!exists && !isBlocked) {
+        if (!exists) {
           ++cnt;
           multi.hSet(`liveChatData:${messageId}`, {
             id: messageId,
@@ -88,9 +82,9 @@ export const GET = async (req: NextRequest) => {
       logger.warn('Proceeding without Redis. Data will not be stored.');
     }
 
-    return makeResponse(200, true, 'Fetched livechat data', livechatItems);
+    return makeResponse(200, true, 'Fetched livechat data', filteredMessages);
   } catch (error) {
-    logger.error(`Error while getting livechat Data `, error);
+    logger.error(`Error while getting livechat Data ${error}`);
     return makeResponse(500, false, 'Error while getting livechat Data', error);
   }
 };
@@ -130,7 +124,7 @@ export const POST = async (req: NextRequest) => {
     const data = liveChatData.data.items;
     return makeResponse(200, true, 'Posted message on livechat', data);
   } catch (error) {
-    logger.error(`Error while posting ChatMessage `, error);
+    logger.error(`Error while posting ChatMessage ${error}`);
     return makeResponse(500, false, 'Error while posting chatmessage', error);
   }
 };
@@ -172,7 +166,7 @@ export async function DELETE(req: Request) {
     );
     return makeResponse(200, true, 'All Redis data cleared successfully', null);
   } catch (error) {
-    logger.error(`Error while clearing Redis data `, error);
+    logger.error(`Error while clearing Redis data ${error}`);
     return makeResponse(500, false, 'Error while clearing Redis data', null);
   }
 }

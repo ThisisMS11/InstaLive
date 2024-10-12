@@ -133,6 +133,8 @@ export default function StudioEntry({
     undefined
   );
 
+  const [broadcastStatus, setBroadcastStatus] = useState<string>('Starting...')
+
   const broadcastData = useAppSelector((state) => state.broadcasts);
   const { startWebCam, stopWebCam } = useStudio();
 
@@ -183,6 +185,9 @@ export default function StudioEntry({
 
   /* Listening to Changing broadCast status */
   useEffect(() => {
+    if (status)
+      setBroadcastStatus(status);
+
     if (status === 'testing') {
       (async () => {
         await transitionToLive('live', broadcastData.id);
@@ -247,16 +252,16 @@ export default function StudioEntry({
 
             toast(`${userInfo.channelName} Blocked`, {
               description: userInfo.messageContent,
-              duration: 2000,
+              duration: 10000,
               position: 'top-center',
+              className: 'flex gap-6 items-center',
               icon: (
-                <Avatar className="my-auto mr-3">
+                <Avatar className="my-auto mr-3 w-8 h-8">
                   <AvatarImage src={userInfo.profileImage} />
                   <AvatarFallback>N/A</AvatarFallback>
                 </Avatar>
               ),
             });
-
           }
         } catch (error: any) {
           console.error(`Error fetching blocked user data: ${error?.message}`);
@@ -321,7 +326,8 @@ export default function StudioEntry({
           <div className="col-span-9 gap-4">
             <CardContent className="p-10 items-center justify-center flex flex-col gap-2">
               <div>
-                <p className="text-center text-2xl">Main Display</p>
+                <p className="text-center text-2xl">{broadcastData.liveChatId}</p>
+                <p className="text-center text-2xl">{broadcastStatus + "..." || "nothing"}</p>
               </div>
 
               <div className="relative w-[95%] h-[34rem] rounded-lg border bg-card text-card-foreground shadow-sm">
