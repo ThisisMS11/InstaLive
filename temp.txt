@@ -1,71 +1,7 @@
-What is done ? 
-I am able to store the livechat message ids perfectly into redis queue and info into sets and I am not absolutely clear with the flow . 
+Next : Try out the unblock user feature on real live stream , api is working fine , 
+Everything is almost done , we just have to wrap things up and update the documentation and prep it for the deployment . 
 
-Steps ahead : 
-1. Check the livechatdata for the user who is blocked and filter out his messages to avoid errors in redis and on client side.
-2. Implement unblock user thing and update redis for that event.
-3. 
-
-4. I need the livechatId at the fastify server.
+Error handling and other refactoring can be worked upon.
 
 
-        {     
-            "kind": "youtube#liveChatMessage",
-            "etag": "dmDbZpwCkDxHPZ9a2iDjR7-7xgE",
-            "id": "LCC.EhwKGkNMWDU1TUxLLTRnREZSNC1yUVlkOWZBbXZB",
-            "snippet": {
-                "type": "userBannedEvent",
-                "liveChatId": "KicKGFVDcGtWc3REU3FwSGdMdVdRUVhRRHR2ZxILc0NDdGdTM214a0U",
-                "authorChannelId": "UCpkVstDSqpHgLuWQQXQDtvg",
-                "publishedAt": "2024-10-07T05:54:44.46184+00:00",
-                "userBannedDetails": {
-                    "bannedUserDetails": {
-                        "channelId": "UC5Y41jd5NwiE_5Ijc46nepg",
-                        "channelUrl": "http://www.youtube.com/channel/UC5Y41jd5NwiE_5Ijc46nepg",
-                        "displayName": "MOHIT SAINI",
-                        "profileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_k18TQOefWzLa5SvdJmEE0dDZLfk4am4CaTqv-UUpCP4ll3lucs6Ttsxlbnh6UOy4Y8dw=s88-c-k-c0x00ffffff-no-rj"
-                    },
-                    "banType": "temporary",
-                    "banDurationSeconds": "300"
-                }
-            },
-            "authorDetails": {
-                "channelId": "UCpkVstDSqpHgLuWQQXQDtvg",
-                "channelUrl": "http://www.youtube.com/channel/UCpkVstDSqpHgLuWQQXQDtvg",
-                "displayName": "MotaBhai Motivation",
-                "profileImageUrl": "https://yt3.ggpht.com/njFcVXmAEJhPDZtfIvzd0ZJXz4RhGe-wgd3-UfSvrAS_-S2w4lbCGf4PXsb5Q19JWxZxYbAvIdg=s88-c-k-c0x00ffffff-no-rj",
-                "isVerified": false,
-                "isChatOwner": true,
-                "isChatSponsor": false,
-                "isChatModerator": false
-            }
-        }
-
-
-
-         {
-            "kind": "youtube#liveChatMessage",
-            "etag": "JUyBn5s05aATbIw46U0Ib6FSbuU",
-            "id": "LCC.EhwKGkNOWDdwc0RLLTRnREZhX0l3Z1FkOEtJV013",
-            "snippet": {
-                "type": "textMessageEvent",
-                "liveChatId": "KicKGFVDcGtWc3REU3FwSGdMdVdRUVhRRHR2ZxILc0NDdGdTM214a0U",
-                "authorChannelId": "UC5Y41jd5NwiE_5Ijc46nepg",
-                "publishedAt": "2024-10-07T05:54:39.258058+00:00",
-                "hasDisplayContent": true,
-                "displayMessage": "fu*k israel",
-                "textMessageDetails": {
-                    "messageText": "fu*k israel"
-                }
-            },
-            "authorDetails": {
-                "channelId": "UC5Y41jd5NwiE_5Ijc46nepg",
-                "channelUrl": "http://www.youtube.com/channel/UC5Y41jd5NwiE_5Ijc46nepg",
-                "displayName": "MOHIT SAINI",
-                "profileImageUrl": "https://yt3.ggpht.com/ytc/AIdro_k18TQOefWzLa5SvdJmEE0dDZLfk4am4CaTqv-UUpCP4ll3lucs6Ttsxlbnh6UOy4Y8dw=s88-c-k-c0x00ffffff-no-rj",
-                "isVerified": false,
-                "isChatOwner": false,
-                "isChatSponsor": false,
-                "isChatModerator": false
-            }
-        },
+Creating a ui for broadcast status change.

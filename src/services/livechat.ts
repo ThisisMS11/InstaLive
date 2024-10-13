@@ -1,13 +1,14 @@
 import useSWR from 'swr';
 import AxiosFetcher from '@/utils/axiosFetcher';
 import AxiosInstance from '@/utils/axios';
+
 export const useGetLiveChatMessages = (liveChatId: string) => {
   const { data, error, isLoading, mutate } = useSWR(
     `/api/v1/youtube/livechat?liveChatId=${liveChatId}`,
     AxiosFetcher,
     {
-      // errorRetryCount: 0,
-      // errorRetryInterval: 5000,
+      errorRetryCount: 1,
+      errorRetryInterval: 5000,
       refreshInterval: 10000,
       dedupingInterval: 4000,
     }

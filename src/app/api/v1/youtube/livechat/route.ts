@@ -35,12 +35,30 @@ export const GET = async (req: NextRequest) => {
       (item: any) => item.snippet.type === 'textMessageEvent'
     );
 
+    const unBlockedMessages = [];
+
     const redisConnected = await CheckRedisConnection(redisClient);
 
     if (redisConnected) {
       /* Putting the messages ids into chatMsgIds redis set */
       const processedMessageIds = 'processedMessageIds';
       const messageQueue = 'messageQueue';
+      const blockedMessageIds = 'blockedMessageIds';
+      const previouslyBlockedMessageIds = 'previouslyBlockedMessageIds';
+
+      const messageIds = filteredMessages.map((item: any) => item.id);
+
+      // console.log({ messageIds });
+
+      logger.info(`Preprocessing filtered Messages from liveChat`);
+      const [processedStatuses, blockedStatuses, previouslyBlockedStatuses] =
+        await Promise.all([
+          redisClient.SMISMEMBER(processedMessageIds, messageIds),
+          redisClient.SMISMEMBER(blockedMessageIds, messageIds),
+          redisClient.SMISMEMBER(previouslyBlockedMessageIds, messageIds),
+        ]);
+
+      // console.log({ processedStatuses, blockedStatuses, previouslyBlockedStatuses })
 
       /* Batching the inserting of ids so that can be performed in one go */
       const multi = redisClient.multi();
@@ -48,17 +66,13 @@ export const GET = async (req: NextRequest) => {
       let cnt = 0;
 
       logger.info(
-        `Batching Message IDs to be put into "processedMessageIds" set and content into "liveChatData" Hash set. `
+        `Batching messages into "processedMessageIds" set and "liveChatData" Hash set.`
       );
-      for (const item of filteredMessages) {
+      filteredMessages.forEach((item: any, index: number) => {
         const messageId = item.id;
-        const exists = await redisClient.sIsMember(
-          processedMessageIds,
-          messageId
-        );
 
-        if (!exists) {
-          ++cnt;
+        if (!processedStatuses[index]) {
+          cnt++;
           multi.hSet(`liveChatData:${messageId}`, {
             id: messageId,
             authorChannelId: item.snippet.authorChannelId,
@@ -68,21 +82,24 @@ export const GET = async (req: NextRequest) => {
             liveChatId: item.snippet.liveChatId,
           });
           multi.rPush(messageQueue, messageId);
-
-          /* Setting an expire for the redis hash */
           multi.expire(`liveChatData:${messageId}`, 86400);
         }
-      }
+
+        if (!blockedStatuses[index] && !previouslyBlockedStatuses[index]) {
+          unBlockedMessages.push(item);
+        }
+      });
 
       logger.info(
-        `Ids pushed into redis set and data into  hash set, Total Count : ${cnt}`
+        `Ids pushed into redis set and data into hash set, Total Count: ${cnt}`
       );
       await multi.exec();
     } else {
       logger.warn('Proceeding without Redis. Data will not be stored.');
+      unBlockedMessages.push(...filteredMessages);
     }
 
-    return makeResponse(200, true, 'Fetched livechat data', filteredMessages);
+    return makeResponse(200, true, 'Fetched livechat data', unBlockedMessages);
   } catch (error) {
     logger.error(`Error while getting livechat Data ${error}`);
     return makeResponse(500, false, 'Error while getting livechat Data', error);

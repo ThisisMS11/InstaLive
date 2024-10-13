@@ -33,6 +33,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
+  Progress,
 } from '@/imports/Shadcn_imports';
 import { transitionToLive } from '@/services/youtube';
 import { useOverlays } from '@/services/overlay';
@@ -127,12 +128,13 @@ export default function StudioEntry({
   const [weAreLive, setWeAreLive] = useState<boolean>(false);
   const router = useRouter();
 
-  // const { overlayImage, setOverlayImage } = useStudio();
+  const { displayName } = useStudio();
   const [overlayImage, setOverlayImage] = useState<string | undefined>(
     undefined
   );
 
   const [broadcastStatus, setBroadcastStatus] = useState<string>('Starting...');
+  const [broadcastProgress, setBroadcastProgress] = useState<number>(0);
 
   const broadcastData = useAppSelector((state) => state.broadcasts);
   const { startWebCam, stopWebCam } = useStudio();
@@ -185,6 +187,8 @@ export default function StudioEntry({
   /* Listening to Changing broadCast status */
   useEffect(() => {
     if (status) setBroadcastStatus(status);
+
+    // if(status==='live')
 
     if (status === 'testing') {
       (async () => {
@@ -322,13 +326,15 @@ export default function StudioEntry({
 
         <ResizablePanel defaultSize={60}>
           <div className="col-span-9 gap-4">
-            <CardContent className="p-10 items-center justify-center flex flex-col gap-2">
+            <CardContent className="p-8 items-center justify-center flex flex-col gap-2">
               <div>
                 <p className="text-center text-2xl">
-                  {broadcastData.liveChatId}
+                  {/* {broadcastData.liveChatId} */}
+                  {displayName}
                 </p>
-                <p className="text-center text-2xl">
+                <p className="text-center text-xl text-gray-600">
                   {broadcastStatus + '...' || 'nothing'}
+                  <Progress value={33} max={100} />
                 </p>
               </div>
 
