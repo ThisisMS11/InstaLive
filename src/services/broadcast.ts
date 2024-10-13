@@ -29,11 +29,18 @@ export const useBroadcastStatus = (
   };
 };
 
+/* To fetch all the previous livestream data to display on dashboard page */
 export const useAllBroadcasts = () => {
-  console.info('Fetching All Past Broadcast info ...');
   const { data, error, isLoading } = useSWR(
     `/api/v1/youtube/broadcast`,
-    AxiosFetcher
+    AxiosFetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      errorRetryCount: 1,
+      errorRetryInterval: 1000,
+    }
   );
 
   return {
@@ -43,7 +50,7 @@ export const useAllBroadcasts = () => {
   };
 };
 
-/* to get the total number of views till present */
+/* To get previous broadcast metrices information or liveStream information */
 export const useBroadcastMetrics = (
   broadcastId: string,
   type: string,

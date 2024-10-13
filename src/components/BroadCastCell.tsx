@@ -49,9 +49,9 @@ export default function BroadCastCell({ broadcast }: { broadcast: any }) {
       <TableCell className="text-center">
         <Badge variant="default">{broadcast.privacyStatus || 'Unknown'}</Badge>
       </TableCell>
-      <TableCell className="text-center">
+      {/* <TableCell className="text-center">
         <Badge variant="default">{broadcast.status || 'Unknown'}</Badge>
-      </TableCell>
+      </TableCell> */}
       <TableCell className="text-center">
         {renderMetric(metrics?.viewCount)}
       </TableCell>

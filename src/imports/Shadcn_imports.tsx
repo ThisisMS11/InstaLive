@@ -75,3 +75,5 @@ export {
 } from '@/components/ui/tooltip';
 
 export { Skeleton } from '@/components/ui/skeleton';
+
+export { Progress } from '@/components/ui/progress';

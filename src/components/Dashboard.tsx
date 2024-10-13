@@ -257,7 +257,7 @@ function Dashboard({
                     Duration
                   </TableHead>
                   <TableHead>Privacy Status</TableHead>
-                  <TableHead>Status</TableHead>
+                  {/* <TableHead>Status</TableHead> */}
                   <TableHead>
                     <Eye />
                   </TableHead>

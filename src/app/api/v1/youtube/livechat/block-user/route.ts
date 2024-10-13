@@ -128,6 +128,11 @@ export async function PUT(req: NextRequest) {
         );
         await redisClient.sRem('blockedMessageIds', messageId);
 
+        logger.info(
+          `Adding messageId: ${messageId} to previouslyBlockedMessageIds set.`
+        );
+        await redisClient.sAdd('previouslyBlockedMessageIds', messageId);
+
         logger.info(`Unblocked user ${authorChannelId} in live chat ${banId}`);
         return makeResponse(200, true, `Unblocked User`, { authorChannelId });
       } catch (error) {
