@@ -17,10 +17,10 @@ export const useBroadcastStatus = (
   const { data, error, isLoading } = useSWR<BroadcastStatusResponse>(
     `/api/v1/youtube/broadcast/status?broadcastId=${broadcastId}`,
     AxiosFetcher,
-    // {
-    //   refreshInterval: 2000,
-    // },
-    { errorRetryCount: 0, errorRetryInterval: 5000 }
+    {
+      refreshInterval: 2000,
+      errorRetryCount: 0, errorRetryInterval: 5000
+    },
   );
   return {
     status: data?.data,
@@ -59,10 +59,10 @@ export const useBroadcastMetrics = (
   const { data, error, isLoading } = useSWR(
     `/api/v1/youtube/broadcast/stats?broadcastId=${broadcastId}&type=${type}`,
     AxiosFetcher,
-    // {
-    //   refreshInterval: refreshIntervalinMs,
-    // }
-    { errorRetryCount: 1, errorRetryInterval: 5000 }
+    {
+      refreshInterval: refreshIntervalinMs,
+      errorRetryCount: 1, errorRetryInterval: 5000
+    }
   );
 
   return {

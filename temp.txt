@@ -1,7 +1,0 @@
-Next : Try out the unblock user feature on real live stream , api is working fine , 
-Everything is almost done , we just have to wrap things up and update the documentation and prep it for the deployment . 
-
-Error handling and other refactoring can be worked upon.
-
-
-Creating a ui for broadcast status change.

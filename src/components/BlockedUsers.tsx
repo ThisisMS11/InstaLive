@@ -25,7 +25,7 @@ interface BlockedUser {
 
 const BlockedUserItem: React.FC<{
   user: BlockedUser;
-  onUnblock: (messageId: string) => Promise<void>;
+  onUnblock: any;
 }> = ({ user, onUnblock }) => (
   <Accordion type="single" collapsible key={user.id} className="shadow">
     <AccordionItem value={user.id}>
