@@ -18,7 +18,7 @@ export const useOverlays = () => {
   const { data, error, isLoading } = useSWR(
     `/api/v1/youtube/broadcast/overlay`,
     AxiosFetcher,
-    { errorRetryCount: 0, errorRetryInterval: 5000 }
+    { errorRetryCount: 1, errorRetryInterval: 5000 }
   );
 
   return {

@@ -16,13 +16,13 @@ export default function StatTable({ broadCastId }: { broadCastId: string }) {
     data: metrices,
     isError: metricError,
     isLoading: metricsLoading,
-  } = useBroadcastMetrics(broadCastId, 'metrics', 5000000);
+  } = useBroadcastMetrics(broadCastId, 'metrics', 10000);
 
   const {
     data: streamData,
     isError: streamDataError,
     isLoading: streamDataLoading,
-  } = useBroadcastMetrics(broadCastId, 'stream', 5000000);
+  } = useBroadcastMetrics(broadCastId, 'stream', 10000);
 
   // Handle errors by logging them and providing fallback data
   if (metricError) {

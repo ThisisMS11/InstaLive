@@ -43,6 +43,7 @@ import { Loader } from '@/imports/Component_imports';
 import { useStudio } from '@/app/context/StudioContext';
 import { useSWRConfig } from 'swr';
 import { getBlockedUserInfo } from '@/services/livechat';
+import { motion } from 'framer-motion';
 
 export function AlertDialogDemo({
   transitionToLive,
@@ -135,6 +136,7 @@ export default function StudioEntry({
 
   const [broadcastStatus, setBroadcastStatus] = useState<string>('Starting...');
   const [broadcastProgress, setBroadcastProgress] = useState<number>(0);
+  const [showProgress, setShowProgress] = useState(true);
 
   const broadcastData = useAppSelector((state) => state.broadcasts);
   const { startWebCam, stopWebCam } = useStudio();
@@ -188,7 +190,34 @@ export default function StudioEntry({
   useEffect(() => {
     if (status) setBroadcastStatus(status);
 
-    // if(status==='live')
+    switch (status?.toLowerCase()) {
+      case 'ready':
+        setBroadcastProgress(10);
+        break;
+      case 'teststarting':
+        setBroadcastProgress(30);
+        break;
+      case 'testing':
+        setBroadcastProgress(60);
+        break;
+
+      case 'livestarting':
+        setBroadcastProgress(80);
+        break;
+
+      case 'live':
+        setBroadcastProgress(80);
+        setTimeout(() => {
+          setBroadcastProgress(100);
+          setTimeout(() => {
+            setShowProgress(false);
+          }, 500);
+        }, 500);
+        break;
+
+      default:
+        break;
+    }
 
     if (status === 'testing') {
       (async () => {
@@ -327,15 +356,30 @@ export default function StudioEntry({
         <ResizablePanel defaultSize={60}>
           <div className="col-span-9 gap-4">
             <CardContent className="p-8 items-center justify-center flex flex-col gap-2">
-              <div>
+              <div className="w-full flex flex-col items-center justify-center">
                 <p className="text-center text-2xl">
                   {/* {broadcastData.liveChatId} */}
                   {displayName}
                 </p>
-                <p className="text-center text-xl text-gray-600">
-                  {broadcastStatus + '...' || 'nothing'}
-                  <Progress value={33} max={100} />
-                </p>
+
+                <motion.p
+                  className="text-center text-xl text-gray-600"
+                  initial={{ scale: 1 }}
+                  animate={{ scale: showProgress ? 1 : 1.2 }} // Increase the scale when progress bar disappears
+                  transition={{ duration: 0.5 }}
+                >
+                  {broadcastStatus.toLowerCase() === 'live' && !showProgress
+                    ? 'You are Live'
+                    : `${broadcastStatus}...` || 'nothing'}
+                </motion.p>
+
+                {showProgress && (
+                  <Progress
+                    className="w-5/6 mt-1"
+                    value={broadcastProgress}
+                    max={100}
+                  />
+                )}
               </div>
 
               <div className="relative w-[95%] h-[34rem] rounded-lg border bg-card text-card-foreground shadow-sm">

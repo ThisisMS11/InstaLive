@@ -11,7 +11,7 @@ export default function BroadCastCell({ broadcast }: { broadcast: any }) {
     data: metrics,
     isError,
     isLoading,
-  } = useBroadcastMetrics(broadcast.id, 'metrics', 300000);
+  } = useBroadcastMetrics(broadcast.id, 'metrics', 60000);
 
   useEffect(() => {
     if (isError) {
