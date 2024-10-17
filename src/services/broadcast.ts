@@ -19,8 +19,9 @@ export const useBroadcastStatus = (
     AxiosFetcher,
     {
       refreshInterval: 2000,
-      errorRetryCount: 0, errorRetryInterval: 5000
-    },
+      errorRetryCount: 0,
+      errorRetryInterval: 5000,
+    }
   );
   return {
     status: data?.data,
@@ -61,7 +62,8 @@ export const useBroadcastMetrics = (
     AxiosFetcher,
     {
       refreshInterval: refreshIntervalinMs,
-      errorRetryCount: 1, errorRetryInterval: 5000
+      errorRetryCount: 1,
+      errorRetryInterval: 5000,
     }
   );
 

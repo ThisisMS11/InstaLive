@@ -10,7 +10,10 @@ export default function Navbar({ className }: { className?: string }) {
 
   return (
     <div
-      className={cn('fixed top-5 inset-x-0 max-w-2xl mx-auto z-50 bg-white ', className)}
+      className={cn(
+        'fixed top-5 inset-x-0 max-w-2xl mx-auto z-50 bg-white ',
+        className
+      )}
     >
       <nav className="border-2 border-gray-200 flex items-center justify-between p-2 rounded-full">
         {/* @ts-ignore */}
