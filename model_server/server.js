@@ -11,18 +11,18 @@ const fastify = Fastify({
   },
 });
 
-const redis = new Redis({
-  host: 'localhost',
-  port: 6379,
-});
-
 const schema = {
   type: 'object',
-  required: ['SHARED_SECRET'],
+  required: ['SHARED_SECRET', 'REDIS_PASSWORD', 'REDIS_HOST', 'REDIS_PORT', 'NODE_ENV', 'NEXT_SERVER', 'HUGGING_FACE_API_KEY', 'MODEL_URL'],
   properties: {
-    SHARED_SECRET: {
-      type: 'string',
-    },
+    SHARED_SECRET: { type: 'string' },
+    REDIS_PASSWORD: { type: 'string' },
+    REDIS_HOST: { type: 'string' },
+    REDIS_PORT: { type: 'string' },
+    NODE_ENV: { type: 'string' },
+    NEXT_SERVER: { type: 'string' },
+    HUGGING_FACE_API_KEY: { type: 'string' },
+    MODEL_URL: { type: 'string' },
   },
 };
 
@@ -35,6 +35,8 @@ const options = {
 
 fastify.register(fastifyIO);
 fastify.register(fastifyEnv, options);
+
+let redis;
 
 const livechatSockets = new Map();
 
@@ -67,7 +69,12 @@ const processMessage = async (messageId) => {
         `${messageId} Found Spam, Content : ${messageData.messageContent}`
       );
       /* making the api call to block this user */
-      const url = `http://localhost:3000/api/v1/youtube/livechat/block-user/`;
+
+      if (!fastify.config.NEXT_SERVER || !fastify.config.SHARED_SECRET) {
+        throw new Error("NEXT_SERVER or SHARED_SECRET is not defined in the environment variables.");
+      }
+
+      const url = `${fastify.config.NEXT_SERVER}/api/v1/youtube/livechat/block-user/`;
       const body = {
         messageId: messageId,
         liveChatId: messageData.liveChatId,
@@ -125,13 +132,23 @@ const processMessage = async (messageId) => {
 
 const detectSpam = async (content) => {
   try {
+    // Check if the necessary environment variables are present
+    if (!fastify.config.MODEL_URL) {
+      throw new Error("MODEL_URL is not defined in the environment variables.");
+    }
+
+    if (!fastify.config.HUGGING_FACE_API_KEY) {
+      throw new Error("HUGGING_FACE_API_KEY is not defined in the environment variables.");
+    }
+
     const body = { inputs: content };
+
     const response = await fetch(
-      'https://api-inference.huggingface.co/models/unitary/unbiased-toxic-roberta',
+      fastify.config.MODEL_URL,
       {
         method: 'POST',
         headers: {
-          Authorization: `Bearer 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`,
+          Authorization: `Bearer ${fastify.config.HUGGING_FACE_API_KEY}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),
@@ -166,26 +183,26 @@ const detectSpam = async (content) => {
       return threshold !== undefined && item.score > threshold;
     });
 
-    // Log the scores and the spam detection result
-    // fastify.log.info(`Content: "${content}"`);
-    // fastify.log.info(`Scores: ${JSON.stringify(scores)}`);
-    // fastify.log.info(`Is spam: ${isSpam}`);
-
     return isSpam;
   } catch (error) {
     fastify.log.error(
-      `Error occurred while calling Hugging Face model API: ${error.message}`
+      `Error occurred while detecting spam: ${error.message}`
     );
     return false;
   }
 };
 
+
 const pollQueue = async () => {
   while (true) {
     try {
-      // Wait for a new message ID in the queue
-      const [_, messageId] = await redis.blpop('messageQueue', 0);
-      await processMessage(messageId);
+      if (redis) {
+        // Wait for a new message ID in the queue
+        const [_, messageId] = await redis.blpop('messageQueue', 0);
+        await processMessage(messageId);
+      } else {
+        fastify.log.error(`Redis is Not connected to process queue messages`);
+      }
     } catch (error) {
       fastify.log.error(`Error polling queue: ${error.message}`);
       // Wait a bit before trying again to avoid hammering Redis in case of persistent errors
@@ -197,6 +214,12 @@ const pollQueue = async () => {
 // Start the server
 const start = async () => {
   await fastify.ready();
+
+  redis = new Redis({
+    host: fastify.config.REDIS_HOST,
+    port: Number(fastify.config.REDIS_PORT),
+    ...(fastify.config.REDIS_PASSWORD && { password: fastify.config.REDIS_PASSWORD }),
+  });
 
   try {
     await fastify.listen({ port: 8005 });

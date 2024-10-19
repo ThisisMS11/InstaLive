@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# messageQueue
+# processedMessageIds
+# blockedMessageIds
+# previouslyBlockedMessageIds
+# liveChatData:key
+# messageBanId:key
+
 # Set your Redis CLI command here (if needed)
 REDIS_CLI="redis-cli"
 

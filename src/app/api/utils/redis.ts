@@ -3,10 +3,10 @@ import { createLoggerWithLabel } from './logger';
 
 const logger = createLoggerWithLabel('Redis');
 
-const isProduction = process.env.NODE_ENV === 'production';
 
+// Create Redis client configuration
 const redisClient = createClient({
-  password: isProduction ? process.env.REDIS_PASSWORD : undefined,
+  password: process.env.REDIS_PASSWORD || undefined,
   socket: {
     host: process.env.REDIS_HOST,
     port: Number(process.env.REDIS_PORT),
