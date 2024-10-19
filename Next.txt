@@ -1,5 +1,0 @@
-Try to integrate msw , so that when you are working on new features you are not calling apis which are not necessary to reduce network load and latency in development. Mock responses.
-
-Also configure apis calls to handle things properly.
-
-try out redis cloud performance.

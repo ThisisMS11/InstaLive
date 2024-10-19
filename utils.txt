@@ -1,3 +1,0 @@
-1. I was not able to unblock the user ,you have to check the correctness of that api first.
-2. reduce your youtube api calls , your quota may get finished very soon otherwise.
-3. 

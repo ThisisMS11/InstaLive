@@ -43,6 +43,7 @@ import { Loader } from '@/imports/Component_imports';
 import { useStudio } from '@/app/context/StudioContext';
 import { useSWRConfig } from 'swr';
 import { getBlockedUserInfo } from '@/services/livechat';
+import { deleteRedisData } from '@/services/redis';
 import { motion } from 'framer-motion';
 
 export function AlertDialogDemo({
@@ -92,6 +93,19 @@ export function AlertDialogDemo({
                     dispatch(emptyLiveStream());
                     dispatch(emptyBroadcast());
 
+                    /* call the api to clean the redis data */
+                    try {
+                      console.log(`Deleting redis data`);
+                      const response = await deleteRedisData();
+                      if (response.status == 200) {
+                        console.info(`Data deletion from redis successfull`);
+                      } else {
+                        console.warn(`Unexpected Status Code from redis deletion api.`)
+                      }
+                    } catch (error) {
+                      console.error(`Some error occured while deleting data from redis : `, error);
+                    }
+
                     toast('Stream Completed', {
                       description: 'Stream has been successfully completed',
                       duration: 5000,
@@ -128,6 +142,7 @@ export default function StudioEntry({
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [weAreLive, setWeAreLive] = useState<boolean>(false);
   const router = useRouter();
+  const dispatch = useAppDispatch()
 
   const { displayName } = useStudio();
   const [overlayImage, setOverlayImage] = useState<string | undefined>(
@@ -231,6 +246,26 @@ export default function StudioEntry({
         description: 'Stream has been successfully completed',
         duration: 5000,
       });
+
+      const cleanRedisData = async () => {
+        /* call the api to clean the redis data */
+        try {
+          console.log(`Deleting redis data`);
+          const response = await deleteRedisData();
+          if (response.status == 200) {
+            console.info(`Data deletion from redis successfull`);
+          } else {
+            console.warn(`Unexpected Status Code from redis deletion api.`)
+          }
+        } catch (error) {
+          console.error(`Some error occured while deleting data from redis : `, error);
+        }
+      }
+
+      dispatch(emptyLiveStream());
+      dispatch(emptyBroadcast());
+      cleanRedisData();
+
       router.push('/dashboard');
     }
   }, [status, broadcastStatusError, broadcastIsLoading]);
