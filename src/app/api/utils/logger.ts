@@ -28,18 +28,31 @@ const logger: Logger = createLogger({
   levels: myCustomLevels.levels,
   format: combine(timestamp(), errors({ stack: true }), myFormat),
   defaultMeta: { service: 'user-service' },
-  transports: [
+  transports: [],
+});
+
+// Add file transports only in non-production environments (e.g., development)
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(
     new transports.File({
       filename: path.join(process.cwd(), 'logs', 'error.log'),
       level: 'error',
-    }),
+    })
+  );
+  logger.add(
     new transports.File({
       filename: path.join(process.cwd(), 'logs', 'combined.log'),
-    }),
-  ],
-});
+    })
+  );
 
-if (process.env.NODE_ENV !== 'production') {
+  // Add console transport for better readability in dev
+  logger.add(
+    new transports.Console({
+      format: combine(colorize({ all: true }), myFormat),
+    })
+  );
+} else {
+  // In production, only log to console
   logger.add(
     new transports.Console({
       format: combine(colorize({ all: true }), myFormat),

@@ -22,6 +22,7 @@ const schema = {
     'NEXT_SERVER',
     'HUGGING_FACE_API_KEY',
     'MODEL_URL',
+    'PORT',
   ],
   properties: {
     SHARED_SECRET: { type: 'string' },
@@ -32,6 +33,7 @@ const schema = {
     NEXT_SERVER: { type: 'string' },
     HUGGING_FACE_API_KEY: { type: 'string' },
     MODEL_URL: { type: 'string' },
+    PORT: { type: 'number' },
   },
 };
 
@@ -231,8 +233,9 @@ const start = async () => {
   });
 
   try {
-    await fastify.listen({ port: 8005 });
-    fastify.log.info(`Server is running on port 8005`);
+    const port = Number(fastify.config.PORT) || 8005;
+    await fastify.listen({ port, host: '0.0.0.0' });
+    fastify.log.info(`Server is running on port ${port}`);
 
     // Socket.io connection handler
     fastify.io.on('connection', (socket) => {

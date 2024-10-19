@@ -27,7 +27,13 @@ const PrivacyPolicy = () => {
               </p>
               <p className="text-gray-700 mb-4">
                 This privacy policy applies to users of InstaLive which operates
-                through www.example.com.
+                through{' '}
+                <a
+                  href="https://instalive.vercel.app/"
+                  className="text-blue-500 hover:underline"
+                >
+                  InstaLive
+                </a>
               </p>
               <p className="text-gray-700 mb-4">
                 When we refer to a “stream” in this Privacy Policy, this might

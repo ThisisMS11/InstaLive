@@ -52,12 +52,15 @@ const Studio = () => {
 
         const youtubeUrl = `${ingestionAddress}/${streamName}`;
         const broadcasting_server_url = `${process.env.NEXT_PUBLIC_FFMPEG_SERVER}/?youtubeUrl=${youtubeUrl}`;
-        const model_server_url = `http://localhost:8005/?liveChatId=${liveChatId}`;
+        const model_server_url = `${process.env.NEXT_PUBLIC_MODEL_SERVER}/?liveChatId=${liveChatId}`;
 
         try {
-          if (!process.env.NEXT_PUBLIC_FFMPEG_SERVER) {
+          if (
+            !process.env.NEXT_PUBLIC_FFMPEG_SERVER ||
+            !process.env.NEXT_PUBLIC_MODEL_SERVER
+          ) {
             throw new Error(
-              'FFMPEG Server URL not found in environment variables'
+              'FFMPEG Server URL or NEXT_PUBLIC_MODEL_SERVER not found in environment variables'
             );
           }
 
