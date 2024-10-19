@@ -100,10 +100,15 @@ export function AlertDialogDemo({
                       if (response.status == 200) {
                         console.info(`Data deletion from redis successfull`);
                       } else {
-                        console.warn(`Unexpected Status Code from redis deletion api.`)
+                        console.warn(
+                          `Unexpected Status Code from redis deletion api.`
+                        );
                       }
                     } catch (error) {
-                      console.error(`Some error occured while deleting data from redis : `, error);
+                      console.error(
+                        `Some error occured while deleting data from redis : `,
+                        error
+                      );
                     }
 
                     toast('Stream Completed', {
@@ -142,7 +147,7 @@ export default function StudioEntry({
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [weAreLive, setWeAreLive] = useState<boolean>(false);
   const router = useRouter();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const { displayName } = useStudio();
   const [overlayImage, setOverlayImage] = useState<string | undefined>(
@@ -255,12 +260,15 @@ export default function StudioEntry({
           if (response.status == 200) {
             console.info(`Data deletion from redis successfull`);
           } else {
-            console.warn(`Unexpected Status Code from redis deletion api.`)
+            console.warn(`Unexpected Status Code from redis deletion api.`);
           }
         } catch (error) {
-          console.error(`Some error occured while deleting data from redis : `, error);
+          console.error(
+            `Some error occured while deleting data from redis : `,
+            error
+          );
         }
-      }
+      };
 
       dispatch(emptyLiveStream());
       dispatch(emptyBroadcast());

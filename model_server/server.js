@@ -7,13 +7,22 @@ import fastifyEnv from '@fastify/env';
 const fastify = Fastify({
   logger: {
     level: 'info',
-    file: './logs/combined.log',
+    // file: './logs/combined.log',
   },
 });
 
 const schema = {
   type: 'object',
-  required: ['SHARED_SECRET', 'REDIS_PASSWORD', 'REDIS_HOST', 'REDIS_PORT', 'NODE_ENV', 'NEXT_SERVER', 'HUGGING_FACE_API_KEY', 'MODEL_URL'],
+  required: [
+    'SHARED_SECRET',
+    'REDIS_PASSWORD',
+    'REDIS_HOST',
+    'REDIS_PORT',
+    'NODE_ENV',
+    'NEXT_SERVER',
+    'HUGGING_FACE_API_KEY',
+    'MODEL_URL',
+  ],
   properties: {
     SHARED_SECRET: { type: 'string' },
     REDIS_PASSWORD: { type: 'string' },
@@ -71,7 +80,9 @@ const processMessage = async (messageId) => {
       /* making the api call to block this user */
 
       if (!fastify.config.NEXT_SERVER || !fastify.config.SHARED_SECRET) {
-        throw new Error("NEXT_SERVER or SHARED_SECRET is not defined in the environment variables.");
+        throw new Error(
+          'NEXT_SERVER or SHARED_SECRET is not defined in the environment variables.'
+        );
       }
 
       const url = `${fastify.config.NEXT_SERVER}/api/v1/youtube/livechat/block-user/`;
@@ -134,26 +145,25 @@ const detectSpam = async (content) => {
   try {
     // Check if the necessary environment variables are present
     if (!fastify.config.MODEL_URL) {
-      throw new Error("MODEL_URL is not defined in the environment variables.");
+      throw new Error('MODEL_URL is not defined in the environment variables.');
     }
 
     if (!fastify.config.HUGGING_FACE_API_KEY) {
-      throw new Error("HUGGING_FACE_API_KEY is not defined in the environment variables.");
+      throw new Error(
+        'HUGGING_FACE_API_KEY is not defined in the environment variables.'
+      );
     }
 
     const body = { inputs: content };
 
-    const response = await fetch(
-      fastify.config.MODEL_URL,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${fastify.config.HUGGING_FACE_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      }
-    );
+    const response = await fetch(fastify.config.MODEL_URL, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${fastify.config.HUGGING_FACE_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
 
     const data = await response.json();
 
@@ -185,13 +195,10 @@ const detectSpam = async (content) => {
 
     return isSpam;
   } catch (error) {
-    fastify.log.error(
-      `Error occurred while detecting spam: ${error.message}`
-    );
+    fastify.log.error(`Error occurred while detecting spam: ${error.message}`);
     return false;
   }
 };
-
 
 const pollQueue = async () => {
   while (true) {
@@ -218,7 +225,9 @@ const start = async () => {
   redis = new Redis({
     host: fastify.config.REDIS_HOST,
     port: Number(fastify.config.REDIS_PORT),
-    ...(fastify.config.REDIS_PASSWORD && { password: fastify.config.REDIS_PASSWORD }),
+    ...(fastify.config.REDIS_PASSWORD && {
+      password: fastify.config.REDIS_PASSWORD,
+    }),
   });
 
   try {

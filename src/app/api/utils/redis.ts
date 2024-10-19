@@ -3,7 +3,6 @@ import { createLoggerWithLabel } from './logger';
 
 const logger = createLoggerWithLabel('Redis');
 
-
 // Create Redis client configuration
 const redisClient = createClient({
   password: process.env.REDIS_PASSWORD || undefined,
