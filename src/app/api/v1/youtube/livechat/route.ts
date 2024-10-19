@@ -145,4 +145,3 @@ export const POST = async (req: NextRequest) => {
     return makeResponse(500, false, 'Error while posting chatmessage', error);
   }
 };
-
