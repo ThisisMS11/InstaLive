@@ -32,6 +32,7 @@
     "@tabler/icons-react": "^3.5.0",
     "@types/react-redux": "^7.1.33",
     "@types/redis": "^4.0.11",
+    "@vercel/analytics": "^1.4.0",
     "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
