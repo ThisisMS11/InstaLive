@@ -62,7 +62,7 @@ export default function OverlayAccordion({
               overlays.map((overlay: any) => (
                 <div
                   key={overlay.id}
-                  className="flex my-2 border-2 border-gray-200  rounded-md h-20 items-center content-center gap-2 p-2"
+                  className="dark:border-gray-700 flex my-2 border-2 border-gray-200  rounded-md h-20 items-center content-center gap-2 p-2"
                 >
                   <Image
                     src={overlay.url}

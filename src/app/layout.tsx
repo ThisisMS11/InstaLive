@@ -4,7 +4,7 @@ import Providers from '@/components/Providers';
 import './globals.css';
 import { Toaster } from 'sonner';
 import { Analytics } from '@vercel/analytics/next';
-
+import { ThemeProvider } from '@/components/theme-provider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -22,7 +22,14 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           <div className="pt-[0px]">
-            {children}
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
             <Toaster />
             <Analytics />
           </div>

@@ -76,7 +76,7 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
-      <div className="h-[95vh] w-full rounded-md bg-white  flex flex-col items-center justify-evenly antialiased">
+      <div className="dark:bg-black h-[100vh] w-full rounded-md bg-white  flex flex-col items-center justify-evenly antialiased">
         <div className="max-w-3xl mx-auto   text-center">
           <HeroHighlight>
             <motion.h1
@@ -92,14 +92,14 @@ export default function HomePage() {
                 duration: 0.5,
                 ease: [0.4, 0.0, 0.2, 1],
               }}
-              className="relative z-10 text-lg md:text-6xl  bg-clip-text text-transparent bg-gradient-to-b from-neutral-600 to-neutral-400  text-center font-sans font-bold"
+              className="dark:text-white relative z-10 text-lg md:text-6xl  bg-clip-text text-transparent bg-gradient-to-b from-neutral-600 to-neutral-400  text-center font-sans font-bold"
             >
               LiveStream Just One Name
               <Highlight className="text-black dark:text-white">
                 InstaLive
               </Highlight>
             </motion.h1>
-            <p className="text-neutral-500 max-w-lg mx-auto mt-4 text-xl text-center relative z-10">
+            <p className="text-neutral-500 dark:text-white max-w-lg mx-auto mt-4 text-xl text-center relative z-10">
               Go live effortlessly and reach your audience everywhere with
               InstaLive
             </p>
