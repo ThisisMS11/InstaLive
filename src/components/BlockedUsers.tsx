@@ -85,7 +85,7 @@ const BlockedUsers: React.FC = () => {
   }
 
   return (
-    <div className="bg-white p-3 rounded-lg shadow h-full">
+    <div className="dark:bg-transparent bg-white p-3 rounded-lg shadow h-full">
       <div className="h-1/6 text-2xl font-bold">Blocked Users</div>
       <div className="h-5/6 p-2 overflow-y-scroll">
         {blockedUsers.length > 0 ? (

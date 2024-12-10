@@ -49,8 +49,8 @@ export default function ChatBox({ liveChatId }: { liveChatId: string }) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center bg-white rounded-lg shadow max-w-lg h-full w-[100%]  relative  ">
-        <div className="flex items-center p-4 absolute top-0 my-4 w-full z-10 bg-white border-b">
+      <div className="dark:bg-black flex items-center bg-white rounded-lg shadow max-w-lg h-full w-[100%]  relative  ">
+        <div className="dark:bg-black flex items-center p-4 absolute top-0 my-4 w-full z-10 bg-white border-b">
           <Skeleton className="rounded-full w-8 h-8" />
           <div>
             <Skeleton className="w-28 h-8 ml-4" />
@@ -108,8 +108,8 @@ export default function ChatBox({ liveChatId }: { liveChatId: string }) {
   };
 
   return (
-    <div className="flex items-center bg-white rounded-lg shadow max-w-lg h-full w-[100%]  relative  ">
-      <div className="flex items-center p-4 border-b absolute top-0 my-4 w-full z-10 bg-white">
+    <div className="dark:bg-transparent flex items-center bg-white rounded-lg shadow max-w-lg h-full w-[100%]  relative  ">
+      <div className="flex items-center p-4 border-b absolute top-0 my-4 w-full z-10">
         <Avatar>
           <AvatarImage
             // @ts-ignore
@@ -173,7 +173,7 @@ export default function ChatBox({ liveChatId }: { liveChatId: string }) {
 
       <form
         onSubmit={handleSendMessage}
-        className="flex items-center p-4 border-t absolute  bottom-0  w-full bg-white"
+        className="flex items-center p-4 border-t absolute  bottom-0  w-full "
       >
         <Input
           placeholder="Type your message..."

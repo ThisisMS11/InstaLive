@@ -19,6 +19,7 @@ import {
   CardTitle,
   CardContent,
 } from '@/imports/Shadcn_imports';
+import ToggleButton from '@/components/ToggleButton';
 import { ThumbsUp, Eye, MessageSquareText } from 'lucide-react';
 import BroadCastCell from './BroadCastCell';
 import { useAppSelector } from '@/imports/Redux_imports';
@@ -140,6 +141,7 @@ function Dashboard({
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
+            <ToggleButton />
 
             {liveStreamData && liveStreamData.id !== '' && (
               <button
@@ -154,33 +156,6 @@ function Dashboard({
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <Card>
-              <CardHeader>
-                <CardTitle>Upcoming Streams</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-2">
-                  <div className="flex items-center justify-between">
-                    <div className="font-medium">Tech Talk</div>
-                    <div className="text-sm text-muted-foreground">
-                      June 15, 2023
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="font-medium">Game Night</div>
-                    <div className="text-sm text-muted-foreground">
-                      June 22, 2023
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="font-medium">Q&A Session</div>
-                    <div className="text-sm text-muted-foreground">
-                      July 1, 2023
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
             <Card>
               <CardHeader>
                 <CardTitle>Stream Analytics</CardTitle>
