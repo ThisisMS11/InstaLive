@@ -9,66 +9,69 @@ import GoogleIcon from '@/app/assets/google.svg';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import Navbar from '@/components/Navbar';
-function DashBoardButton() {
-  const router = useRouter();
+import ToggleButton from '@/components/ToggleButton';
+import Navbar from '@/components/landing/navbar';
+import Hero from '@/components/landing/hero';
 
-  return (
-    <button
-      className="cursor-pointer flex px-3 py-1 relative bg-gradient-to-r text-white from-indigo-500 to-purple-500 rounded-md mx-auto z-10"
-      style={{ pointerEvents: 'auto' }}
-      onClick={() => {
-        router.push('/dashboard');
-      }}
-    >
-      DashBoard
-      <motion.div
-        className="mx-2"
-        animate={{ x: [0, 10, 0] }}
-        transition={{ repeat: Infinity, duration: 1, ease: 'easeInOut' }}
-      >
-        <MoveRight />
-      </motion.div>
-    </button>
-  );
-}
+// function DashBoardButton() {
+//   const router = useRouter();
 
-function GoogleSignButton() {
-  return (
-    <button
-      className="w-fit flex justify-center items-center gap-2 py-3 px-4 border rounded font-light text-md text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 -mt-2 cursor-pointer z-10"
-      style={{ pointerEvents: 'auto' }}
-      onClick={async () => {
-        console.log('clicked');
-        await signIn('google');
-      }}
-    >
-      <Image
-        src={GoogleIcon.src}
-        className="w-5 h-5 mr-2"
-        alt="Github Icon"
-        width={25}
-        height={25}
-      />
-      Continue with Google
-    </button>
-  );
-}
+//   return (
+//     <button
+//       className="cursor-pointer flex px-3 py-1 relative bg-gradient-to-r text-white from-indigo-500 to-purple-500 rounded-md mx-auto z-10"
+//       style={{ pointerEvents: 'auto' }}
+//       onClick={() => {
+//         router.push('/dashboard');
+//       }}
+//     >
+//       DashBoard
+//       <motion.div
+//         className="mx-2"
+//         animate={{ x: [0, 10, 0] }}
+//         transition={{ repeat: Infinity, duration: 1, ease: 'easeInOut' }}
+//       >
+//         <MoveRight />
+//       </motion.div>
+//     </button>
+//   );
+// }
+
+// function GoogleSignButton() {
+//   return (
+//     <button
+//       className="w-fit flex justify-center items-center gap-2 py-3 px-4 border rounded font-light text-md text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 -mt-2 cursor-pointer z-10"
+//       style={{ pointerEvents: 'auto' }}
+//       onClick={async () => {
+//         console.log('clicked');
+//         await signIn('google');
+//       }}
+//     >
+//       <Image
+//         src={GoogleIcon.src}
+//         className="w-5 h-5 mr-2"
+//         alt="Github Icon"
+//         width={25}
+//         height={25}
+//       />
+//       Continue with Google
+//     </button>
+//   );
+// }
 
 export default function HomePage() {
   const session = useSession();
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      toast('InstaLive', {
-        description: 'Welcome to InstaLive !',
-        duration: 5000,
-        icon: <Hand />,
-      });
-    }, 1000);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     toast('InstaLive', {
+  //       description: 'Welcome to InstaLive !',
+  //       duration: 5000,
+  //       icon: <Hand />,
+  //     });
+  //   }, 1000);
 
-    return () => clearTimeout(timer);
-  });
+  //   return () => clearTimeout(timer);
+  // });
 
   // @ts-ignore
   console.log(session);
@@ -76,6 +79,10 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
+      <Hero />
+
+      {/* <ToggleButton /> */}
+      {/*
       <div className="dark:bg-black h-[100vh] w-full rounded-md bg-white  flex flex-col items-center justify-evenly antialiased">
         <div className="max-w-3xl mx-auto   text-center">
           <HeroHighlight>
@@ -107,7 +114,7 @@ export default function HomePage() {
         </div>
         <BackgroundBeams />
         {session?.data?.user ? <DashBoardButton /> : <GoogleSignButton />}
-      </div>
+      </div> */}
     </>
   );
 }

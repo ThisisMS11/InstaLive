@@ -1,11 +1,25 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Figtree, Inter, Plus_Jakarta_Sans } from 'next/font/google';
 import Providers from '@/components/Providers';
 import './globals.css';
 import { Toaster } from 'sonner';
 import { Analytics } from '@vercel/analytics/next';
 import { ThemeProvider } from '@/components/theme-provider';
-const inter = Inter({ subsets: ['latin'] });
+import { cn } from '@/lib/utils';
+
+const figtree = Figtree({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-figtree',
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['200', '300', '400', '500', '600', '700', '800'],
+  variable: '--font-jakarta',
+});
 
 export const metadata: Metadata = {
   title: 'InstaLive',
@@ -19,7 +33,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body
+        className={cn(figtree.variable, jakarta.variable, 'font-secondary')}
+      >
         <Providers>
           <div className="pt-[0px]">
             <ThemeProvider
