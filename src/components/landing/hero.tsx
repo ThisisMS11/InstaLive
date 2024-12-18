@@ -15,29 +15,29 @@ import GlowDiv from '../glow-div';
 export default function Hero() {
   return (
     <>
-      <div className="h-[90vh] w-full dark:bg-black bg-white  dark:bg-dot-white/[0.5] bg-dot-black/[0.2] relative flex">
+      <div className="h-fit pb-32 w-full dark:bg-black bg-white  dark:bg-dot-white/[0.5] bg-dot-black/[0.2] relative flex">
         <div className="w-full absolute border-red-500 top-0 h-[10rem] bg-gradient-to-b from-background to-transparent z-[1]"></div>
         <div className="w-full absolute border-t-2 border-green-500 bottom-0 h-[5rem] backdrop-blur-sm bg-gradient-to-t from-background via-background/80 to-transparent z-[1]"></div>
-        <div className="w-[70%] h-full absolute border-yellow-500 left-0  bg-gradient-to-r from-background via-background/80 to-transparent z-[1]"></div>
+        <div className="w-[90%] h-full absolute border-yellow-500 left-0  bg-gradient-to-r from-background via-background/80 to-transparent z-[1]"></div>
         <div className="w-[20%] h-full absolute border-yellow-500 right-0  bg-gradient-to-l from-background via-background/80 to-transparent z-[1]"></div>
 
-        <main className="max-w-6xl z-20 w-full mx-auto">
+        <main className="max-w-6xl relative z-20 w-full mx-auto">
           <div className="p-4">
             {/* Radial gradient for the container to give a faded look */}
             {/* <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div> */}
-            <div className="flex  flex-col gap-4 mx-10 items-start justify-center h-fit pt-14">
+            <div className="flex  flex-col gap-4 md:mx-10 items-start justify-center h-fit pt-14">
               <div className="font-primary text-4xl md:text-5xl lg:text-6xl flex flex-col text-center font-bold items-start">
-                <div>Stream to your Audience</div>
+                <div>Stream to your audience</div>
                 <div>in a few clicks.</div>
               </div>
-              <div className="w-full text-xs sm:text-sm md:text-lg md:w-[50%] text-left">
-                Stream seamlessly with just a few clicks to youtube , twitch and
-                facebook , no complex setup, no stress.
+              <div className="w-full text-xs sm:text-sm md:w-[50%] text-left">
+                Stream seamlessly with just a few clicks to YouTube , Twitch and
+                Facebook , without much hassle.
               </div>
               <div className="flex items-center mt-2 gap-4">
-                <Button className="">Start streaming now!</Button>
+                <Button className="">Stream Now</Button>
                 <Button variant={'ghost'} className="flex items-center gap-2">
-                  <span>Watch Live Streams</span>
+                  <span>Live Streams</span>
                   <span className="w-3 h-3 rounded-xl animate-pulse bg-red-500"></span>
                 </Button>
               </div>

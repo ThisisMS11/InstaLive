@@ -8,7 +8,7 @@ export default function GlowDiv({
 }) {
   return (
     <>
-      <motion.section className="absolute z-40 right-[20rem] top-[12rem] hidden rotate-12 items-center justify-center drop-shadow-[0_60px_100px_#60e26d] lg:flex">
+      <motion.section className="absolute z-40 right-[10rem] top-[12rem] hidden rotate-12 items-center justify-center drop-shadow-[0_60px_100px_#60e26d] lg:flex">
         <motion.div
           className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-green-400 to-green-600 md:h-48 md:w-48"
           style={{
