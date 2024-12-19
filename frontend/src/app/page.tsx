@@ -1,15 +1,6 @@
 'use client';
-import React, { useEffect } from 'react';
-import { BackgroundBeams } from '@/components/ui/background-beams';
-import { motion } from 'framer-motion';
-import { HeroHighlight, Highlight } from '@/components/ui/hero-highlight';
-import { signIn, useSession } from 'next-auth/react';
-import { MoveRight, Hand } from 'lucide-react';
-import GoogleIcon from '@/app/assets/google.svg';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
-import ToggleButton from '@/components/ToggleButton';
+import React from 'react';
+import { useSession } from 'next-auth/react';
 import Navbar from '@/components/landing/navbar';
 import Hero from '@/components/landing/hero';
 import Features from '@/components/landing/features';

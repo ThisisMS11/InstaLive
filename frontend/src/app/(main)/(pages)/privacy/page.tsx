@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from '@/components/Navbar';
+import Navbar from '@/components/landing/navbar';
 
 const PrivacyPolicy = () => {
   return (
@@ -7,25 +7,22 @@ const PrivacyPolicy = () => {
       <Navbar />
       <div className="min-h-screen">
         <div className="container mx-auto px-4 py-8 ">
-          <div className="bg-white shadow-lg rounded-lg p-8">
+          <div className="dark:bg-black bg-white shadow-lg rounded-lg p-8">
             <h1 className="text-4xl font-bold text-center mb-6 mt-4">
               Privacy Policy
             </h1>
 
             <section className="mb-6">
-              <h2 className="text-2xl font-semibold mb-4">
-                1. Important Information and Who We Are
+              <h2 className="text-xl font-medium mb-2">
+                1. Purpose of this privacy policy
               </h2>
-              <h3 className="text-xl font-medium mb-2">
-                Purpose of this privacy policy
-              </h3>
-              <p className="text-gray-700 mb-4">
+              <p className="dark:text-gray-400 text-gray-700 mb-4">
                 This Privacy Policy gives you information about how InstaLive
                 collects and processes your personal data when you use our
                 services, including any personal data you may provide through
                 the Instalive platform.
               </p>
-              <p className="text-gray-700 mb-4">
+              <p className="dark:text-gray-400 text-gray-700 mb-4">
                 This privacy policy applies to users of InstaLive which operates
                 through{' '}
                 <a
@@ -35,7 +32,7 @@ const PrivacyPolicy = () => {
                   InstaLive
                 </a>
               </p>
-              <p className="text-gray-700 mb-4">
+              <p className="dark:text-gray-400 text-gray-700 mb-4">
                 When we refer to a “stream” in this Privacy Policy, this might
                 mean a live stream.
               </p>
@@ -45,11 +42,11 @@ const PrivacyPolicy = () => {
               <h2 className="text-2xl font-semibold mb-4">
                 2. The Personal Data We Collect About You
               </h2>
-              <p className="text-gray-700 mb-4">
+              <p className="dark:text-gray-400 text-gray-700 mb-4">
                 We may collect and process different kinds of personal data
                 about you which we have grouped together as follows:
               </p>
-              <ul className="list-disc list-inside space-y-2">
+              <ul className="dark:text-gray-400 list-disc list-inside space-y-2">
                 <li>
                   <strong>Google Login Information:</strong> We use Google OAuth
                   for authentication, which allows us to access your Google
@@ -80,7 +77,7 @@ const PrivacyPolicy = () => {
               <h2 className="text-2xl font-semibold mb-4">
                 3. How We Use Your Data?
               </h2>
-              <ul className="list-disc list-inside space-y-2">
+              <ul className="dark:text-gray-400 list-disc list-inside space-y-2">
                 <li>
                   <strong>To Provide and Manage Services:</strong> We use your
                   data, including your name, email address, and profile image,
@@ -123,7 +120,7 @@ const PrivacyPolicy = () => {
 
             <section className="mb-6">
               <h2 className="text-2xl font-semibold mb-4">4. Cookies</h2>
-              <p className="text-gray-700 mb-4">
+              <p className="dark:text-gray-400 text-gray-700 mb-4">
                 We do not use cookies or similar tracking technologies on our
                 platform. We do not track your activities across websites, nor
                 do we collect any data through cookies for analytics,
@@ -135,7 +132,7 @@ const PrivacyPolicy = () => {
               <h2 className="text-2xl font-semibold mb-4">
                 5. Third-Party Services
               </h2>
-              <p className="text-gray-700 mb-4">
+              <p className="dark:text-gray-400 text-gray-700 mb-4">
                 <strong>Cloudinary:</strong>We use Cloudinary as a third-party
                 service to store and manage overlay images including both
                 default overlays provided by our platform and those uploaded by
@@ -156,7 +153,7 @@ const PrivacyPolicy = () => {
 
             <section className="mb-6">
               <h2 className="text-2xl font-semibold mb-4">6. Data Security</h2>
-              <p className="text-gray-700 mb-4">
+              <p className="dark:text-gray-400 text-gray-700 mb-4">
                 We have implemented basic technical and organizational security
                 measures to help protect your personal data from unauthorized
                 access, use, alteration, or disclosure. Your data is stored in a
@@ -173,7 +170,7 @@ const PrivacyPolicy = () => {
                 purposes. Access to your data is strictly limited to what is
                 necessary to provide the core functionalities of the platform.
               </p>
-              <p className="text-gray-700 mb-4">
+              <p className="dark:text-gray-400 text-gray-700 mb-4">
                 This project is a personal initiative, and the security measures
                 are limited to what is necessary for its core functionalities.
               </p>
@@ -181,7 +178,7 @@ const PrivacyPolicy = () => {
 
             <section className="mb-6">
               <h2 className="text-2xl font-semibold mb-4">7. Contacting Us</h2>
-              <p className="text-gray-700 mb-4">
+              <p className="dark:text-gray-400 text-gray-700 mb-4">
                 If you have any questions or concerns, feel free to reach out at{' '}
                 <a
                   href="mailto:mohitforwork2002@gmail.com"

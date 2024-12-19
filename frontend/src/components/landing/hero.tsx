@@ -1,19 +1,11 @@
 import React from 'react';
 import { Button } from '../ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { AvatarCirclesDemo } from '../ui/avatar-demo';
-import {
-  Calendar,
-  Eye,
-  Globe,
-  ThumbsUp,
-  TrendingUp,
-  Video,
-} from 'lucide-react';
+import { Calendar, TrendingUp, Video } from 'lucide-react';
 import GlowDiv from '../glow-div';
 import { signIn, Image, useSession, useRouter } from '@/imports/Nextjs_imports';
 import GoogleIcon from '@/app/assets/google.svg';
-import { MoveRight, Hand } from 'lucide-react';
+import { MoveRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 function GoogleSignButton() {
@@ -74,7 +66,11 @@ export default function Hero() {
                     <motion.div
                       className="mx-2"
                       animate={{ x: [0, 10, 0] }}
-                      transition={{ repeat: Infinity, duration: 1, ease: 'easeInOut' }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 1,
+                        ease: 'easeInOut',
+                      }}
                     >
                       <MoveRight />
                     </motion.div>

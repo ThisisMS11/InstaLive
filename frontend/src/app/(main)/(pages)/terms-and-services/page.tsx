@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from '@/components/Navbar';
+import Navbar from '@/components/landing/navbar';
 
 const TermsAndConditions = () => {
   return (
@@ -7,17 +7,17 @@ const TermsAndConditions = () => {
       <Navbar />
       <div className="min-h-screen">
         <div className="container mx-auto px-4 py-8">
-          <div className="bg-white shadow-lg rounded-lg p-8">
+          <div className="dark:bg-black bg-white shadow-lg rounded-lg p-8">
             <h1 className="text-4xl font-bold text-center mb-6 mt-4">
               Terms and Conditions
             </h1>
-            <p className="text-gray-700 mb-4">
+            <p className="dark:text-gray-300 text-gray-700 mb-4">
               <strong>Last Updated:</strong> 21st October 2024
             </p>
 
             <section className="mb-6">
               <h2 className="text-2xl font-semibold mb-4">1. Overview</h2>
-              <p className="text-gray-700">
+              <p className="dark:text-gray-300 text-gray-700">
                 Welcome to InstaLive! These Terms and Conditions
                 (&quot;Terms&quot;) govern your access to and use of the
                 InstaLive platform and services. Please read them carefully
@@ -25,7 +25,7 @@ const TermsAndConditions = () => {
                 agree to be bound by these Terms. If you do not agree with these
                 Terms, please do not use InstaLive.
                 <br />
-                <div className="mt-4 text-black font-semibold">
+                <div className="dark:text-gray-300 mt-4 text-black font-semibold">
                   InstaLive is a personal project, not intended for commercial
                   purposes. It is a platform designed to enable users to stream
                   content and interact with viewers in real time. While we aim
@@ -40,7 +40,7 @@ const TermsAndConditions = () => {
               <h2 className="text-2xl font-semibold mb-4">
                 2. User Accounts and Registration
               </h2>
-              <ul className="list-disc list-inside space-y-2">
+              <ul className="dark:text-gray-300 list-disc list-inside space-y-2">
                 <li>
                   <strong>Account Creation:</strong> You must use a Google
                   account to register on InstaLive. By doing so, you agree to
@@ -64,7 +64,7 @@ const TermsAndConditions = () => {
               <h2 className="text-2xl font-semibold mb-4">
                 3. Usage of Services
               </h2>
-              <ul className="list-disc list-inside space-y-2">
+              <ul className="dark:text-gray-300 list-disc list-inside space-y-2">
                 <li>
                   <strong>Personal Use:</strong> InstaLive is intended for
                   personal use only. You may not use the platform for any
@@ -91,7 +91,7 @@ const TermsAndConditions = () => {
                 4. Data Handling and Privacy
               </h2>
 
-              <ul className="list-disc list-inside space-y-2">
+              <ul className="dark:text-gray-300 list-disc list-inside space-y-2">
                 <li>
                   <strong>Personal Data:</strong> For information on how we
                   collect, process, and use your data, please refer to our{' '}
@@ -120,7 +120,7 @@ const TermsAndConditions = () => {
               <h2 className="text-2xl font-semibold mb-4">
                 5. Third-Party Services
               </h2>
-              <ul className="list-disc list-inside space-y-2">
+              <ul className="dark:text-gray-300 list-disc list-inside space-y-2">
                 <li>
                   <strong>YouTube Data:</strong> With your consent, InstaLive
                   can access and manage your YouTube livestreams via the YouTube
@@ -140,7 +140,7 @@ const TermsAndConditions = () => {
               <h2 className="text-2xl font-semibold mb-4">
                 6. Limitation of Liability
               </h2>
-              <ul className="list-disc list-inside space-y-2">
+              <ul className="dark:text-gray-300 list-disc list-inside space-y-2">
                 <li>
                   <strong>No Warranty:</strong> InstaLive is provided &quot;as
                   is&quot; without any warranties, express or implied. We do not
@@ -167,7 +167,7 @@ const TermsAndConditions = () => {
               <h2 className="text-2xl font-semibold mb-4">
                 7. Modifications to the Service and Terms
               </h2>
-              <ul className="list-disc list-inside space-y-2">
+              <ul className="dark:text-gray-300 list-disc list-inside space-y-2">
                 <li>
                   <strong>Changes to the Platform:</strong> As a personal
                   project, InstaLive may undergo changes or be discontinued at
@@ -185,7 +185,7 @@ const TermsAndConditions = () => {
 
             <section className="mb-6">
               <h2 className="text-2xl font-semibold mb-4">8. Governing Law</h2>
-              <p className="text-gray-700">
+              <p className="dark:text-gray-300 text-gray-700">
                 These Terms are governed by and construed in accordance with the
                 laws of India. Any disputes arising from or relating to these
                 Terms or the use of InstaLive shall be subject to the exclusive
@@ -195,7 +195,7 @@ const TermsAndConditions = () => {
 
             <section className="mb-6">
               <h2 className="text-2xl font-semibold mb-4">9. Contact Us</h2>
-              <p className="text-gray-700">
+              <p className="dark:text-gray-300 text-gray-700">
                 If you have any questions, concerns, or feedback regarding these
                 Terms or the InstaLive platform, please reach out to us at:
               </p>

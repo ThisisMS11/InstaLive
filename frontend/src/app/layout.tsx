@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Figtree, Inter, Plus_Jakarta_Sans } from 'next/font/google';
+import { Figtree, Plus_Jakarta_Sans } from 'next/font/google';
 import Providers from '@/components/Providers';
 import './globals.css';
 import { Toaster } from 'sonner';

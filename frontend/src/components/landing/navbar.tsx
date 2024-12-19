@@ -1,13 +1,10 @@
 'use client';
 import React from 'react';
-import { cn } from '@/utils/cn';
-import { useRouter, signIn, useSession, Image } from '@/imports/Nextjs_imports';
+import { useSession } from '@/imports/Nextjs_imports';
 import { Avatar, AvatarFallback, AvatarImage } from '@/imports/Shadcn_imports';
-import logo from '@/app/assets/logo.png';
-import { Button } from '../ui/button';
 import Logo from '../logo';
 
-function IsLoggedIn({ imageUrl }: { imageUrl: String }) {
+function IsLoggedIn({ imageUrl }: { imageUrl: string | null | undefined }) {
   return (
     <Avatar>
       {/* @ts-ignore  */}
@@ -17,9 +14,8 @@ function IsLoggedIn({ imageUrl }: { imageUrl: String }) {
   );
 }
 
-export default function Navbar({ className }: { className?: string }) {
+export default function Navbar() {
   const session = useSession();
-  const router = useRouter();
 
   return (
     <>
@@ -33,8 +29,9 @@ export default function Navbar({ className }: { className?: string }) {
                 <span>Help</span>
                 <span>Docs</span>
               </div>
-              {/* @ts-ignore  */}
-              {session?.data?.user && <IsLoggedIn imageUrl={session.data.user.image} />}
+              {session?.data?.user && (
+                <IsLoggedIn imageUrl={session.data.user.image} />
+              )}
             </div>
           </div>
         </div>
