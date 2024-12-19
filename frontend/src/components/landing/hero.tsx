@@ -11,8 +11,37 @@ import {
   Video,
 } from 'lucide-react';
 import GlowDiv from '../glow-div';
+import { signIn, Image, useSession, useRouter } from '@/imports/Nextjs_imports';
+import GoogleIcon from '@/app/assets/google.svg';
+import { MoveRight, Hand } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+function GoogleSignButton() {
+  return (
+    <Button
+      className="w-fit flex justify-center items-center p-4 border rounded-full font-light text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2  cursor-pointer z-10"
+      style={{ pointerEvents: 'auto' }}
+      onClick={async () => {
+        console.log('clicked');
+        await signIn('google');
+      }}
+    >
+      <Image
+        src={GoogleIcon.src}
+        className="w-5 h-5 mr-4"
+        alt="Github Icon"
+        width={25}
+        height={25}
+      />
+      Continue With Google
+    </Button>
+  );
+}
 
 export default function Hero() {
+  const session = useSession();
+  const router = useRouter();
+
   return (
     <>
       <div className="h-fit pb-32 w-full dark:bg-black bg-white  dark:bg-dot-white/[0.5] bg-dot-black/[0.2] relative flex">
@@ -35,7 +64,24 @@ export default function Hero() {
                 Facebook , without much hassle.
               </div>
               <div className="flex items-center mt-2 gap-4">
-                <Button className="">Stream Now</Button>
+                {session?.data?.user ? (
+                  <Button
+                    onClick={() => {
+                      router.push('/dashboard');
+                    }}
+                  >
+                    DashBoard{' '}
+                    <motion.div
+                      className="mx-2"
+                      animate={{ x: [0, 10, 0] }}
+                      transition={{ repeat: Infinity, duration: 1, ease: 'easeInOut' }}
+                    >
+                      <MoveRight />
+                    </motion.div>
+                  </Button>
+                ) : (
+                  <GoogleSignButton />
+                )}
                 <Button variant={'ghost'} className="flex items-center gap-2">
                   <span>Live Streams</span>
                   <span className="w-3 h-3 rounded-xl animate-pulse bg-red-500"></span>
