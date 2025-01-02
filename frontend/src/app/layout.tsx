@@ -8,49 +8,53 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { cn } from '@/lib/utils';
 
 const figtree = Figtree({
-  subsets: ['latin'],
-  display: 'swap',
-  weight: ['300', '400', '500', '600', '700', '800', '900'],
-  variable: '--font-figtree',
+    subsets: ['latin'],
+    display: 'swap',
+    weight: ['300', '400', '500', '600', '700', '800', '900'],
+    variable: '--font-figtree',
 });
 
 const jakarta = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  display: 'swap',
-  weight: ['200', '300', '400', '500', '600', '700', '800'],
-  variable: '--font-jakarta',
+    subsets: ['latin'],
+    display: 'swap',
+    weight: ['200', '300', '400', '500', '600', '700', '800'],
+    variable: '--font-jakarta',
 });
 
 export const metadata: Metadata = {
-  title: 'InstaLive',
-  description: 'Will make you go live.',
+    title: 'InstaLive',
+    description: 'Will make you go live.',
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body
-        className={cn(figtree.variable, jakarta.variable, 'font-secondary')}
-      >
-        <Providers>
-          <div className="pt-[0px]">
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
+    return (
+        <html lang="en">
+            <body
+                className={cn(
+                    figtree.variable,
+                    jakarta.variable,
+                    'font-secondary'
+                )}
             >
-              {children}
-            </ThemeProvider>
-            <Toaster />
-            <Analytics />
-          </div>
-        </Providers>
-      </body>
-    </html>
-  );
+                <Providers>
+                    <div className="pt-[0px]">
+                        <ThemeProvider
+                            attribute="class"
+                            defaultTheme="system"
+                            enableSystem
+                            disableTransitionOnChange
+                        >
+                            {children}
+                        </ThemeProvider>
+                        <Toaster />
+                        <Analytics />
+                    </div>
+                </Providers>
+            </body>
+        </html>
+    );
 }

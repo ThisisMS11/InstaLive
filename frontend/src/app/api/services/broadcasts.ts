@@ -2,64 +2,64 @@ import prisma from '@/lib/db';
 import { BroadcastStatus } from '@prisma/client';
 
 export async function GetBroadcasts(userId: string) {
-  return await prisma.broadcast.findMany({
-    where: {
-      userId: userId,
-    },
-  });
+    return await prisma.broadcast.findMany({
+        where: {
+            userId: userId,
+        },
+    });
 }
 
 export async function UpdateBroadcastStatus(
-  youtubeBroadcastId: string,
-  status: BroadcastStatus
+    youtubeBroadcastId: string,
+    status: BroadcastStatus
 ) {
-  return await prisma.broadcast.update({
-    where: {
-      id: youtubeBroadcastId,
-    },
-    data: {
-      status: status,
-    },
-  });
+    return await prisma.broadcast.update({
+        where: {
+            id: youtubeBroadcastId,
+        },
+        data: {
+            status: status,
+        },
+    });
 }
 
 export async function getMetrices(youtube: any, youtubeBroadcastId: string) {
-  return youtube.videos.list({
-    part: ['statistics'],
-    id: youtubeBroadcastId,
-  });
+    return youtube.videos.list({
+        part: ['statistics'],
+        id: youtubeBroadcastId,
+    });
 }
 
 export async function getLiveStreamDetails(
-  youtube: any,
-  youtubeBroadcastId: string
+    youtube: any,
+    youtubeBroadcastId: string
 ) {
-  return youtube.videos.list({
-    id: youtubeBroadcastId,
-    part: ['id', 'snippet', 'liveStreamingDetails'],
-  });
+    return youtube.videos.list({
+        id: youtubeBroadcastId,
+        part: ['id', 'snippet', 'liveStreamingDetails'],
+    });
 }
 
 export async function addOverlay(
-  userId: string,
-  public_id: string,
-  url: string,
-  name: string
+    userId: string,
+    public_id: string,
+    url: string,
+    name: string
 ) {
-  return prisma.overlays.create({
-    data: {
-      userId: userId,
-      public_id: public_id,
-      url: url,
-      description: name,
-    },
-  });
+    return prisma.overlays.create({
+        data: {
+            userId: userId,
+            public_id: public_id,
+            url: url,
+            description: name,
+        },
+    });
 }
 
 export async function GetOverlays(userId: string) {
-  return prisma.overlays.findMany({
-    where: {
-      userId: userId,
-    },
-  });
+    return prisma.overlays.findMany({
+        where: {
+            userId: userId,
+        },
+    });
 }

@@ -53,39 +53,39 @@ import Footer from '@/components/footer';
 // }
 
 export default function HomePage() {
-  const session = useSession();
+    const session = useSession();
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     toast('InstaLive', {
-  //       description: 'Welcome to InstaLive !',
-  //       duration: 5000,
-  //       icon: <Hand />,
-  //     });
-  //   }, 1000);
+    // useEffect(() => {
+    //   const timer = setTimeout(() => {
+    //     toast('InstaLive', {
+    //       description: 'Welcome to InstaLive !',
+    //       duration: 5000,
+    //       icon: <Hand />,
+    //     });
+    //   }, 1000);
 
-  //   return () => clearTimeout(timer);
-  // });
+    //   return () => clearTimeout(timer);
+    // });
 
-  // @ts-ignore
-  console.log(session);
+    // @ts-ignore
+    console.log(session);
 
-  return (
-    <>
-      <Navbar />
-      <Hero />
-      <main className="max-w-6xl relative z-20 w-full mx-auto">
-        <div className="p-4 md:mx-10">
-          <Features />
-          <FaqSection />
-        </div>
-      </main>
-      <Footer />
-      {/* <ToggleButton /> */}
-      {/*
+    return (
+        <>
+            <Navbar />
+            <Hero />
+            <main className="max-w-6xl relative z-20 w-full mx-auto">
+                <div className="p-4 md:mx-10">
+                    <Features />
+                    <FaqSection />
+                </div>
+            </main>
+            <Footer />
+            {/* <ToggleButton /> */}
+            {/*
       <div className="dark:bg-black h-[100vh] w-full rounded-md bg-white  flex flex-col items-center justify-evenly antialiased">
         <div className="max-w-3xl mx-auto   text-center">
-          <HeroHighlight>
+        <HeroHighlight>
             <motion.h1
               initial={{
                 opacity: 0,
@@ -115,6 +115,6 @@ export default function HomePage() {
         <BackgroundBeams />
         {session?.data?.user ? <DashBoardButton /> : <GoogleSignButton />}
       </div> */}
-    </>
-  );
+        </>
+    );
 }

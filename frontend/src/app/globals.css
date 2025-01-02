@@ -3,97 +3,97 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 126 35% 99%;
-    --foreground: 126 50% 3%;
-    --popover: 126 35% 99%;
-    --popover-foreground: 126 50% 3%;
-    --card: 126 35% 99%;
-    --card-foreground: 126 50% 3%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --primary: 126 69% 63%;
-    --primary-foreground: 126 69% 3%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 22 85% 40%;
-    --destructive-foreground: 0 0% 100%;
-    --ring: 126 69% 63%;
-    --chart-1: 126 69% 63%;
-    --chart-2: 126 11% 92%;
-    --chart-3: 126 11% 92%;
-    --chart-4: 126 11% 95%;
-    --chart-5: 126 72% 63%;
-    --radius: 0.5rem;
-  }
+    :root {
+        --background: 126 35% 99%;
+        --foreground: 126 50% 3%;
+        --popover: 126 35% 99%;
+        --popover-foreground: 126 50% 3%;
+        --card: 126 35% 99%;
+        --card-foreground: 126 50% 3%;
+        --border: 220 13% 91%;
+        --input: 220 13% 91%;
+        --primary: 126 69% 63%;
+        --primary-foreground: 126 69% 3%;
+        --secondary: 240 4.8% 95.9%;
+        --secondary-foreground: 240 5.9% 10%;
+        --muted: 240 4.8% 95.9%;
+        --muted-foreground: 240 3.8% 46.1%;
+        --accent: 240 4.8% 95.9%;
+        --accent-foreground: 240 5.9% 10%;
+        --destructive: 22 85% 40%;
+        --destructive-foreground: 0 0% 100%;
+        --ring: 126 69% 63%;
+        --chart-1: 126 69% 63%;
+        --chart-2: 126 11% 92%;
+        --chart-3: 126 11% 92%;
+        --chart-4: 126 11% 95%;
+        --chart-5: 126 72% 63%;
+        --radius: 0.5rem;
+    }
 
-  .dark {
-    --background: 126 58% 1%;
-    --foreground: 126 12% 98%;
-    --popover: 126 58% 1%;
-    --popover-foreground: 126 12% 98%;
-    --card: 126 58% 1%;
-    --card-foreground: 126 12% 98%;
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --primary: 126 69% 63%;
-    --primary-foreground: 126 69% 3%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 22 85% 53%;
-    --destructive-foreground: 0 0% 0%;
-    --ring: 126 69% 63%;
-    --chart-1: 126 69% 63%;
-    --chart-2: 126 5% 15%;
-    --chart-3: 126 5% 15%;
-    --chart-4: 126 5% 18%;
-    --chart-5: 126 72% 63%;
-  }
+    .dark {
+        --background: 126 58% 1%;
+        --foreground: 126 12% 98%;
+        --popover: 126 58% 1%;
+        --popover-foreground: 126 12% 98%;
+        --card: 126 58% 1%;
+        --card-foreground: 126 12% 98%;
+        --border: 215 27.9% 16.9%;
+        --input: 215 27.9% 16.9%;
+        --primary: 126 69% 63%;
+        --primary-foreground: 126 69% 3%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 240 3.7% 15.9%;
+        --muted-foreground: 240 5% 64.9%;
+        --accent: 240 3.7% 15.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 22 85% 53%;
+        --destructive-foreground: 0 0% 0%;
+        --ring: 126 69% 63%;
+        --chart-1: 126 69% 63%;
+        --chart-2: 126 5% 15%;
+        --chart-3: 126 5% 15%;
+        --chart-4: 126 5% 18%;
+        --chart-5: 126 72% 63%;
+    }
 }
 
 /* Blinking Red Dot CSS start*/
 @layer base {
-  * {
-    @apply border-border;
-  }
+    * {
+        @apply border-border;
+    }
 
-  body {
-    @apply bg-background text-foreground;
-  }
+    body {
+        @apply bg-background text-foreground;
+    }
 }
 
 .bb {
-  @apply border-2 border-black;
+    @apply border-2 border-black;
 }
 
 @keyframes blink {
-  0%,
-  100% {
-    opacity: 1;
-    box-shadow:
-      0 0 10px 5px rgba(255, 0, 0, 0.5),
-      0 0 20px 10px rgba(255, 0, 0, 0.3),
-      0 0 30px 15px rgba(255, 0, 0, 0.1);
-  }
+    0%,
+    100% {
+        opacity: 1;
+        box-shadow:
+            0 0 10px 5px rgba(255, 0, 0, 0.5),
+            0 0 20px 10px rgba(255, 0, 0, 0.3),
+            0 0 30px 15px rgba(255, 0, 0, 0.1);
+    }
 
-  50% {
-    opacity: 0.5;
-    box-shadow:
-      0 0 5px 2.5px rgba(255, 0, 0, 0.5),
-      0 0 10px 5px rgba(255, 0, 0, 0.3),
-      0 0 15px 7.5px rgba(255, 0, 0, 0.1);
-  }
+    50% {
+        opacity: 0.5;
+        box-shadow:
+            0 0 5px 2.5px rgba(255, 0, 0, 0.5),
+            0 0 10px 5px rgba(255, 0, 0, 0.3),
+            0 0 15px 7.5px rgba(255, 0, 0, 0.1);
+    }
 }
 
 .animate-blink {
-  animation: blink 1s infinite;
+    animation: blink 1s infinite;
 }
 
 /* Blinking Red dot css ends */

@@ -6,17 +6,17 @@ import { store, persistor } from '@/redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 
 interface Props {
-  children: ReactNode;
+    children: ReactNode;
 }
 
 const Providers = (props: Props) => {
-  return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <SessionProvider>{props.children}</SessionProvider>
-      </PersistGate>
-    </Provider>
-  );
+    return (
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+                <SessionProvider>{props.children}</SessionProvider>
+            </PersistGate>
+        </Provider>
+    );
 };
 
 export default Providers;

@@ -5,15 +5,15 @@ import livestreamReducer from './slices/liveStreamSlice';
 import youtubeChannelInfoReducer from './slices/youtubeChannelInfoSlice';
 
 const rootPersistConfig = {
-  key: 'root',
-  storage,
-  keyPrefix: 'redux-',
+    key: 'root',
+    storage,
+    keyPrefix: 'redux-',
 };
 
 const rootReducer = combineReducers({
-  livestreams: livestreamReducer,
-  broadcasts: broadcastReducer,
-  youtubeChannelInfo: youtubeChannelInfoReducer,
+    livestreams: livestreamReducer,
+    broadcasts: broadcastReducer,
+    youtubeChannelInfo: youtubeChannelInfoReducer,
 });
 
 export { rootPersistConfig, rootReducer };

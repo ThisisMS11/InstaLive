@@ -10,7 +10,7 @@ node_modules
 /coverage
 
 # next.js
-/.next/
+.next
 /out/
 
 # production
@@ -26,7 +26,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-/env
+env
 .env*.local
 
 
@@ -41,3 +41,4 @@ migrations
 logs
 
 *.txt
+

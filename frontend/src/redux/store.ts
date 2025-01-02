@@ -5,12 +5,12 @@ import { persistStore, persistReducer } from 'redux-persist';
 import { rootPersistConfig, rootReducer } from './rootReducer';
 
 export const store = configureStore({
-  reducer: persistReducer(rootPersistConfig, rootReducer),
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false,
-      immutableCheck: false,
-    }),
+    reducer: persistReducer(rootPersistConfig, rootReducer),
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: false,
+            immutableCheck: false,
+        }),
 });
 
 export const persistor = persistStore(store);
