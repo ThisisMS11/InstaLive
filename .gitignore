@@ -42,3 +42,5 @@ logs
 
 *.txt
 
+redis-initiator.sh
+

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { VideoOff, MonitorUp, CircleX } from 'lucide-react';
+import { VideoOff, CircleX, Copy } from 'lucide-react';
 import {
     useAppSelector,
     useAppDispatch,
@@ -45,6 +45,7 @@ import { useSWRConfig } from 'swr';
 import { getBlockedUserInfo } from '@/services/livechat';
 import { deleteRedisData } from '@/services/redis';
 import { motion } from 'framer-motion';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 export function AlertDialogDemo({
     transitionToLive,
@@ -247,11 +248,11 @@ export default function StudioEntry({
                 break;
         }
 
-        // if (status === 'testing') {
-        //   (async () => {
-        //     await transitionToLive('live', broadcastData.id);
-        //   })();
-        // }
+        if (status === 'testing') {
+            (async () => {
+                await transitionToLive('live', broadcastData.id);
+            })();
+        }
         console.log({ status });
 
         if (status == 'complete') {
@@ -424,7 +425,7 @@ export default function StudioEntry({
                                     transition={{ duration: 0.5 }}
                                 >
                                     {broadcastStatus.toLowerCase() === 'live' &&
-                                    !showProgress
+                                        !showProgress
                                         ? 'You are Live'
                                         : `${broadcastStatus}...` || 'nothing'}
                                 </motion.p>
@@ -475,9 +476,15 @@ export default function StudioEntry({
                             </div>
 
                             <div className="dark:bg-black mt-2 flex justify-center gap-10 border-2 bg-white py-2 px-4">
-                                <Button>
+                                {/* <Button>
                                     {true ? <MonitorUp /> : <VideoOff />}
-                                </Button>
+                                </Button> */}
+                                <CopyToClipboard text={`https://www.youtube.com/watch?v=${broadcastData.id}`}>
+                                    <Button>
+                                        Copy URL
+                                        <Copy className='ml-3' />
+                                    </Button>
+                                </CopyToClipboard>
                                 <Button>
                                     {true ? (
                                         <AlertDialogDemo

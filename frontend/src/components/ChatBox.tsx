@@ -133,49 +133,55 @@ export default function ChatBox({ liveChatId }: { liveChatId: string }) {
                 className="space-y-2 p-2 w-full h-[65%] overlflow-x-hidden "
                 ref={parent}
             >
-                {/* user waala  */}
-                <ScrollToBottom
-                    mode="bottom"
-                    initialScrollBehavior="auto"
-                    className="h-[22rem] overflow-x-hidden"
-                >
-                    {liveChatMessages &&
-                        liveChatMessages.map((message: any) => {
+                {liveChatMessages && liveChatMessages.length > 0 ? (
+                    <ScrollToBottom
+                        mode="bottom"
+                        initialScrollBehavior="auto"
+                        className="h-[22rem] overflow-x-hidden"
+                    >
+                        {liveChatMessages.map((message: any, index: number) => {
                             // am i the author
                             const isAuthor =
-                                message.authorDetails.channelId ===
+                                message?.authorDetails?.channelId ===
                                 youtubeChannelInfo?.channelId;
 
                             const class1 = isAuthor
-                                ? `flex items-end justify-end mt-2`
-                                : `flex items-end justify-start mt-2`;
+                                ? 'flex items-end justify-end mt-2'
+                                : 'flex items-end justify-start mt-2';
                             const class2 = isAuthor
-                                ? `p-3 bg-gray-300 rounded-lg flex items-center gap-2`
-                                : `p-3 bg-gray-100 rounded-lg flex items-center gap-2`;
+                                ? 'p-3 bg-gray-300 rounded-lg flex items-center gap-2'
+                                : 'p-3 bg-gray-100 rounded-lg flex items-center gap-2';
 
                             return (
-                                <div className={class1} key={message.id}>
+                                <div
+                                    className={class1}
+                                    key={message?.id || index}
+                                >
                                     <div className={class2}>
                                         <Avatar className="w-8 h-8">
-                                            {/* @ts-ignore */}
                                             <AvatarImage
                                                 src={
-                                                    message
-                                                        ? message.authorDetails
-                                                              .profileImageUrl
-                                                        : './placeholder-user.jpg'
+                                                    message?.authorDetails
+                                                        ?.profileImageUrl
                                                 }
                                             />
-                                            <AvatarFallback>MS</AvatarFallback>
+                                            <AvatarFallback>
+                                                {message?.authorDetails
+                                                    ?.displayName?.[0] || '?'}
+                                            </AvatarFallback>
                                         </Avatar>
                                         <p className="text-sm">
-                                            {message.snippet.displayMessage}
+                                            {message?.snippet?.displayMessage ||
+                                                'No content'}
                                         </p>
                                     </div>
                                 </div>
                             );
                         })}
-                </ScrollToBottom>
+                    </ScrollToBottom>
+                ) : (
+                    <div className='w-full h-full flex items-center justify-center'>No Chat Messages</div>
+                )}
             </div>
 
             <form

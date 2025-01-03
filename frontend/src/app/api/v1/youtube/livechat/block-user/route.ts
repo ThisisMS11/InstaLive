@@ -76,6 +76,10 @@ export async function POST(req: NextRequest) {
             );
 
             await redisClient.sAdd('blockedMessageIds', messageId);
+
+            // cleaning up the blockedMessageIds after a day
+            await redisClient.expire('blockedMessageIds',86400);
+
             await redisClient.hSet(`messageBanId:${messageId}`, {
                 banId,
                 authorChannelId,

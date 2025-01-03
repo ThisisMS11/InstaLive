@@ -48,6 +48,11 @@ export const GET = async (req: NextRequest) => {
 
             const messageIds = filteredMessages.map((item: any) => item.id);
 
+            /* to avoid SMISMEMBER error */
+            if (messageIds.length === 0) {
+                return makeResponse(200, true, 'Fetched livechat data', []);
+            }
+
             // console.log({ messageIds });
 
             logger.info(`Preprocessing filtered Messages from liveChat`);
@@ -86,6 +91,7 @@ export const GET = async (req: NextRequest) => {
                         liveChatId: item.snippet.liveChatId,
                     });
                     multi.rPush(messageQueue, messageId);
+                    multi.expire(messageQueue,86400)
                     multi.expire(`liveChatData:${messageId}`, 86400);
                 }
 

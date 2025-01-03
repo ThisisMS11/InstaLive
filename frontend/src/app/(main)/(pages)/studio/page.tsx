@@ -96,8 +96,8 @@ const Studio = () => {
                         setErrorOccurred(true);
                     });
                 } catch (error) {
-                    // @ts-ignore
                     toast.error(
+                        // @ts-ignore
                         `Error initializing sockets: ${error?.message}`,
                         {
                             duration: 5000,
@@ -128,9 +128,9 @@ const Studio = () => {
                 />
             )}
             {/* <MainStudio
-        broadcast_socket={broadcast_socket}
-        model_socket={model_socket}
-      /> */}
+                broadcast_socket={broadcast_socket}
+                model_socket={model_socket}
+            /> */}
         </StudioProvider>
     );
 };

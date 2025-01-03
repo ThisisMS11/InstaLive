@@ -3,6 +3,7 @@ import React from 'react';
 import { useSession } from '@/imports/Nextjs_imports';
 import { Avatar, AvatarFallback, AvatarImage } from '@/imports/Shadcn_imports';
 import Logo from '../logo';
+import ToggleButton from '@/components/ToggleButton';
 
 function IsLoggedIn({ imageUrl }: { imageUrl: string | null | undefined }) {
     return (
@@ -28,6 +29,7 @@ export default function Navbar() {
                                 <span>Products</span>
                                 <span>Help</span>
                                 <span>Docs</span>
+                                <ToggleButton/>
                             </div>
                             {session?.data?.user && (
                                 <IsLoggedIn

@@ -47,15 +47,18 @@ const FeatureSection = () => {
                 <div className="flex flex-col md:flex-row flex-wrap gap-8">
                     {/* Large Feature Card - 2/3 width on desktop */}
                     <div className="w-full md:w-[calc(66%-1rem)] relative group">
-                        <div className="absolute inset-0 bg-primary/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300 opacity-0 group-hover:opacity-100" />
-                        <div className="relative p-8 rounded-2xl border border-primary/10 hover:border-primary/20 transition-all duration-300 backdrop-blur-3xl hover:translate-y-[-4px] hover:shadow-2xl hover:shadow-primary/10 h-full">
+
+                        <div className="absolute inset-0 dark:bg-primary/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300 opacity-0 group-hover:opacity-100" />
+
+                        <div className="relative p-8 rounded-2xl border border-primary dark:border-primary/10 hover:border-primary/20 transition-all duration-300 backdrop-blur-3xl hover:translate-y-[-4px] hover:shadow-2xl hover:shadow-primary/10 h-full">
+
                             <div className="mb-4 inline-block p-3 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 shadow-[0_0_30px_rgba(var(--primary),.3)] group-hover:shadow-none transition-all duration-300">
                                 {features[0].icon}
                             </div>
-                            <h3 className="text-2xl font-semibold mb-3 text-white group-hover:text-primary transition-colors">
+                            <h3 className="text-2xl font-semibold mb-3 dark:text-white group-hover:text-primary transition-colors">
                                 {features[0].title}
                             </h3>
-                            <p className="text-emerald-100/60 leading-relaxed">
+                            <p className="dark:text-emerald-100/60 leading-relaxed">
                                 {features[0].description}
                             </p>
                         </div>
@@ -63,15 +66,18 @@ const FeatureSection = () => {
 
                     {/* Medium Feature Card - 1/3 width on desktop */}
                     <div className="w-full md:w-[calc(33%-1rem)] relative group">
+
                         <div className="absolute inset-0 bg-primary/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300 opacity-0 group-hover:opacity-100" />
-                        <div className="relative p-8 rounded-2xl border border-primary/10 hover:border-primary/20 transition-all duration-300 backdrop-blur-3xl hover:translate-y-[-4px] hover:shadow-2xl hover:shadow-primary/10 h-full">
+
+                        <div className="relative p-8 rounded-2xl border border-primary dark:border-primary/10 hover:border-primary/20 transition-all duration-300 backdrop-blur-3xl hover:translate-y-[-4px] hover:shadow-2xl hover:shadow-primary/10 h-full">
+
                             <div className="mb-4 inline-block p-3 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 shadow-[0_0_30px_rgba(var(--primary),.3)] group-hover:shadow-none transition-all duration-300">
                                 {features[1].icon}
                             </div>
-                            <h3 className="text-xl font-semibold mb-3 text-white group-hover:text-primary transition-colors">
+                            <h3 className="text-xl font-semibold mb-3 dark:text-white group-hover:text-primary transition-colors">
                                 {features[1].title}
                             </h3>
-                            <p className="text-emerald-100/60 leading-relaxed">
+                            <p className="dark:text-emerald-100/60 leading-relaxed">
                                 {features[1].description}
                             </p>
                         </div>
@@ -85,14 +91,16 @@ const FeatureSection = () => {
                                 className="w-full sm:w-1/2 relative group"
                             >
                                 <div className="absolute inset-0 bg-primary/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300 opacity-0 group-hover:opacity-100" />
-                                <div className="relative p-8 rounded-2xl border border-primary/10 hover:border-primary/20 transition-all duration-300 backdrop-blur-3xl hover:translate-y-[-4px] hover:shadow-2xl hover:shadow-primary/10">
+
+                                <div className="relative p-8 rounded-2xl border border-primary dark:border-primary/10 hover:border-primary/20 transition-all duration-300 backdrop-blur-3xl hover:translate-y-[-4px] hover:shadow-2xl hover:shadow-primary/10">
+
                                     <div className="mb-4 inline-block p-3 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 shadow-[0_0_30px_rgba(var(--primary),.3)] group-hover:shadow-none transition-all duration-300">
                                         {feature.icon}
                                     </div>
-                                    <h3 className="text-xl font-semibold mb-3 text-white group-hover:text-primary transition-colors">
+                                    <h3 className="text-xl font-semibold mb-3 dark:text-white group-hover:text-primary transition-colors">
                                         {feature.title}
                                     </h3>
-                                    <p className="text-emerald-100/60 leading-relaxed">
+                                    <p className="dark:text-emerald-100/60 leading-relaxed">
                                         {feature.description}
                                     </p>
                                 </div>
