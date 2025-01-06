@@ -115,8 +115,7 @@ export default function ChatBox({ liveChatId }: { liveChatId: string }) {
                         // @ts-ignore
                         src={
                             session
-                                ? session?.data?.user.image
-                                : './placeholder-user.jpg'
+                                && session?.data?.user.image
                         }
                     />
                     <AvatarFallback>MS</AvatarFallback>
